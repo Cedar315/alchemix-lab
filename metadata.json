@@ -1,0 +1,6 @@
+{
+  "name": "AlcheMix Lab",
+  "description": "探索每一滴背后的科学 - 精致的实验室风格鸡尾酒特调与调配助手 (Explore the science behind every drop - Exquisite laboratory-style cocktail mixing and mixology assistant)",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

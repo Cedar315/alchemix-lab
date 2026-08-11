@@ -1,0 +1,606 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id                String             @id @db.Uuid
+  email             String             @unique
+  nickname          String?
+  avatarUrl         String?            @map("avatar_url")
+  createdAt         DateTime           @default(now()) @map("created_at")
+  updatedAt         DateTime           @default(now()) @updatedAt @map("updated_at")
+  preferences       UserPreference[]
+  customizedRecipes CustomizedRecipe[]
+  savedRecipes      UserSavedRecipe[]
+  drinkLogs         DrinkLog[]
+  analyticsEvents   AnalyticsEvent[]
+
+  @@map("users")
+}
+
+model UserPreference {
+  id                    BigInt   @id @default(autoincrement())
+  userId                String?  @map("user_id") @db.Uuid
+  user                  User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sweetnessPreference   Int      @default(3) @map("sweetness_preference")
+  bitternessTolerance   Int      @default(3) @map("bitterness_tolerance")
+  alcoholTolerance      Int      @default(3) @map("alcohol_tolerance")
+  acidityPreference     Int      @default(3) @map("acidity_preference")
+  favoriteTags          Json     @default("[]") @map("favorite_tags")
+  dislikedIngredients   Json     @default("[]") @map("disliked_ingredients")
+  favoriteIngredients   Json     @default("[]") @map("favorite_ingredients")
+  preferredAlcoholLevel Int      @default(2) @map("preferred_alcohol_level")
+  dislikedCategories    Json     @default("[]") @map("disliked_categories")
+  preferredFlavorTags   Json     @default("[]") @map("preferred_flavor_tags")
+  customNotes           String?  @map("custom_notes")
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@map("user_preferences")
+}
+
+model DataSource {
+  id               BigInt    @id @default(autoincrement())
+  name             String    @unique
+  type             String
+  url              String?
+  reliabilityScore Float     @default(1.00) @map("reliability_score")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  products         Product[]
+
+  @@map("data_sources")
+}
+
+model Ingredient {
+  id                           BigInt                 @id @default(autoincrement())
+  slug                         String                 @unique
+  name                         String
+  nameZh                       String                 @default("") @map("name_zh")
+  nameEn                       String                 @default("") @map("name_en")
+  brand                        String?
+  aliases                      Json                   @default("[]")
+  type                         String                 @default("other")
+  category                     String
+  subCategory                  String?                @map("sub_category")
+  abv                          Float                  @default(0)
+  abvRange                     String?                @map("abv_range")
+  sweetness                    Float                  @default(0)
+  acidity                      Float                  @default(0)
+  bitterness                   Float                  @default(0)
+  carbonation                  Float                  @default(0)
+  viscosity                    Float                  @default(0)
+  alcoholIntensity             Float                  @default(0) @map("alcohol_intensity")
+  sugarGPer100ml               Float?                 @map("sugar_g_per_100ml")
+  caffeine                     Boolean?
+  pHRange                      String?                @map("ph_range")
+  ingredients                  Json                   @default("[]")
+  flavorTags                   Json                   @default("[]") @map("flavor_tags")
+  suitableWith                 Json                   @default("[]") @map("suitable_with")
+  avoidWith                    Json                   @default("[]") @map("avoid_with")
+  recommendedVolumeMl          Json                   @default("[]") @map("recommended_volume_ml")
+  convenienceStoreAvailability Int                    @default(3) @map("convenience_store_availability")
+  sourceType                   String                 @default("local_database") @map("source_type")
+  confidence                   String                 @default("medium")
+  isTemporary                  Boolean                @default(false) @map("is_temporary")
+  sourceNote                   String?                @map("source_note")
+  isAlcoholic                  Boolean                @default(false) @map("is_alcoholic")
+  createdAt                    DateTime               @default(now()) @map("created_at")
+  updatedAt                    DateTime               @default(now()) @updatedAt @map("updated_at")
+  flavorProfile                FlavorProfile?
+  products                     ProductIngredient[]
+  cocktailIngredients          CocktailIngredient[]
+  customizedRecipeItems        CustomizedRecipeItem[]
+  ingredientLookupLogs         IngredientLookupLog[]
+
+  @@index([nameZh])
+  @@index([nameEn])
+  @@index([brand])
+  @@index([category])
+  @@index([subCategory])
+  @@map("ingredients")
+}
+
+model Cocktail {
+  id                        BigInt               @id @default(autoincrement())
+  nameZh                    String               @map("name_zh")
+  nameEn                    String               @map("name_en")
+  slug                      String               @unique
+  description               String
+  originalFlavorDescription String               @map("original_flavor_description")
+  beginnerWarning           String?              @map("beginner_warning")
+  bitterness                Float                @default(0)
+  sweetness                 Float                @default(0)
+  acidity                   Float                @default(0)
+  alcoholIntensity          Float                @default(0) @map("alcohol_intensity")
+  freshness                 Float                @default(0)
+  difficulty                Int                  @default(2)
+  isClassic                 Boolean              @default(true) @map("is_classic")
+  createdAt                 DateTime             @default(now()) @map("created_at")
+  updatedAt                 DateTime             @default(now()) @updatedAt @map("updated_at")
+  ingredients               CocktailIngredient[]
+  customizedRecipes         CustomizedRecipe[]
+
+  @@map("cocktails")
+}
+
+model CocktailIngredient {
+  id           BigInt     @id @default(autoincrement())
+  cocktailId   BigInt     @map("cocktail_id")
+  cocktail     Cocktail   @relation(fields: [cocktailId], references: [id], onDelete: Cascade)
+  ingredientId BigInt     @map("ingredient_id")
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Restrict)
+  amountMl     Float?     @map("amount_ml")
+  unit         String     @default("ml")
+  role         String     @default("other")
+  note         String?
+  order        Int        @default(0)
+
+  @@index([cocktailId])
+  @@index([ingredientId])
+  @@map("cocktail_ingredients")
+}
+
+model CustomizedRecipe {
+  id               BigInt                 @id @default(autoincrement())
+  baseCocktailId   BigInt?                @map("base_cocktail_id")
+  baseCocktail     Cocktail?              @relation(fields: [baseCocktailId], references: [id], onDelete: SetNull)
+  userId           String?                @map("user_id") @db.Uuid
+  user             User?                  @relation(fields: [userId], references: [id], onDelete: SetNull)
+  nameZh           String                 @map("name_zh")
+  nameEn           String                 @map("name_en")
+  selectedGoals    Json                   @default("[]") @map("selected_goals")
+  description      String
+  aiExplanation    String?                @map("ai_explanation")
+  bitternessBefore Float                  @default(0) @map("bitterness_before")
+  bitternessAfter  Float                  @default(0) @map("bitterness_after")
+  sweetnessBefore  Float                  @default(0) @map("sweetness_before")
+  sweetnessAfter   Float                  @default(0) @map("sweetness_after")
+  acidityBefore    Float                  @default(0) @map("acidity_before")
+  acidityAfter     Float                  @default(0) @map("acidity_after")
+  alcoholBefore    Float                  @default(0) @map("alcohol_before")
+  alcoholAfter     Float                  @default(0) @map("alcohol_after")
+  freshnessBefore  Float                  @default(0) @map("freshness_before")
+  freshnessAfter   Float                  @default(0) @map("freshness_after")
+  sourceType       String                 @default("ai_generated") @map("source_type")
+  createdAt        DateTime               @default(now()) @map("created_at")
+  updatedAt        DateTime               @default(now()) @updatedAt @map("updated_at")
+  items            CustomizedRecipeItem[]
+
+  @@index([baseCocktailId])
+  @@index([userId])
+  @@map("customized_recipes")
+}
+
+model CustomizedRecipeItem {
+  id           BigInt           @id @default(autoincrement())
+  recipeId     BigInt           @map("recipe_id")
+  recipe       CustomizedRecipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  ingredientId BigInt?          @map("ingredient_id")
+  ingredient   Ingredient?      @relation(fields: [ingredientId], references: [id], onDelete: SetNull)
+  nameSnapshot String           @map("name_snapshot")
+  amountMl     Float?           @map("amount_ml")
+  unit         String           @default("ml")
+  note         String?
+  order        Int              @default(0)
+
+  @@index([recipeId])
+  @@index([ingredientId])
+  @@map("customized_recipe_items")
+}
+
+model IngredientLookupLog {
+  id                  BigInt      @id @default(autoincrement())
+  query               String
+  localMatched        Boolean     @default(false) @map("local_matched")
+  matchedIngredientId BigInt?     @map("matched_ingredient_id")
+  matchedIngredient   Ingredient? @relation(fields: [matchedIngredientId], references: [id], onDelete: SetNull)
+  aiUsed              Boolean     @default(false) @map("ai_used")
+  aiResultJson        Json?       @map("ai_result_json")
+  savedToIngredient   Boolean     @default(false) @map("saved_to_ingredient")
+  createdAt           DateTime    @default(now()) @map("created_at")
+
+  @@index([query])
+  @@index([matchedIngredientId])
+  @@map("ingredient_lookup_logs")
+}
+
+model SafetyRule {
+  id            BigInt   @id @default(autoincrement())
+  ruleKey       String   @unique @map("rule_key")
+  title         String
+  description   String
+  conditionJson Json     @map("condition_json")
+  severity      String   @default("info")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("safety_rules")
+}
+
+model FlavorProfile {
+  id              BigInt      @id @default(autoincrement())
+  ingredientId    BigInt?     @unique @map("ingredient_id")
+  ingredient      Ingredient? @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+  productId       BigInt?     @unique @map("product_id")
+  product         Product?    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  sweetness       Int         @default(0)
+  sourness        Int         @default(0)
+  bitterness      Int         @default(0)
+  alcoholStrength Int         @default(0) @map("alcohol_strength")
+  freshness       Int         @default(0)
+  fruitiness      Int         @default(0)
+  teaLevel        Int         @default(0) @map("tea_level")
+  dairyLevel      Int         @default(0) @map("dairy_level")
+  herbalLevel     Int         @default(0) @map("herbal_level")
+  spiceLevel      Int         @default(0) @map("spice_level")
+  body            Int         @default(1)
+  aromaTags       Json        @default("[]") @map("aroma_tags")
+  flavorTags      Json        @default("[]") @map("flavor_tags")
+  updatedAt       DateTime    @default(now()) @updatedAt @map("updated_at")
+
+  @@map("flavor_profiles")
+}
+
+model Product {
+  id                      BigInt                         @id @default(autoincrement())
+  barcode                 String?                        @unique
+  brand                   String
+  name                    String
+  subCategory             String?                        @map("sub_category")
+  abv                     Float                          @default(0.00)
+  imageUrl                String?                        @map("image_url")
+  priceRange              Int                            @default(1) @map("price_range")
+  commonStoreType         Json                           @default("[]") @map("common_store_type")
+  ingredientListText      String?                        @map("ingredient_list_text")
+  allergens               Json                           @default("[]") @map("allergens")
+  sugarContentPer100ml    Float?                         @map("sugar_content_per_100ml")
+  caffeineContentPer100ml Float?                         @map("caffeine_content_per_100ml")
+  carbonationLevel        Int                            @default(0) @map("carbonation_level")
+  sourceId                BigInt?                        @map("source_id")
+  source                  DataSource?                    @relation(fields: [sourceId], references: [id], onDelete: SetNull)
+  createdAt               DateTime                       @default(now()) @map("created_at")
+  updatedAt               DateTime                       @default(now()) @updatedAt @map("updated_at")
+  ingredients             ProductIngredient[]
+  flavorProfile           FlavorProfile?
+  feedbackAdjustments     UserFeedbackFlavorAdjustment[]
+
+  @@map("products")
+}
+
+model ProductIngredient {
+  productId    BigInt     @map("product_id")
+  product      Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  ingredientId BigInt     @map("ingredient_id")
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+
+  @@id([productId, ingredientId])
+  @@map("product_ingredients")
+}
+
+model LabPairingRule {
+  id               BigInt   @id @default(autoincrement())
+  targetSlugA      String   @map("target_slug_a")
+  targetSlugB      String   @map("target_slug_b")
+  ruleType         String   @map("rule_type")
+  description      String
+  recommendedRatio String?  @map("recommended_ratio")
+  mixingNotes      String?  @map("mixing_notes")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  @@map("lab_pairing_rules")
+}
+
+model CocktailTemplate {
+  id              BigInt         @id @default(autoincrement())
+  name            String         @unique
+  description     String
+  originalRecipe  Json           @map("original_recipe")
+  remixLogicHints Json           @map("remix_logic_hints")
+  createdAt       DateTime       @default(now()) @map("created_at")
+  recipeOutputs   RecipeOutput[]
+
+  @@map("cocktail_templates")
+}
+
+model RecipeOutput {
+  id               String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sourceTemplateId BigInt?           @map("source_template_id")
+  sourceTemplate   CocktailTemplate? @relation(fields: [sourceTemplateId], references: [id], onDelete: SetNull)
+  inputParams      Json              @map("input_params")
+  recipeJson       Json              @map("recipe_json")
+  createdAt        DateTime          @default(now()) @map("created_at")
+  savedByUsers     UserSavedRecipe[]
+  drinkLogs        DrinkLog[]
+
+  @@map("recipe_outputs")
+}
+
+model UserSavedRecipe {
+  id             BigInt       @id @default(autoincrement())
+  userId         String       @map("user_id") @db.Uuid
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipeOutputId String       @map("recipe_output_id") @db.Uuid
+  recipeOutput   RecipeOutput @relation(fields: [recipeOutputId], references: [id], onDelete: Cascade)
+  savedAt        DateTime     @default(now()) @map("saved_at")
+
+  @@unique([userId, recipeOutputId])
+  @@map("user_saved_recipes")
+}
+
+model DrinkLog {
+  id             BigInt                         @id @default(autoincrement())
+  userId         String                         @map("user_id") @db.Uuid
+  user           User                           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipeOutputId String?                        @map("recipe_output_id") @db.Uuid
+  recipeOutput   RecipeOutput?                  @relation(fields: [recipeOutputId], references: [id], onDelete: SetNull)
+  recipeId       String?                        @map("recipe_id")
+  recipeName     String                         @map("recipe_name")
+  recipeSnapshot Json                           @default("{}") @map("recipe_snapshot")
+  drinkDate      DateTime                       @default(now()) @map("drink_date")
+  drinkTime      String?                        @map("drink_time")
+  rating         Float                          @default(0)
+  tasteScores    Json                           @default("{}") @map("taste_scores")
+  note           String?
+  comment        String?
+  isFinished     Boolean                        @default(true) @map("is_finished")
+  isFavorite     Boolean                        @default(false) @map("is_favorite")
+  isStarred      Boolean                        @default(false) @map("is_starred")
+  moodTags       Json                           @default("[]") @map("mood_tags")
+  imageUrl       String?                        @map("image_url")
+  photoUrl       String?                        @map("photo_url")
+  sourcePage     String?                        @map("source_page")
+  scene          String?
+  createdAt      DateTime                       @default(now()) @map("created_at")
+  updatedAt      DateTime                       @default(now()) @updatedAt @map("updated_at")
+  adjustments    UserFeedbackFlavorAdjustment[]
+
+  @@index([userId])
+  @@index([recipeId])
+  @@index([drinkDate])
+  @@map("drink_logs")
+}
+
+model UserFeedbackFlavorAdjustment {
+  id                   BigInt   @id @default(autoincrement())
+  drinkLogId           BigInt   @map("drink_log_id")
+  drinkLog             DrinkLog @relation(fields: [drinkLogId], references: [id], onDelete: Cascade)
+  productId            BigInt?  @map("product_id")
+  product              Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+  feedbackType         String   @map("feedback_type")
+  userAdjustmentWeight Int      @default(1) @map("user_adjustment_weight")
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  @@map("user_feedback_flavor_adjustments")
+}
+
+model AnalyticsEvent {
+  id            BigInt   @id @default(autoincrement())
+  userId        String?  @map("user_id") @db.Uuid
+  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  sessionId     String?  @map("session_id")
+  eventName     String   @map("event_name")
+  page          String
+  action        String
+  target        String?
+  recipeId      String?  @map("recipe_id")
+  ingredientIds Json     @default("[]") @map("ingredient_ids")
+  source        String?
+  metadata      Json     @default("{}")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@index([userId])
+  @@index([sessionId])
+  @@index([eventName])
+  @@index([page])
+  @@index([createdAt])
+  @@map("analytics_events")
+}
+
+model ClassicCocktail {
+  id             BigInt                    @id @default(autoincrement())
+  slug           String                    @unique
+  nameCn         String                    @map("name_cn")
+  nameEn         String                    @map("name_en")
+  description    String
+  baseSpirit     String?                   @map("base_spirit")
+  originalRecipe Json                      @map("original_recipe")
+  flavorProfile  Json                      @map("flavor_profile")
+  difficulty     Int                       @default(2)
+  isActive       Boolean                   @default(true) @map("is_active")
+  createdAt      DateTime                  @default(now()) @map("created_at")
+  updatedAt      DateTime                  @default(now()) @updatedAt @map("updated_at")
+  variants       ClassicCocktailVariant[]
+
+  @@index([slug])
+  @@index([nameCn])
+  @@index([nameEn])
+  @@map("classic_cocktails")
+}
+
+model RemixTag {
+  id          BigInt                       @id @default(autoincrement())
+  slug        String                       @unique
+  nameCn      String                       @map("name_cn")
+  nameEn      String                       @map("name_en")
+  description String?
+  sortOrder   Int                          @default(0) @map("sort_order")
+  isActive    Boolean                      @default(true) @map("is_active")
+  createdAt   DateTime                     @default(now()) @map("created_at")
+  updatedAt   DateTime                     @default(now()) @updatedAt @map("updated_at")
+  variants    ClassicCocktailVariantTag[]
+
+  @@index([slug])
+  @@index([nameCn])
+  @@map("remix_tags")
+}
+
+model ClassicCocktailVariant {
+  id                   BigInt                       @id @default(autoincrement())
+  cocktailId           BigInt                       @map("cocktail_id")
+  cocktail             ClassicCocktail              @relation(fields: [cocktailId], references: [id], onDelete: Cascade)
+  titleCn              String                       @map("title_cn")
+  titleEn              String                       @map("title_en")
+  description          String
+  formulaNote          String?                      @map("formula_note")
+  method               String
+  glassware            String?
+  ice                  String?
+  abvLevel             Int                          @default(2) @map("abv_level")
+  sweetnessLevel       Int                          @default(3) @map("sweetness_level")
+  acidityLevel         Int                          @default(3) @map("acidity_level")
+  bitternessLevel      Int                          @default(2) @map("bitterness_level")
+  alcoholIntensity     Int                          @default(2) @map("alcohol_intensity")
+  convenienceScore     Int                          @default(3) @map("convenience_score")
+  beginnerScore        Int                          @default(3) @map("beginner_score")
+  aiGenerated          Boolean                      @default(false) @map("ai_generated")
+  isPublished          Boolean                      @default(true) @map("is_published")
+  createdAt            DateTime                     @default(now()) @map("created_at")
+  updatedAt            DateTime                     @default(now()) @updatedAt @map("updated_at")
+  tags                 ClassicCocktailVariantTag[]
+  ingredients          VariantIngredient[]
+
+  @@index([cocktailId])
+  @@index([isPublished])
+  @@index([convenienceScore])
+  @@index([beginnerScore])
+  @@map("classic_cocktail_variants")
+}
+
+model ClassicCocktailVariantTag {
+  id        BigInt                  @id @default(autoincrement())
+  variantId BigInt                  @map("variant_id")
+  variant   ClassicCocktailVariant  @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  tagId     BigInt                  @map("tag_id")
+  tag       RemixTag                @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([variantId, tagId])
+  @@index([tagId])
+  @@map("classic_cocktail_variant_tags")
+}
+
+model VariantIngredient {
+  id               BigInt                  @id @default(autoincrement())
+  variantId        BigInt                  @map("variant_id")
+  variant          ClassicCocktailVariant  @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  ingredientNameCn String                  @map("ingredient_name_cn")
+  ingredientNameEn String                  @map("ingredient_name_en")
+  amount           String
+  unit             String                  @default("ml")
+  role             String                  @default("mixer")
+  isOptional       Boolean                 @default(false) @map("is_optional")
+  substituteNote   String?                 @map("substitute_note")
+  sortOrder        Int                     @default(0) @map("sort_order")
+
+  @@index([variantId])
+  @@index([ingredientNameCn])
+  @@index([ingredientNameEn])
+  @@map("variant_ingredients")
+}
+
+model Recipe {
+  id                 BigInt                 @id @default(autoincrement())
+  slug               String                 @unique
+  nameCn             String                 @map("name_cn")
+  nameEn             String                 @map("name_en")
+  type               String
+  baseSpirit         String?                @map("base_spirit")
+  description        String
+  story              String?
+  method             String
+  glassware          String?
+  ice                String?
+  difficulty         Int                    @default(1)
+  abvLevel           Int                    @default(1) @map("abv_level")
+  sweetnessLevel     Int                    @default(3) @map("sweetness_level")
+  acidityLevel       Int                    @default(3) @map("acidity_level")
+  bitternessLevel    Int                    @default(1) @map("bitterness_level")
+  alcoholIntensity   Int                    @default(1) @map("alcohol_intensity")
+  freshnessLevel     Int                    @default(3) @map("freshness_level")
+  fruitinessLevel    Int                    @default(3) @map("fruitiness_level")
+  convenienceScore   Int                    @default(3) @map("convenience_score")
+  beginnerScore      Int                    @default(3) @map("beginner_score")
+  estimatedCostLevel Int                    @default(2) @map("estimated_cost_level")
+  prepTimeMinutes    Int                    @default(3) @map("prep_time_minutes")
+  isPublished        Boolean                @default(true) @map("is_published")
+  aiGenerated        Boolean                @default(false) @map("ai_generated")
+  createdAt          DateTime               @default(now()) @map("created_at")
+  updatedAt          DateTime               @default(now()) @updatedAt @map("updated_at")
+  ingredients        RecipeIngredient[]
+  tags               RecipeTag[]
+  originalLinks      ClassicRecipeVariant[] @relation("OriginalRecipe")
+  variantLinks       ClassicRecipeVariant[] @relation("VariantRecipe")
+
+  @@index([type])
+  @@index([baseSpirit])
+  @@index([nameCn])
+  @@index([nameEn])
+  @@index([isPublished])
+  @@map("recipes")
+}
+
+model RecipeIngredient {
+  id               BigInt   @id @default(autoincrement())
+  recipeId         BigInt   @map("recipe_id")
+  recipe           Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  ingredientNameCn String   @map("ingredient_name_cn")
+  ingredientNameEn String   @map("ingredient_name_en")
+  amount           String
+  unit             String   @default("ml")
+  role             String   @default("mixer")
+  isOptional       Boolean  @default(false) @map("is_optional")
+  substituteNote   String?  @map("substitute_note")
+  sortOrder        Int      @default(0) @map("sort_order")
+
+  @@index([recipeId])
+  @@index([ingredientNameCn])
+  @@index([ingredientNameEn])
+  @@map("recipe_ingredients")
+}
+
+model Tag {
+  id        BigInt      @id @default(autoincrement())
+  slug      String      @unique
+  nameCn    String      @map("name_cn")
+  nameEn    String      @map("name_en")
+  category  String
+  sortOrder Int         @default(0) @map("sort_order")
+  isActive  Boolean     @default(true) @map("is_active")
+  recipes   RecipeTag[]
+
+  @@index([category])
+  @@index([nameCn])
+  @@map("tags")
+}
+
+model RecipeTag {
+  id       BigInt @id @default(autoincrement())
+  recipeId BigInt @map("recipe_id")
+  recipe   Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  tagId    BigInt @map("tag_id")
+  tag      Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([recipeId, tagId])
+  @@index([tagId])
+  @@map("recipe_tags")
+}
+
+model ClassicRecipeVariant {
+  id               BigInt @id @default(autoincrement())
+  originalRecipeId BigInt @map("original_recipe_id")
+  originalRecipe   Recipe @relation("OriginalRecipe", fields: [originalRecipeId], references: [id], onDelete: Cascade)
+  variantRecipeId  BigInt @map("variant_recipe_id")
+  variantRecipe    Recipe @relation("VariantRecipe", fields: [variantRecipeId], references: [id], onDelete: Cascade)
+  remixDirection   String @map("remix_direction")
+  changeSummary    String @map("change_summary")
+
+  @@unique([originalRecipeId, variantRecipeId])
+  @@index([variantRecipeId])
+  @@map("classic_recipe_variants")
+}
