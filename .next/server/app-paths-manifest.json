@@ -1,9 +1,0 @@
-{
-  "/_not-found/page": "app/_not-found/page.js",
-  "/inspiration/classic-remix/page": "app/inspiration/classic-remix/page.js",
-  "/inspiration/page": "app/inspiration/page.js",
-  "/page": "app/page.js",
-  "/inspiration/convenience-mix/page": "app/inspiration/convenience-mix/page.js",
-  "/admin/page": "app/admin/page.js",
-  "/api/analytics/events/route": "app/api/analytics/events/route.js"
-}
