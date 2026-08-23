@@ -1,16 +1,17 @@
 import InspirationRouteClient from "../InspirationRouteClient";
 
 type ClassicRemixPageProps = {
-  searchParams?: {
+  searchParams?: Promise<{
     cocktail?: string;
-  };
+  }>;
 };
 
-export default function ClassicRemixPage({ searchParams }: ClassicRemixPageProps) {
+export default async function ClassicRemixPage({ searchParams }: ClassicRemixPageProps) {
+  const params = await searchParams;
   return (
     <InspirationRouteClient
       initialView="classic-remix"
-      initialCocktailId={searchParams?.cocktail ?? ""}
+      initialCocktailId={params?.cocktail ?? ""}
     />
   );
 }

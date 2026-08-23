@@ -1,16 +1,17 @@
 import InspirationRouteClient from "../InspirationRouteClient";
 
 type ConvenienceMixPageProps = {
-  searchParams?: {
+  searchParams?: Promise<{
     cocktail?: string;
-  };
+  }>;
 };
 
-export default function ConvenienceMixPage({ searchParams }: ConvenienceMixPageProps) {
+export default async function ConvenienceMixPage({ searchParams }: ConvenienceMixPageProps) {
+  const params = await searchParams;
   return (
     <InspirationRouteClient
       initialView="convenience-mix"
-      initialCocktailId={searchParams?.cocktail ?? ""}
+      initialCocktailId={params?.cocktail ?? ""}
     />
   );
 }

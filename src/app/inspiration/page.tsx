@@ -1,11 +1,12 @@
 import InspirationRouteClient from "./InspirationRouteClient";
 
 type InspirationPageProps = {
-  searchParams?: {
+  searchParams?: Promise<{
     tab?: string;
-  };
+  }>;
 };
 
-export default function InspirationPage({ searchParams }: InspirationPageProps) {
-  return <InspirationRouteClient initialView="menu" initialExploreTab={searchParams?.tab === "classic" ? "classic" : "convenience"} />;
+export default async function InspirationPage({ searchParams }: InspirationPageProps) {
+  const params = await searchParams;
+  return <InspirationRouteClient initialView="menu" initialExploreTab={params?.tab === "classic" ? "classic" : "convenience"} />;
 }

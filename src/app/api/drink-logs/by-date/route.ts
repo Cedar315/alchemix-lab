@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/db/prisma';
-
-const LOCAL_USER_ID = '00000000-0000-0000-0000-000000000001';
+import { getOrCreateSessionUser, sessionResponse } from '@/lib/auth/session';
 
 function serialize(log: any) {
   return {
@@ -14,6 +13,7 @@ function serialize(log: any) {
 }
 
 export async function GET(request: Request) {
+  const session = await getOrCreateSessionUser(request);
   const { searchParams } = new URL(request.url);
   const date = searchParams.get('date');
   if (!date) return NextResponse.json({ success: false, error: 'Missing date' }, { status: 400 });
@@ -23,9 +23,9 @@ export async function GET(request: Request) {
   end.setUTCDate(end.getUTCDate() + 1);
 
   const logs = await prisma.drinkLog.findMany({
-    where: { userId: LOCAL_USER_ID, drinkDate: { gte: start, lt: end } },
+    where: { userId: session.userId, drinkDate: { gte: start, lt: end } },
     orderBy: { createdAt: 'desc' },
   });
 
-  return NextResponse.json({ success: true, drink_logs: logs.map(serialize) });
+  return sessionResponse(NextResponse.json({ success: true, drink_logs: logs.map(serialize) }), session);
 }

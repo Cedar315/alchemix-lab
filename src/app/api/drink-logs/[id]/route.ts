@@ -1,5 +1,34 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/db/prisma';
+import { getOrCreateSessionUser, sessionResponse } from '@/lib/auth/session';
+import { z } from 'zod';
+
+const updateSchema = z.object({
+  recipe_name: z.string().max(200).optional(),
+  recipeName: z.string().max(200).optional(),
+  recipe_snapshot: z.any().optional(),
+  recipeSnapshot: z.any().optional(),
+  drink_date: z.string().max(30).optional(),
+  drink_time: z.string().max(20).optional().nullable(),
+  drinkTime: z.string().max(20).optional().nullable(),
+  rating: z.coerce.number().min(0).max(5).optional(),
+  taste_scores: z.any().optional(),
+  tasteScores: z.any().optional(),
+  note: z.string().max(5000).optional().nullable(),
+  comment: z.string().max(5000).optional().nullable(),
+  is_finished: z.boolean().optional(),
+  isFinished: z.boolean().optional(),
+  is_favorite: z.boolean().optional(),
+  isFavorite: z.boolean().optional(),
+  is_starred: z.boolean().optional(),
+  isStarred: z.boolean().optional(),
+  mood_tags: z.array(z.string().max(50)).max(30).optional(),
+  moodTags: z.array(z.string().max(50)).max(30).optional(),
+  image_url: z.string().max(2048).optional().nullable(),
+  imageUrl: z.string().max(2048).optional().nullable(),
+  source_page: z.string().max(200).optional().nullable(),
+  sourcePage: z.string().max(200).optional().nullable(),
+});
 
 function serialize(log: any) {
   return {
@@ -11,11 +40,14 @@ function serialize(log: any) {
   };
 }
 
-export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const body = await request.json();
-    const log = await prisma.drinkLog.update({
-      where: { id: BigInt(params.id) },
+    const body = updateSchema.parse(await request.json());
+    const session = await getOrCreateSessionUser(request);
+    const { id: rawId } = await params;
+    const id = BigInt(rawId);
+    const update = await prisma.drinkLog.updateMany({
+      where: { id, userId: session.userId },
       data: {
         recipeName: body.recipe_name ?? body.recipeName,
         recipeSnapshot: body.recipe_snapshot ?? body.recipeSnapshot,
@@ -34,9 +66,15 @@ export async function PATCH(request: Request, { params }: { params: { id: string
       },
     });
 
-    return NextResponse.json({ success: true, drink_log: serialize(log) });
+    if (update.count === 0) {
+      return sessionResponse(NextResponse.json({ success: false, error: 'Drink log not found' }, { status: 404 }), session);
+    }
+    const log = await prisma.drinkLog.findUniqueOrThrow({ where: { id } });
+
+    return sessionResponse(NextResponse.json({ success: true, drink_log: serialize(log) }), session);
   } catch (error) {
     console.error('PATCH /api/drink-logs/[id] error', error);
-    return NextResponse.json({ success: false, error: 'Failed to update drink log' }, { status: 500 });
+    const status = error instanceof z.ZodError ? 400 : 500;
+    return NextResponse.json({ success: false, error: status === 400 ? 'Invalid drink log' : 'Failed to update drink log' }, { status });
   }
 }

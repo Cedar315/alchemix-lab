@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/db/prisma';
-
-const LOCAL_USER_ID = '00000000-0000-0000-0000-000000000001';
+import { getOrCreateSessionUser, sessionResponse } from '@/lib/auth/session';
 
 export async function GET(request: Request) {
+  const session = await getOrCreateSessionUser(request);
   const { searchParams } = new URL(request.url);
   const month = searchParams.get('month') ?? new Date().toISOString().slice(0, 7);
   const start = new Date(`${month}-01T00:00:00.000Z`);
@@ -11,7 +11,7 @@ export async function GET(request: Request) {
   end.setUTCMonth(end.getUTCMonth() + 1);
 
   const logs = await prisma.drinkLog.findMany({
-    where: { userId: LOCAL_USER_ID, drinkDate: { gte: start, lt: end } },
+    where: { userId: session.userId, drinkDate: { gte: start, lt: end } },
   });
 
   const days = logs.reduce<Record<string, any>>((acc, log) => {
@@ -26,5 +26,5 @@ export async function GET(request: Request) {
     return acc;
   }, {});
 
-  return NextResponse.json({ success: true, days: Object.values(days) });
+  return sessionResponse(NextResponse.json({ success: true, days: Object.values(days) }), session);
 }

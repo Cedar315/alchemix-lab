@@ -1,9 +1,10 @@
 import prisma from '@/lib/db/prisma';
 
-export async function GET(_req: Request, { params }: { params: { slug: string } }) {
+export async function GET(_req: Request, { params }: { params: Promise<{ slug: string }> }) {
   try {
+    const { slug } = await params;
     const cocktail = await prisma.cocktail.findUnique({
-      where: { slug: params.slug },
+      where: { slug },
       include: {
         ingredients: {
           include: { ingredient: true },

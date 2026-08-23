@@ -1,19 +1,36 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/db/prisma';
+import { getOrCreateSessionUser, sessionResponse } from '@/lib/auth/session';
+import { z } from 'zod';
 
-const LOCAL_USER_ID = '00000000-0000-0000-0000-000000000001';
-
-async function ensureLocalUser() {
-  return prisma.user.upsert({
-    where: { id: LOCAL_USER_ID },
-    update: {},
-    create: {
-      id: LOCAL_USER_ID,
-      email: 'local-user@alchemix.lab',
-      nickname: 'Local Mixologist',
-    },
-  });
-}
+const drinkLogSchema = z.object({
+  recipe_id: z.string().max(200).optional().nullable(),
+  recipeId: z.string().max(200).optional().nullable(),
+  recipe_name: z.string().max(200).optional(),
+  recipeName: z.string().max(200).optional(),
+  recipe_snapshot: z.any().optional(),
+  recipeSnapshot: z.any().optional(),
+  drink_date: z.string().max(30).optional(),
+  drink_time: z.string().max(20).optional().nullable(),
+  drinkTime: z.string().max(20).optional().nullable(),
+  rating: z.coerce.number().min(0).max(5).optional(),
+  taste_scores: z.any().optional(),
+  tasteScores: z.any().optional(),
+  note: z.string().max(5000).optional().nullable(),
+  comment: z.string().max(5000).optional().nullable(),
+  is_finished: z.boolean().optional(),
+  isFinished: z.boolean().optional(),
+  is_favorite: z.boolean().optional(),
+  isFavorite: z.boolean().optional(),
+  is_starred: z.boolean().optional(),
+  isStarred: z.boolean().optional(),
+  mood_tags: z.array(z.string().max(50)).max(30).optional(),
+  moodTags: z.array(z.string().max(50)).max(30).optional(),
+  image_url: z.string().max(2048).optional().nullable(),
+  imageUrl: z.string().max(2048).optional().nullable(),
+  source_page: z.string().max(200).optional().nullable(),
+  sourcePage: z.string().max(200).optional().nullable(),
+});
 
 function serialize(log: any) {
   return {
@@ -27,12 +44,12 @@ function serialize(log: any) {
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    await ensureLocalUser();
+    const body = drinkLogSchema.parse(await request.json());
+    const session = await getOrCreateSessionUser(request);
 
     const log = await prisma.drinkLog.create({
       data: {
-        userId: body.user_id ?? LOCAL_USER_ID,
+        userId: session.userId,
         recipeId: body.recipe_id ?? body.recipeId ?? null,
         recipeName: body.recipe_name ?? body.recipeName ?? '未命名配方',
         recipeSnapshot: body.recipe_snapshot ?? body.recipeSnapshot ?? {},
@@ -51,9 +68,10 @@ export async function POST(request: Request) {
       },
     });
 
-    return NextResponse.json({ success: true, drink_log: serialize(log) });
+    return sessionResponse(NextResponse.json({ success: true, drink_log: serialize(log) }), session);
   } catch (error) {
     console.error('POST /api/drink-logs error', error);
-    return NextResponse.json({ success: false, error: 'Failed to create drink log' }, { status: 500 });
+    const status = error instanceof z.ZodError ? 400 : 500;
+    return NextResponse.json({ success: false, error: status === 400 ? 'Invalid drink log' : 'Failed to create drink log' }, { status });
   }
 }
