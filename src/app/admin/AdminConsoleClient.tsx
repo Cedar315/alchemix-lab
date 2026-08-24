@@ -11,6 +11,7 @@ import {
   FlaskConical,
   LayoutDashboard,
   ListFilter,
+  LogOut,
   Pencil,
   Plus,
   Search,
@@ -90,6 +91,19 @@ export default function AdminConsoleClient() {
   const [draftItems, setDraftItems] = useState<Array<{ id: string; kind: AdminDraftKind; title: string; createdAt: string }>>([]);
   const [analyticsEvents, setAnalyticsEvents] = useState<AnalyticsEventRecord[]>([]);
   const [localDrinkLogs, setLocalDrinkLogs] = useState<DrinkLog[]>([]);
+  const [signingOut, setSigningOut] = useState(false);
+
+  const signOut = async () => {
+    setSigningOut(true);
+    try {
+      const response = await fetch("/api/auth/sign-out", { method: "POST" });
+      if (!response.ok) throw new Error("退出失败");
+      window.location.assign("/");
+    } catch {
+      setToast("退出失败，请稍后重试");
+      setSigningOut(false);
+    }
+  };
 
   const refreshMvpData = () => {
     setAnalyticsEvents(readAnalyticsEvents());
@@ -381,10 +395,21 @@ export default function AdminConsoleClient() {
       <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-4 py-5 sm:px-6 lg:px-8">
         <header className="flex flex-col gap-4 border-b border-[#E8E8E8] pb-5 lg:flex-row lg:items-center lg:justify-between">
           <div className="space-y-3">
-            <a href="/" className="inline-flex items-center gap-2 text-sm font-semibold text-neutral-500 transition hover:text-neutral-950">
-              <ArrowLeft size={16} />
-              返回 AlcheMix Lab
-            </a>
+            <div className="flex flex-wrap items-center gap-4">
+              <a href="/" className="inline-flex items-center gap-2 text-sm font-semibold text-neutral-500 transition hover:text-neutral-950">
+                <ArrowLeft size={16} />
+                返回 AlcheMix Lab
+              </a>
+              <button
+                type="button"
+                onClick={signOut}
+                disabled={signingOut}
+                className="inline-flex cursor-pointer items-center gap-2 text-sm font-semibold text-red-600 transition hover:text-red-700 disabled:cursor-wait disabled:opacity-60"
+              >
+                <LogOut size={16} />
+                {signingOut ? "正在退出…" : "退出登录"}
+              </button>
+            </div>
             <div>
               <div className="inline-flex items-center gap-2 rounded-full border border-[#E8E8E8] bg-white px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-neutral-500">
                 <Database size={13} />
