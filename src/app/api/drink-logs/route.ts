@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/db/prisma';
-import { getOrCreateSessionUser, sessionResponse } from '@/lib/auth/session';
+import { authErrorResponse, requireUser } from '@/lib/auth/current-user';
 import { z } from 'zod';
 
 const drinkLogSchema = z.object({
@@ -45,11 +45,11 @@ function serialize(log: any) {
 export async function POST(request: Request) {
   try {
     const body = drinkLogSchema.parse(await request.json());
-    const session = await getOrCreateSessionUser(request);
+    const { user } = await requireUser();
 
     const log = await prisma.drinkLog.create({
       data: {
-        userId: session.userId,
+        userId: user.id,
         recipeId: body.recipe_id ?? body.recipeId ?? null,
         recipeName: body.recipe_name ?? body.recipeName ?? '未命名配方',
         recipeSnapshot: body.recipe_snapshot ?? body.recipeSnapshot ?? {},
@@ -68,10 +68,22 @@ export async function POST(request: Request) {
       },
     });
 
-    return sessionResponse(NextResponse.json({ success: true, drink_log: serialize(log) }), session);
+    return NextResponse.json({ success: true, drink_log: serialize(log) });
   } catch (error) {
     console.error('POST /api/drink-logs error', error);
+    const authResponse = authErrorResponse(error);
+    if (authResponse) return authResponse;
     const status = error instanceof z.ZodError ? 400 : 500;
     return NextResponse.json({ success: false, error: status === 400 ? 'Invalid drink log' : 'Failed to create drink log' }, { status });
+  }
+}
+
+export async function GET() {
+  try {
+    const { user } = await requireUser();
+    const logs = await prisma.drinkLog.findMany({ where: { userId: user.id }, orderBy: { createdAt: 'desc' }, take: 500 });
+    return NextResponse.json({ success: true, drink_logs: logs.map(serialize) });
+  } catch (error) {
+    return authErrorResponse(error) ?? NextResponse.json({ success: false, error: 'Failed to read drink logs' }, { status: 500 });
   }
 }

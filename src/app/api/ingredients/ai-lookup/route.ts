@@ -59,6 +59,6 @@ Rules:
     });
   } catch (error: any) {
     console.error('POST /api/ingredients/ai-lookup error', error);
-    return Response.json({ success: false, error: error?.message ?? 'AI lookup failed' }, { status: 500 });
+    return Response.json({ success: false, error: 'AI lookup failed' }, { status: 500 });
   }
 }

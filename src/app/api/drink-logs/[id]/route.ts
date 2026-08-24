@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/db/prisma';
-import { getOrCreateSessionUser, sessionResponse } from '@/lib/auth/session';
+import { authErrorResponse, requireUser } from '@/lib/auth/current-user';
 import { z } from 'zod';
 
 const updateSchema = z.object({
@@ -43,11 +43,11 @@ function serialize(log: any) {
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const body = updateSchema.parse(await request.json());
-    const session = await getOrCreateSessionUser(request);
+    const { user } = await requireUser();
     const { id: rawId } = await params;
     const id = BigInt(rawId);
     const update = await prisma.drinkLog.updateMany({
-      where: { id, userId: session.userId },
+      where: { id, userId: user.id },
       data: {
         recipeName: body.recipe_name ?? body.recipeName,
         recipeSnapshot: body.recipe_snapshot ?? body.recipeSnapshot,
@@ -67,13 +67,15 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     });
 
     if (update.count === 0) {
-      return sessionResponse(NextResponse.json({ success: false, error: 'Drink log not found' }, { status: 404 }), session);
+      return NextResponse.json({ success: false, error: 'Drink log not found' }, { status: 404 });
     }
     const log = await prisma.drinkLog.findUniqueOrThrow({ where: { id } });
 
-    return sessionResponse(NextResponse.json({ success: true, drink_log: serialize(log) }), session);
+    return NextResponse.json({ success: true, drink_log: serialize(log) });
   } catch (error) {
     console.error('PATCH /api/drink-logs/[id] error', error);
+    const authResponse = authErrorResponse(error);
+    if (authResponse) return authResponse;
     const status = error instanceof z.ZodError ? 400 : 500;
     return NextResponse.json({ success: false, error: status === 400 ? 'Invalid drink log' : 'Failed to update drink log' }, { status });
   }

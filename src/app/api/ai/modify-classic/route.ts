@@ -14,6 +14,6 @@ export async function POST(req: Request) {
     return new Response(JSON.stringify({ success: true, recipe: validated }), { status: 200, headers: { 'Content-Type': 'application/json' } });
   } catch (err: any) {
     console.error('modify-classic error', err);
-    return new Response(JSON.stringify({ success: false, error: err?.message || 'Invalid request' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
+    return new Response(JSON.stringify({ success: false, error: 'Invalid classic modification request' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
   }
 }

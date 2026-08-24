@@ -19,7 +19,7 @@ export async function GET() {
     });
   } catch (error: any) {
     console.error('GET /api/lab/ingredients error', error);
-    return new Response(JSON.stringify({ success: false, error: error?.message || 'Database read failed' }), {
+    return new Response(JSON.stringify({ success: false, error: 'Database read failed' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });

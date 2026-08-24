@@ -24,6 +24,6 @@ export async function POST(req: Request) {
     });
   } catch (error: any) {
     console.error('POST /api/generate-tip error', error);
-    return Response.json({ error: error?.message ?? 'Tip generation failed' }, { status: 500 });
+    return Response.json({ error: 'Tip generation failed' }, { status: 500 });
   }
 }

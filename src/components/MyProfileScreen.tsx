@@ -6,9 +6,11 @@ interface MyProfileScreenProps {
   drinkLogs: DrinkLog[];
   onRemoveCocktail: (id: string) => void;
   onNavigateToLab: () => void;
+  onAuthChanged: (signedIn: boolean) => void;
 }
 
 type AccountProfile = {
+  id: string;
   nickname: string;
   email: string;
   createdAt: string;
@@ -22,6 +24,7 @@ export default function MyProfileScreen({
   drinkLogs,
   onRemoveCocktail,
   onNavigateToLab,
+  onAuthChanged,
 }: MyProfileScreenProps) {
   const [visibleMonth, setVisibleMonth] = useState(() => {
     const now = new Date();
@@ -30,54 +33,111 @@ export default function MyProfileScreen({
   const [selectedDateKey, setSelectedDateKey] = useState<string | null>(null);
   const [accountProfile, setAccountProfile] = useState<AccountProfile | null>(null);
   const [showAccountSheet, setShowAccountSheet] = useState(false);
-  const [accountMode, setAccountMode] = useState<"login" | "register">("login");
+  const [accountMode, setAccountMode] = useState<"login" | "register" | "profile">("login");
   const [accountNickname, setAccountNickname] = useState("");
   const [accountEmail, setAccountEmail] = useState("");
   const [accountPassword, setAccountPassword] = useState("");
   const [profileView, setProfileView] = useState<ProfileView>("home");
-  const [activeListCategory, setActiveListCategory] = useState<ListCategory>("lab");
 
   useEffect(() => {
-    const stored = localStorage.getItem("alchemix_account_profile");
-    if (stored) {
-      const profile = JSON.parse(stored) as AccountProfile;
-      setAccountProfile(profile);
-      setAccountNickname(profile.nickname);
-      setAccountEmail(profile.email);
+    if (new URLSearchParams(window.location.search).get("auth") === "required") {
+      setAccountMode("login");
+      setShowAccountSheet(true);
     }
   }, []);
+  const [activeListCategory, setActiveListCategory] = useState<ListCategory>("lab");
+  const [accountError, setAccountError] = useState("");
+  const [accountPending, setAccountPending] = useState(false);
 
-  const openAccountSheet = (mode: "login" | "register") => {
+  useEffect(() => {
+    fetch("/api/auth/me")
+      .then((response) => response.ok ? response.json() : null)
+      .then((data) => {
+        if (!data?.user) return;
+        const profile = { id: data.user.id, nickname: data.user.nickname || data.user.email.split("@")[0], email: data.user.email, createdAt: new Date().toISOString() };
+        setAccountProfile(profile);
+        setAccountNickname(profile.nickname);
+        setAccountEmail(profile.email);
+      })
+      .catch(() => setAccountError("暂时无法读取账号状态"));
+  }, []);
+
+  const openAccountSheet = (mode: "login" | "register" | "profile") => {
     setAccountMode(mode);
     setAccountNickname(accountProfile?.nickname ?? "");
     setAccountEmail(accountProfile?.email ?? "");
     setAccountPassword("");
+    setAccountError("");
     setShowAccountSheet(true);
   };
 
-  const saveAccountProfile = () => {
+  const saveAccountProfile = async () => {
     const email = accountEmail.trim();
-    const nickname = accountMode === "register"
+    const nickname = accountMode === "register" || accountMode === "profile"
       ? accountNickname.trim() || "Dr. Mix"
       : accountProfile?.nickname || email.split("@")[0] || "Dr. Mix";
-    if (!email) return;
-
-    const profile: AccountProfile = {
-      nickname,
-      email,
-      createdAt: accountProfile?.createdAt ?? new Date().toISOString(),
-    };
-    setAccountProfile(profile);
-    localStorage.setItem("alchemix_account_profile", JSON.stringify(profile));
-    setShowAccountSheet(false);
+    if (accountMode === "profile" ? !nickname : !email || !accountPassword) return;
+    setAccountPending(true);
+    setAccountError("");
+    try {
+      if (accountMode === "profile") {
+        const response = await fetch("/api/auth/profile", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nickname }),
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "更新档案失败");
+        setAccountProfile((current) => current ? { ...current, nickname: data.user.nickname } : current);
+        setShowAccountSheet(false);
+        return;
+      }
+      const endpoint = accountMode === "register" ? "/api/auth/sign-up" : "/api/auth/sign-in";
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password: accountPassword, nickname }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "账号操作失败");
+      if (data.requiresEmailConfirmation) {
+        setAccountError("注册成功，请先打开邮箱完成验证，然后再登录。 ");
+        setAccountMode("login");
+        return;
+      }
+      const user = data.user;
+      if (user) {
+        setAccountProfile({ id: user.id, nickname: user.nickname || nickname, email: user.email, createdAt: new Date().toISOString() });
+        setShowAccountSheet(false);
+        onAuthChanged(true);
+        if (accountMode === "login" && new URLSearchParams(window.location.search).get("auth") === "required") {
+          window.location.assign("/admin");
+        }
+      }
+    } catch (error) {
+      setAccountError(error instanceof Error ? error.message : "账号操作失败");
+    } finally {
+      setAccountPending(false);
+    }
   };
 
-  const logoutAccount = () => {
+  const logoutAccount = async () => {
+    await fetch("/api/auth/sign-out", { method: "POST" }).catch(() => null);
     setAccountProfile(null);
     setAccountNickname("");
     setAccountEmail("");
     setAccountPassword("");
-    localStorage.removeItem("alchemix_account_profile");
+    onAuthChanged(false);
+  };
+
+  const requestPasswordReset = async () => {
+    const email = accountEmail.trim();
+    if (!email) return setAccountError("请先填写邮箱");
+    setAccountPending(true);
+    const response = await fetch("/api/auth/forgot-password", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email }) });
+    const data = await response.json().catch(() => ({}));
+    setAccountPending(false);
+    setAccountError(data.message || data.error || "如果账号存在，重置邮件已经发送。");
   };
 
   const getRatingValue = (log: DrinkLog) => log.rating ?? 0;
@@ -536,7 +596,7 @@ export default function MyProfileScreen({
           {accountProfile ? (
             <>
               <button
-                onClick={() => openAccountSheet("register")}
+                onClick={() => openAccountSheet("profile")}
                 className="h-11 cursor-pointer rounded-2xl border border-[#E8E8E8] bg-white text-sm font-bold text-neutral-700 hover:bg-[#F7F7F5] active:scale-[0.98]"
               >
                 设置档案
@@ -582,7 +642,7 @@ export default function MyProfileScreen({
                 <div>
                   <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-neutral-400">Account Card</p>
                   <h3 className="mt-1 text-xl font-bold text-neutral-950">
-                    {accountMode === "login" ? "登录 AlcheMix Lab" : accountProfile ? "设置账号档案" : "注册 AlcheMix Lab"}
+                    {accountMode === "login" ? "登录 AlcheMix Lab" : accountMode === "profile" ? "设置账号档案" : "注册 AlcheMix Lab"}
                   </h3>
                   <p className="mt-1 text-sm leading-5 text-neutral-500">
                     像调酒日记一样，把你的酒记、收藏和评分留在自己的档案里。
@@ -600,7 +660,7 @@ export default function MyProfileScreen({
 
             <div className="space-y-4 px-4 py-4">
               <div className="rounded-3xl border border-[#E8E8E8] bg-white p-4 shadow-[0_1px_12px_rgba(15,23,42,0.05)]">
-                <div className="grid grid-cols-2 gap-2 rounded-2xl bg-[#F7F7F5] p-1">
+                {accountMode !== "profile" && <div className="grid grid-cols-2 gap-2 rounded-2xl bg-[#F7F7F5] p-1">
                   <button
                     onClick={() => setAccountMode("login")}
                     className={`h-10 cursor-pointer rounded-xl text-sm font-bold transition-all ${
@@ -617,10 +677,10 @@ export default function MyProfileScreen({
                   >
                     注册
                   </button>
-                </div>
+                </div>}
 
                 <div className="mt-4 space-y-3">
-                  {accountMode === "register" && (
+                  {(accountMode === "register" || accountMode === "profile") && (
                     <label className="block">
                       <span className="text-xs font-bold text-neutral-500">昵称</span>
                       <input
@@ -632,7 +692,7 @@ export default function MyProfileScreen({
                     </label>
                   )}
 
-                  <label className="block">
+                  {accountMode !== "profile" && <label className="block">
                     <span className="text-xs font-bold text-neutral-500">邮箱</span>
                     <input
                       value={accountEmail}
@@ -641,9 +701,10 @@ export default function MyProfileScreen({
                       type="email"
                       className="mt-1 h-12 w-full rounded-2xl border border-[#E8E8E8] bg-[#FCFCFB] px-3 text-sm font-semibold text-neutral-900 outline-none focus:border-neutral-950"
                     />
-                  </label>
+                  </label>}
+                  {accountMode === "login" && <button type="button" onClick={requestPasswordReset} disabled={accountPending} className="text-left text-xs font-bold text-neutral-500 underline underline-offset-4">忘记密码？发送重置邮件</button>}
 
-                  <label className="block">
+                  {accountMode !== "profile" && <label className="block">
                     <span className="text-xs font-bold text-neutral-500">密码</span>
                     <input
                       value={accountPassword}
@@ -652,13 +713,12 @@ export default function MyProfileScreen({
                       type="password"
                       className="mt-1 h-12 w-full rounded-2xl border border-[#E8E8E8] bg-[#FCFCFB] px-3 text-sm font-semibold text-neutral-900 outline-none focus:border-neutral-950"
                     />
-                  </label>
+                  </label>}
                 </div>
 
                 <div className="mt-4 rounded-2xl border border-[#ECECEC] bg-[#F7F7F5] p-3">
-                  <p className="text-xs leading-5 text-neutral-500">
-                    当前是本地体验入口：会先保存在这台设备里。之后接 Supabase Auth 时，可以直接把这个入口换成真实注册登录。
-                  </p>
+                  <p className="text-xs leading-5 text-neutral-500">账号由 Supabase Auth 安全验证。注册后可能需要先完成邮箱验证。</p>
+                  {accountError && <p className="mt-2 text-xs font-semibold text-red-600">{accountError}</p>}
                 </div>
               </div>
             </div>
@@ -666,14 +726,14 @@ export default function MyProfileScreen({
             <div className="border-t border-[#E8E8E8] bg-white p-4">
               <button
                 onClick={saveAccountProfile}
-                disabled={!accountEmail.trim()}
+                disabled={accountMode === "profile" ? !accountNickname.trim() || accountPending : !accountEmail.trim() || !accountPassword || accountPending}
                 className={`h-[52px] w-full rounded-2xl text-sm font-bold active:scale-[0.98] ${
-                  accountEmail.trim()
+                  (accountMode === "profile" ? accountNickname.trim() : accountEmail.trim() && accountPassword) && !accountPending
                     ? "cursor-pointer bg-neutral-950 text-white shadow-[0_10px_24px_rgba(15,23,42,0.14)]"
                     : "cursor-not-allowed bg-neutral-200 text-neutral-400"
                 }`}
               >
-                {accountMode === "login" ? "登录并进入档案" : accountProfile ? "保存设置" : "注册并进入档案"}
+                {accountPending ? "处理中…" : accountMode === "login" ? "登录并进入档案" : accountMode === "profile" ? "保存档案" : "注册并进入档案"}
               </button>
             </div>
           </div>

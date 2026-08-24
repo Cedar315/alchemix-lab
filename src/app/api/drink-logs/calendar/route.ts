@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/db/prisma';
-import { getOrCreateSessionUser, sessionResponse } from '@/lib/auth/session';
+import { authErrorResponse, requireUser } from '@/lib/auth/current-user';
 
 export async function GET(request: Request) {
-  const session = await getOrCreateSessionUser(request);
+  try {
+  const { user } = await requireUser();
   const { searchParams } = new URL(request.url);
   const month = searchParams.get('month') ?? new Date().toISOString().slice(0, 7);
   const start = new Date(`${month}-01T00:00:00.000Z`);
@@ -11,7 +12,7 @@ export async function GET(request: Request) {
   end.setUTCMonth(end.getUTCMonth() + 1);
 
   const logs = await prisma.drinkLog.findMany({
-    where: { userId: session.userId, drinkDate: { gte: start, lt: end } },
+    where: { userId: user.id, drinkDate: { gte: start, lt: end } },
   });
 
   const days = logs.reduce<Record<string, any>>((acc, log) => {
@@ -26,5 +27,8 @@ export async function GET(request: Request) {
     return acc;
   }, {});
 
-  return sessionResponse(NextResponse.json({ success: true, days: Object.values(days) }), session);
+  return NextResponse.json({ success: true, days: Object.values(days) });
+  } catch (error) {
+    return authErrorResponse(error) ?? NextResponse.json({ success: false, error: 'Failed to read calendar' }, { status: 500 });
+  }
 }

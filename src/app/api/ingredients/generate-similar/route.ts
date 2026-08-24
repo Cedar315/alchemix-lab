@@ -16,6 +16,6 @@ export async function POST(req: Request) {
     }));
   } catch (error: any) {
     console.error('POST /api/ingredients/generate-similar error', error);
-    return Response.json({ error: error?.message ?? 'Ingredient generation failed' }, { status: 500 });
+    return Response.json({ error: 'Ingredient generation failed' }, { status: 500 });
   }
 }

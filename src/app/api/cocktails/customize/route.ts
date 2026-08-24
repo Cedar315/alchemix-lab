@@ -1,13 +1,13 @@
 import { z } from 'zod';
 import prisma from '@/lib/db/prisma';
 import { callMiniMaxJson } from '@/lib/ai/services/ai-client';
+import { authErrorResponse, requireUser } from '@/lib/auth/current-user';
 
 const CustomizeRequest = z.object({
   slug: z.string().optional(),
   cocktailSlug: z.string().optional(),
   baseCocktailId: z.union([z.string(), z.number()]).optional(),
   selectedGoals: z.array(z.string()).default([]),
-  userId: z.string().optional(),
   save: z.boolean().default(false),
 });
 
@@ -151,10 +151,11 @@ export async function POST(req: Request) {
 
     let savedRecipeId: string | null = null;
     if (body.save) {
+      const { user } = await requireUser();
       const recipe = await prisma.customizedRecipe.create({
         data: {
           baseCocktailId: cocktail.id,
-          userId: body.userId ?? null,
+          userId: user.id,
           nameZh: generated.nameZh ?? `定制版${cocktail.nameZh}`,
           nameEn: generated.nameEn ?? `CUSTOMIZED ${cocktail.nameEn.toUpperCase()}`,
           selectedGoals: body.selectedGoals,
@@ -217,6 +218,8 @@ export async function POST(req: Request) {
     });
   } catch (error: any) {
     console.error('POST /api/cocktails/customize error', error);
-    return Response.json({ success: false, error: error?.message ?? 'Customize cocktail failed' }, { status: 400 });
+    const authResponse = authErrorResponse(error);
+    if (authResponse) return authResponse;
+    return Response.json({ success: false, error: error instanceof z.ZodError ? 'Invalid customization request' : 'Customize cocktail failed' }, { status: error instanceof z.ZodError ? 400 : 500 });
   }
 }

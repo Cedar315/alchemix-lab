@@ -1,10 +1,10 @@
 import { z } from 'zod';
 import prisma from '@/lib/db/prisma';
+import { authErrorResponse, requireUser } from '@/lib/auth/current-user';
 
 const SaveRecipeRequest = z.object({
   baseCocktailId: z.union([z.string(), z.number()]).optional(),
   cocktailSlug: z.string().optional(),
-  userId: z.string().optional(),
   nameZh: z.string().min(1),
   nameEn: z.string().min(1),
   selectedGoals: z.array(z.string()).default([]),
@@ -37,16 +37,17 @@ const SaveRecipeRequest = z.object({
 export async function POST(req: Request) {
   try {
     const body = SaveRecipeRequest.parse(await req.json());
+    const { user } = await requireUser();
     const baseCocktail = body.baseCocktailId
       ? await prisma.cocktail.findUnique({ where: { id: BigInt(String(body.baseCocktailId)) } })
       : body.cocktailSlug
         ? await prisma.cocktail.findUnique({ where: { slug: body.cocktailSlug } })
         : null;
 
-    const recipe = await prisma.customizedRecipe.create({
-      data: {
+    const recipe = await prisma.$transaction(async (tx) => {
+      const created = await tx.customizedRecipe.create({ data: {
         baseCocktailId: baseCocktail?.id ?? null,
-        userId: body.userId ?? null,
+        userId: user.id,
         nameZh: body.nameZh,
         nameEn: body.nameEn,
         selectedGoals: body.selectedGoals,
@@ -63,19 +64,18 @@ export async function POST(req: Request) {
         freshnessBefore: body.flavorBefore?.freshness ?? 0,
         freshnessAfter: body.flavorAfter?.freshness ?? 0,
         sourceType: 'ai_generated',
-      },
-    });
+      } });
 
     for (const [index, item] of body.items.entries()) {
       const ingredient = item.ingredientId
-        ? await prisma.ingredient.findUnique({ where: { id: BigInt(String(item.ingredientId)) } })
+        ? await tx.ingredient.findUnique({ where: { id: BigInt(String(item.ingredientId)) } })
         : item.ingredientSlug
-          ? await prisma.ingredient.findUnique({ where: { slug: item.ingredientSlug } })
+          ? await tx.ingredient.findUnique({ where: { slug: item.ingredientSlug } })
           : null;
 
-      await prisma.customizedRecipeItem.create({
+      await tx.customizedRecipeItem.create({
         data: {
-          recipeId: recipe.id,
+          recipeId: created.id,
           ingredientId: ingredient?.id ?? null,
           nameSnapshot: item.nameSnapshot,
           amountMl: item.amountMl ?? null,
@@ -85,10 +85,14 @@ export async function POST(req: Request) {
         },
       });
     }
+      return created;
+    });
 
     return Response.json({ success: true, recipeId: recipe.id.toString() });
   } catch (error: any) {
     console.error('POST /api/recipes/save error', error);
-    return Response.json({ success: false, error: error?.message ?? 'Save recipe failed' }, { status: 400 });
+    const authResponse = authErrorResponse(error);
+    if (authResponse) return authResponse;
+    return Response.json({ success: false, error: error instanceof z.ZodError ? 'Invalid recipe data' : 'Save recipe failed' }, { status: error instanceof z.ZodError ? 400 : 500 });
   }
 }

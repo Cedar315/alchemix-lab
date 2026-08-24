@@ -12,6 +12,11 @@ export default function App() {
   // Navigation State: "ASSISTANT" | "LAB" | "INSPIRATION" | "MY"
   const [activeTab, setActiveTab] = useState<string>("LAB");
 
+  useEffect(() => {
+    const authState = new URLSearchParams(window.location.search).get("auth");
+    if (authState === "required" || authState === "forbidden") setActiveTab("MY");
+  }, []);
+
   // Saved cocktails state (persisted in localStorage)
   const [savedCocktails, setSavedCocktails] = useState<SavedCocktail[]>([]);
   const [drinkLogs, setDrinkLogs] = useState<DrinkLog[]>([]);
@@ -23,6 +28,53 @@ export default function App() {
   // Lab Preset Ingredients for cross-screen integration
   const [labPresetIngredients, setLabPresetIngredients] = useState<any[]>([]);
   const [labPresetMixMethod, setLabPresetMixMethod] = useState<"Stir" | "Shake">("Stir");
+
+  const syncAuthenticatedDrinkLogs = () => {
+    fetch("/api/drink-logs")
+      .then((response) => response.ok ? response.json() : null)
+      .then((data) => {
+        if (!data?.drink_logs) return;
+        const local = JSON.parse(localStorage.getItem("alchemix_drink_logs") ?? "[]") as DrinkLog[];
+        if (data.drink_logs.length === 0 && local.length > 0) {
+          Promise.all(local.map((log) => fetch("/api/drink-logs", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(log) })))
+            .then(() => syncAuthenticatedDrinkLogs()).catch(() => null);
+          return;
+        }
+        setDrinkLogs(data.drink_logs);
+        localStorage.setItem("alchemix_drink_logs", JSON.stringify(data.drink_logs));
+      })
+      .catch(() => null);
+  };
+
+  const syncAuthenticatedCocktails = () => {
+    fetch("/api/saved-cocktails")
+      .then((response) => response.ok ? response.json() : null)
+      .then((data) => {
+        if (!data?.cocktails) return;
+        const local = JSON.parse(localStorage.getItem("alchemix_saved_cocktails") ?? "[]") as SavedCocktail[];
+        if (data.cocktails.length === 0 && local.length > 0) {
+          Promise.all(local.map((cocktail) => fetch("/api/saved-cocktails", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(cocktail) })))
+            .then(() => syncAuthenticatedCocktails()).catch(() => null);
+          return;
+        }
+        setSavedCocktails(data.cocktails);
+        localStorage.setItem("alchemix_saved_cocktails", JSON.stringify(data.cocktails));
+      })
+      .catch(() => null);
+  };
+
+  const syncAuthenticatedData = () => {
+    syncAuthenticatedDrinkLogs();
+    syncAuthenticatedCocktails();
+  };
+
+  const handleAuthChanged = (signedIn: boolean) => {
+    if (signedIn) return syncAuthenticatedData();
+    setDrinkLogs([]);
+    setSavedCocktails([]);
+    localStorage.removeItem("alchemix_drink_logs");
+    localStorage.removeItem("alchemix_saved_cocktails");
+  };
 
   // 1. Initial State Loading & Synchronization with localStorage
   useEffect(() => {
@@ -36,46 +88,14 @@ export default function App() {
     const localCocktails = localStorage.getItem("alchemix_saved_cocktails");
     if (localCocktails) {
       setSavedCocktails(JSON.parse(localCocktails));
-    } else {
-      // Default high fidelity cocktail records to populate Dr. Mix's profile initially
-      const defaultCocktails: SavedCocktail[] = [
-        {
-          id: "saved-preset-1",
-          chineseName: "薄荷实验室",
-          name: "Mint Lab Frost",
-          subtitle: "第二次加入液氮后的口感简直完美",
-          spirit: "金酒 Gin",
-          mixer: "苏打水 Soda",
-          size: "250ml",
-          rating: { sweet: 2, acid: 4, strength: 3 },
-          comments: "使用经典干金酒作为碳骨架，注入苏打气泡进行高速撞击，液氮深度冷凝使薄荷脑酯类分子结晶释出，是夏日特配的极致低温试剂。",
-          tags: ["清爽", "微醺"],
-          savedAt: new Date().toISOString().split("T")[0],
-          ratingValue: 5,
-        },
-        {
-          id: "saved-preset-2",
-          chineseName: "午夜试剂",
-          name: "Midnight Reagent",
-          subtitle: "金酒的比例可以再提高5ml",
-          spirit: "金酒 Gin",
-          mixer: "蔓越莓 Cranberry",
-          size: "150ml",
-          rating: { sweet: 4, acid: 3, strength: 5 },
-          comments: "高浓度单宁的蔓越莓果汁分子中和了金酒极高的酒感。此组合能激活中枢受体，带来极其深邃的草本酸甜层次。",
-          tags: ["深邃", "苦甜"],
-          savedAt: new Date().toISOString().split("T")[0],
-          ratingValue: 5,
-        },
-      ];
-      setSavedCocktails(defaultCocktails);
-      localStorage.setItem("alchemix_saved_cocktails", JSON.stringify(defaultCocktails));
     }
 
     const localDrinkLogs = localStorage.getItem("alchemix_drink_logs");
     if (localDrinkLogs) {
       setDrinkLogs(JSON.parse(localDrinkLogs));
     }
+    syncAuthenticatedDrinkLogs();
+    syncAuthenticatedCocktails();
 
     // Emergency rescue tips
     const localTips = localStorage.getItem("alchemix_tips");
@@ -122,12 +142,19 @@ export default function App() {
     const updated = [cocktail, ...savedCocktails];
     setSavedCocktails(updated);
     localStorage.setItem("alchemix_saved_cocktails", JSON.stringify(updated));
+    fetch("/api/saved-cocktails", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(cocktail) })
+      .then((response) => response.ok ? response.json() : null)
+      .then((data) => {
+        if (!data?.cocktail) return;
+        setSavedCocktails((current) => [data.cocktail, ...current.filter((item) => item.id !== cocktail.id)]);
+      }).catch(() => null);
   };
 
   const handleRemoveCocktail = (id: string) => {
     const updated = savedCocktails.filter((c) => c.id !== id);
     setSavedCocktails(updated);
     localStorage.setItem("alchemix_saved_cocktails", JSON.stringify(updated));
+    if (/^[0-9a-f-]{36}$/i.test(id)) fetch(`/api/saved-cocktails/${id}`, { method: "DELETE" }).catch(() => null);
   };
 
   const handleSaveDrinkLog = (log: DrinkLog) => {
@@ -137,6 +164,14 @@ export default function App() {
     ];
     setDrinkLogs(updated);
     localStorage.setItem("alchemix_drink_logs", JSON.stringify(updated));
+    fetch(log.id && /^\d+$/.test(String(log.id)) ? `/api/drink-logs/${log.id}` : "/api/drink-logs", {
+      method: log.id && /^\d+$/.test(String(log.id)) ? "PATCH" : "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(log),
+    }).then((response) => response.ok ? response.json() : null).then((data) => {
+      if (!data?.drink_log) return;
+      setDrinkLogs((current) => [data.drink_log, ...current.filter((item) => item.id !== log.id)]);
+    }).catch(() => null);
     const today = new Date().toISOString().split("T")[0];
     const todayCount = updated.filter((item) => item.drinkDate === today).length;
     setDrinkLogSuccess({ recipeName: log.recipeName, todayCount });
@@ -209,6 +244,7 @@ export default function App() {
             drinkLogs={drinkLogs}
             onRemoveCocktail={handleRemoveCocktail}
             onNavigateToLab={() => setActiveTab("LAB")}
+            onAuthChanged={handleAuthChanged}
           />
         );
       default:

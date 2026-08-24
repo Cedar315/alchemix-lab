@@ -15,6 +15,6 @@ export async function POST(req: Request) {
     return new Response(JSON.stringify({ success: true, recipes: validated }), { status: 200, headers: { 'Content-Type': 'application/json' } });
   } catch (err: any) {
     console.error('generate-recipe error', err);
-    return new Response(JSON.stringify({ success: false, error: err?.message || 'Invalid request' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
+    return new Response(JSON.stringify({ success: false, error: 'Invalid recipe request' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
   }
 }

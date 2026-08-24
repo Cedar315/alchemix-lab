@@ -31,6 +31,6 @@ export async function POST(req: Request) {
     });
   } catch (error: any) {
     console.error('POST /api/ingredients/search error', error);
-    return Response.json({ success: false, error: error?.message ?? 'Ingredient search failed' }, { status: 500 });
+    return Response.json({ success: false, error: 'Ingredient search failed' }, { status: 500 });
   }
 }

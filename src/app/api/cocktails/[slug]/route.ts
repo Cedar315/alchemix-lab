@@ -49,6 +49,6 @@ export async function GET(_req: Request, { params }: { params: Promise<{ slug: s
     });
   } catch (error: any) {
     console.error('GET /api/cocktails/[slug] error', error);
-    return Response.json({ success: false, error: error?.message ?? 'Cocktail lookup failed' }, { status: 500 });
+    return Response.json({ success: false, error: 'Cocktail lookup failed' }, { status: 500 });
   }
 }

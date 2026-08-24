@@ -37,6 +37,6 @@ export async function POST(req: Request) {
     });
   } catch (error: any) {
     console.error('POST /api/assistant error', error);
-    return Response.json({ error: error?.message ?? 'Assistant failed' }, { status: 500 });
+    return Response.json({ error: 'Assistant failed' }, { status: 500 });
   }
 }

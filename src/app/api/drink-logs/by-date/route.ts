@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/db/prisma';
-import { getOrCreateSessionUser, sessionResponse } from '@/lib/auth/session';
+import { authErrorResponse, requireUser } from '@/lib/auth/current-user';
 
 function serialize(log: any) {
   return {
@@ -13,19 +13,23 @@ function serialize(log: any) {
 }
 
 export async function GET(request: Request) {
-  const session = await getOrCreateSessionUser(request);
-  const { searchParams } = new URL(request.url);
-  const date = searchParams.get('date');
-  if (!date) return NextResponse.json({ success: false, error: 'Missing date' }, { status: 400 });
+  try {
+    const { user } = await requireUser();
+    const { searchParams } = new URL(request.url);
+    const date = searchParams.get('date');
+    if (!date) return NextResponse.json({ success: false, error: 'Missing date' }, { status: 400 });
 
   const start = new Date(`${date}T00:00:00.000Z`);
   const end = new Date(start);
   end.setUTCDate(end.getUTCDate() + 1);
 
   const logs = await prisma.drinkLog.findMany({
-    where: { userId: session.userId, drinkDate: { gte: start, lt: end } },
+    where: { userId: user.id, drinkDate: { gte: start, lt: end } },
     orderBy: { createdAt: 'desc' },
   });
 
-  return sessionResponse(NextResponse.json({ success: true, drink_logs: logs.map(serialize) }), session);
+    return NextResponse.json({ success: true, drink_logs: logs.map(serialize) });
+  } catch (error) {
+    return authErrorResponse(error) ?? NextResponse.json({ success: false, error: 'Failed to read drink logs' }, { status: 500 });
+  }
 }

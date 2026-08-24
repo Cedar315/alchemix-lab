@@ -1,8 +1,10 @@
 import prisma from '@/lib/db/prisma';
 import { IngredientFactSchema, toIngredientCreateData } from '@/lib/ingredients/schema';
+import { authErrorResponse, requireAdmin } from '@/lib/auth/current-user';
 
 export async function POST(req: Request) {
   try {
+    await requireAdmin();
     const body = await req.json();
     const lookupLogId = body.lookupLogId ? BigInt(String(body.lookupLogId)) : null;
     const parsed = IngredientFactSchema.parse({
@@ -37,6 +39,8 @@ export async function POST(req: Request) {
     });
   } catch (error: any) {
     console.error('POST /api/ingredients/save-ai-result error', error);
-    return Response.json({ success: false, error: error?.message ?? 'Save AI result failed' }, { status: 400 });
+    const authResponse = authErrorResponse(error);
+    if (authResponse) return authResponse;
+    return Response.json({ success: false, error: 'Save AI result failed' }, { status: 400 });
   }
 }

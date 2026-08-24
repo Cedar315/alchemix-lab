@@ -13,6 +13,6 @@ export async function POST(req: Request) {
     return Response.json(analyzeMixologyRecipe(ingredients, mixMethod));
   } catch (error: any) {
     console.error('POST /api/lab-mix error', error);
-    return Response.json({ error: error?.message ?? 'Lab mix failed' }, { status: 500 });
+    return Response.json({ error: 'Lab mix failed' }, { status: 500 });
   }
 }
