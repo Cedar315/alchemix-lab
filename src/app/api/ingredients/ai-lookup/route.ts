@@ -1,6 +1,12 @@
 import prisma from '@/lib/db/prisma';
 import { callMiniMaxJson } from '@/lib/ai/services/ai-client';
+import { authErrorResponse, requireUser } from '@/lib/auth/current-user';
 import { IngredientFactSchema } from '@/lib/ingredients/schema';
+import { z } from 'zod';
+
+const requestSchema = z.object({
+  query: z.string().trim().min(1).max(100),
+});
 
 const systemPrompt = `You are AlcheMix Lab's beverage data assistant.
 Return only JSON for one drink/ingredient. Use public web knowledge when available, but do not claim exact nutrition unless it is commonly available.
@@ -9,11 +15,14 @@ Never write to any database.`;
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
-    const query = String(body.query ?? '').trim();
+    await requireUser();
+    const { query } = requestSchema.parse(await req.json());
 
-    if (!query) {
-      return Response.json({ success: false, error: 'query is required' }, { status: 400 });
+    if (!process.env.MINIMAX_API_KEY) {
+      return Response.json(
+        { success: false, error: 'AI 联网查询暂未配置，请先使用本地搜索或手动录入' },
+        { status: 503 },
+      );
     }
 
     const aiResult = await callMiniMaxJson<unknown>([
@@ -57,8 +66,13 @@ Rules:
       ingredient: parsed,
       caution: '请以实际包装配料表为准',
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('POST /api/ingredients/ai-lookup error', error);
-    return Response.json({ success: false, error: 'AI lookup failed' }, { status: 500 });
+    const authResponse = authErrorResponse(error);
+    if (authResponse) return authResponse;
+    if (error instanceof z.ZodError) {
+      return Response.json({ success: false, error: '查询内容应为 1–100 个字符' }, { status: 400 });
+    }
+    return Response.json({ success: false, error: 'AI 联网查询失败，请稍后重试' }, { status: 502 });
   }
 }

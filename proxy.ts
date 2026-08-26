@@ -11,11 +11,12 @@ function rateLimit(request: NextRequest, userId?: string) {
 
   const path = request.nextUrl.pathname;
   const isExpensive = path.startsWith("/api/ai/") || path === "/api/ingredients/ai-lookup" || path === "/api/cocktails/customize";
+  const isAiLookup = path === "/api/ingredients/ai-lookup";
   const isAnalytics = path === "/api/analytics/events";
-  const limit = isExpensive ? 20 : isAnalytics ? 60 : 40;
+  const limit = isAiLookup ? 5 : isExpensive ? 20 : isAnalytics ? 60 : 40;
   const windowMs = 60_000;
   const ip = request.headers.get("x-vercel-forwarded-for")?.split(",")[0] ?? request.headers.get("x-forwarded-for")?.split(",")[0] ?? "unknown";
-  const key = `${userId ?? ip}:${isExpensive ? "expensive" : isAnalytics ? "analytics" : "write"}`;
+  const key = `${userId ?? ip}:${isAiLookup ? "ai-lookup" : isExpensive ? "expensive" : isAnalytics ? "analytics" : "write"}`;
   const now = Date.now();
   if (rateStore.size > 10_000) {
     for (const [storedKey, stored] of rateStore) if (stored.resetAt <= now) rateStore.delete(storedKey);
