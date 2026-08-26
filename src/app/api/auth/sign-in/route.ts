@@ -9,7 +9,7 @@ export async function POST(request: Request) {
     const body = schema.parse(await request.json());
     const supabase = await createSupabaseServerClient();
     const { error } = await supabase.auth.signInWithPassword(body);
-    if (error) return Response.json({ error: "邮箱或密码错误，或邮箱尚未验证" }, { status: 401 });
+    if (error) return Response.json({ error: "暂时无法登录。如果还没有账号，请先注册哦；已注册用户请检查登录信息或邮箱验证状态。" }, { status: 401 });
     const current = await getCurrentUser();
     return Response.json({ user: current ? { id: current.user.id, email: current.user.email, nickname: current.user.nickname } : null });
   } catch (error) {

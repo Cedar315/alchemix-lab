@@ -12,11 +12,13 @@ function rateLimit(request: NextRequest, userId?: string) {
   const path = request.nextUrl.pathname;
   const isExpensive = path.startsWith("/api/ai/") || path === "/api/ingredients/ai-lookup" || path === "/api/cocktails/customize";
   const isAiLookup = path === "/api/ingredients/ai-lookup";
+  const isAuthEmail = path === "/api/auth/sign-up" || path === "/api/auth/forgot-password" || path === "/api/auth/resend-confirmation";
+  const isSignIn = path === "/api/auth/sign-in";
   const isAnalytics = path === "/api/analytics/events";
-  const limit = isAiLookup ? 5 : isExpensive ? 20 : isAnalytics ? 60 : 40;
+  const limit = isAiLookup || isAuthEmail ? 5 : isSignIn ? 10 : isExpensive ? 20 : isAnalytics ? 60 : 40;
   const windowMs = 60_000;
   const ip = request.headers.get("x-vercel-forwarded-for")?.split(",")[0] ?? request.headers.get("x-forwarded-for")?.split(",")[0] ?? "unknown";
-  const key = `${userId ?? ip}:${isAiLookup ? "ai-lookup" : isExpensive ? "expensive" : isAnalytics ? "analytics" : "write"}`;
+  const key = `${userId ?? ip}:${isAiLookup ? "ai-lookup" : isAuthEmail ? "auth-email" : isSignIn ? "sign-in" : isExpensive ? "expensive" : isAnalytics ? "analytics" : "write"}`;
   const now = Date.now();
   if (rateStore.size > 10_000) {
     for (const [storedKey, stored] of rateStore) if (stored.resetAt <= now) rateStore.delete(storedKey);

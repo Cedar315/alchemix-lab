@@ -37,6 +37,8 @@ export default function MyProfileScreen({
   const [accountNickname, setAccountNickname] = useState("");
   const [accountEmail, setAccountEmail] = useState("");
   const [accountPassword, setAccountPassword] = useState("");
+  const [acceptedPolicies, setAcceptedPolicies] = useState(false);
+  const [confirmationEmailSent, setConfirmationEmailSent] = useState(false);
   const [profileView, setProfileView] = useState<ProfileView>("home");
 
   useEffect(() => {
@@ -47,6 +49,7 @@ export default function MyProfileScreen({
   }, []);
   const [activeListCategory, setActiveListCategory] = useState<ListCategory>("lab");
   const [accountError, setAccountError] = useState("");
+  const [accountNotice, setAccountNotice] = useState("");
   const [accountPending, setAccountPending] = useState(false);
 
   useEffect(() => {
@@ -67,7 +70,10 @@ export default function MyProfileScreen({
     setAccountNickname(accountProfile?.nickname ?? "");
     setAccountEmail(accountProfile?.email ?? "");
     setAccountPassword("");
+    setAcceptedPolicies(false);
+    setConfirmationEmailSent(false);
     setAccountError("");
+    setAccountNotice("");
     setShowAccountSheet(true);
   };
 
@@ -79,6 +85,7 @@ export default function MyProfileScreen({
     if (accountMode === "profile" ? !nickname : !email || !accountPassword) return;
     setAccountPending(true);
     setAccountError("");
+    setAccountNotice("");
     try {
       if (accountMode === "profile") {
         const response = await fetch("/api/auth/profile", {
@@ -96,13 +103,13 @@ export default function MyProfileScreen({
       const response = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password: accountPassword, nickname }),
+        body: JSON.stringify({ email, password: accountPassword, nickname, acceptedPolicies }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "账号操作失败");
       if (data.requiresEmailConfirmation) {
-        setAccountError("注册成功，请先打开邮箱完成验证，然后再登录。 ");
-        setAccountMode("login");
+        setConfirmationEmailSent(true);
+        setAccountError("");
         return;
       }
       const user = data.user;
@@ -137,7 +144,25 @@ export default function MyProfileScreen({
     const response = await fetch("/api/auth/forgot-password", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email }) });
     const data = await response.json().catch(() => ({}));
     setAccountPending(false);
-    setAccountError(data.message || data.error || "如果账号存在，重置邮件已经发送。");
+    if (response.ok) setAccountNotice(data.message || "如果账号存在，重置邮件已经发送。");
+    else setAccountError(data.error || "暂时无法发送重置邮件");
+  };
+
+  const resendConfirmationEmail = async () => {
+    const email = accountEmail.trim();
+    if (!email) return setAccountError("请先填写邮箱");
+    setAccountPending(true);
+    setAccountError("");
+    setAccountNotice("");
+    const response = await fetch("/api/auth/resend-confirmation", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+    const data = await response.json().catch(() => ({}));
+    setAccountPending(false);
+    if (response.ok) setAccountNotice(data.message || "如果账号已注册，验证邮件已经重新发送。");
+    else setAccountError(data.error || "暂时无法重新发送验证邮件");
   };
 
   const getRatingValue = (log: DrinkLog) => log.rating ?? 0;
@@ -635,7 +660,7 @@ export default function MyProfileScreen({
             aria-label="关闭账号设置"
           ></button>
 
-          <div className="relative z-10 w-full max-w-[430px] overflow-hidden rounded-t-[28px] border border-[#E8E8E8] bg-[#F7F7F5] shadow-[0_-18px_42px_rgba(15,23,42,0.18)] animate-in slide-in-from-bottom-8 fade-in duration-300">
+          <div className="relative z-10 max-h-[calc(100dvh-1rem)] w-full max-w-[430px] overflow-y-auto rounded-t-[28px] border border-[#E8E8E8] bg-[#F7F7F5] shadow-[0_-18px_42px_rgba(15,23,42,0.18)] animate-in slide-in-from-bottom-8 fade-in duration-300">
             <div className="border-b border-[#E8E8E8] bg-white px-4 pb-4 pt-3">
               <div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-neutral-300"></div>
               <div className="flex items-start justify-between gap-3">
@@ -662,7 +687,7 @@ export default function MyProfileScreen({
               <div className="rounded-3xl border border-[#E8E8E8] bg-white p-4 shadow-[0_1px_12px_rgba(15,23,42,0.05)]">
                 {accountMode !== "profile" && <div className="grid grid-cols-2 gap-2 rounded-2xl bg-[#F7F7F5] p-1">
                   <button
-                    onClick={() => setAccountMode("login")}
+                    onClick={() => { setAccountMode("login"); setConfirmationEmailSent(false); setAccountError(""); }}
                     className={`h-10 cursor-pointer rounded-xl text-sm font-bold transition-all ${
                       accountMode === "login" ? "bg-white text-neutral-950 shadow-sm" : "text-neutral-500"
                     }`}
@@ -670,7 +695,7 @@ export default function MyProfileScreen({
                     登录
                   </button>
                   <button
-                    onClick={() => setAccountMode("register")}
+                    onClick={() => { setAccountMode("register"); setConfirmationEmailSent(false); setAccountError(""); }}
                     className={`h-10 cursor-pointer rounded-xl text-sm font-bold transition-all ${
                       accountMode === "register" ? "bg-white text-neutral-950 shadow-sm" : "text-neutral-500"
                     }`}
@@ -714,10 +739,38 @@ export default function MyProfileScreen({
                       className="mt-1 h-12 w-full rounded-2xl border border-[#E8E8E8] bg-[#FCFCFB] px-3 text-sm font-semibold text-neutral-900 outline-none focus:border-neutral-950"
                     />
                   </label>}
+
+                  {accountMode === "register" && (
+                    <label className="flex cursor-pointer items-start gap-2.5 rounded-2xl border border-[#E8E8E8] bg-[#FCFCFB] p-3">
+                      <input
+                        type="checkbox"
+                        checked={acceptedPolicies}
+                        onChange={(event) => setAcceptedPolicies(event.target.checked)}
+                        className="mt-0.5 h-4 w-4 shrink-0 accent-neutral-950"
+                      />
+                      <span className="text-xs leading-5 text-neutral-600">
+                        我已阅读并同意
+                        <a href="/terms" target="_blank" rel="noreferrer" className="font-bold text-neutral-950 underline underline-offset-2">《用户协议》</a>
+                        <a href="/privacy" target="_blank" rel="noreferrer" className="font-bold text-neutral-950 underline underline-offset-2">《隐私政策》</a>
+                        和
+                        <a href="/responsible-drinking" target="_blank" rel="noreferrer" className="font-bold text-neutral-950 underline underline-offset-2">《饮酒安全提示》</a>
+                      </span>
+                    </label>
+                  )}
                 </div>
 
                 <div className="mt-4 rounded-2xl border border-[#ECECEC] bg-[#F7F7F5] p-3">
                   <p className="text-xs leading-5 text-neutral-500">账号由 Supabase Auth 安全验证。注册后可能需要先完成邮箱验证。</p>
+                  {accountNotice && <p className="mt-2 text-xs font-semibold text-emerald-700">{accountNotice}</p>}
+                  {confirmationEmailSent && (
+                    <div className="mt-3 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-xs leading-5 text-emerald-800">
+                      <p className="font-bold">验证邮件已发送</p>
+                      <p>请打开邮箱中的链接完成验证，也请检查垃圾邮件目录。</p>
+                      <button type="button" onClick={resendConfirmationEmail} disabled={accountPending} className="mt-2 font-bold underline underline-offset-4 disabled:opacity-50">
+                        {accountPending ? "正在发送…" : "重新发送验证邮件"}
+                      </button>
+                    </div>
+                  )}
                   {accountError && <p className="mt-2 text-xs font-semibold text-red-600">{accountError}</p>}
                 </div>
               </div>
@@ -725,15 +778,15 @@ export default function MyProfileScreen({
 
             <div className="border-t border-[#E8E8E8] bg-white p-4">
               <button
-                onClick={saveAccountProfile}
-                disabled={accountMode === "profile" ? !accountNickname.trim() || accountPending : !accountEmail.trim() || !accountPassword || accountPending}
+                onClick={confirmationEmailSent ? () => { setAccountMode("login"); setConfirmationEmailSent(false); setAccountPassword(""); setAccountError(""); } : saveAccountProfile}
+                disabled={!confirmationEmailSent && (accountMode === "profile" ? !accountNickname.trim() || accountPending : !accountEmail.trim() || !accountPassword || accountPending || (accountMode === "register" && !acceptedPolicies))}
                 className={`h-[52px] w-full rounded-2xl text-sm font-bold active:scale-[0.98] ${
-                  (accountMode === "profile" ? accountNickname.trim() : accountEmail.trim() && accountPassword) && !accountPending
+                  confirmationEmailSent || ((accountMode === "profile" ? accountNickname.trim() : accountEmail.trim() && accountPassword) && !accountPending && (accountMode !== "register" || acceptedPolicies))
                     ? "cursor-pointer bg-neutral-950 text-white shadow-[0_10px_24px_rgba(15,23,42,0.14)]"
                     : "cursor-not-allowed bg-neutral-200 text-neutral-400"
                 }`}
               >
-                {accountPending ? "处理中…" : accountMode === "login" ? "登录并进入档案" : accountMode === "profile" ? "保存档案" : "注册并进入档案"}
+                {confirmationEmailSent ? "我已完成验证，去登录" : accountPending ? "处理中…" : accountMode === "login" ? "登录并进入档案" : accountMode === "profile" ? "保存档案" : "注册并发送验证邮件"}
               </button>
             </div>
           </div>
