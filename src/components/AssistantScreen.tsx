@@ -467,7 +467,7 @@ function RecipeCard({
 }
 
 export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrinkLog }: AssistantScreenProps) {
-  const [assistantPage, setAssistantPage] = useState<"home" | "material-results" | "mood-results" | "blind-box">("home");
+  const [assistantPage, setAssistantPage] = useState<"home" | "material-picker" | "material-results" | "mood-results" | "blind-box">("home");
   const [materialInput, setMaterialInput] = useState("");
   const [materials, setMaterials] = useState<typeof labIngredientLibrary>([]);
   const [hasRecommended, setHasRecommended] = useState(false);
@@ -565,7 +565,7 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
     recommendations.canMake.length === 0 &&
     recommendations.almostCanMake.length === 0;
 
-  if (assistantPage === "material-results") {
+  if (assistantPage === "material-picker") {
     return (
       <div className="mx-auto max-w-[430px] space-y-5 pb-8">
         <button
@@ -575,6 +575,80 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
         >
           <span className="material-symbols-outlined text-sm">arrow_back</span>
           返回 Drink Finder
+        </button>
+
+        <section className="space-y-2">
+          <span className="inline-flex rounded-full border border-[#E8E8E8] bg-white px-3 py-1 text-[11px] font-bold text-neutral-500">Material Match</span>
+          <h2 className="text-[28px] font-bold leading-tight text-neutral-950">我的材料</h2>
+          <p className="text-sm leading-6 text-neutral-500">选择你手边已有的酒和饮料，看看现在能做什么。</p>
+        </section>
+
+        <section className="rounded-2xl border border-[#E8E8E8] bg-white p-4 shadow-[0_1px_10px_rgba(15,23,42,0.04)]">
+          <form className="flex gap-2" onSubmit={(event) => { event.preventDefault(); addMaterial(); }}>
+            <input
+              value={materialInput}
+              onChange={(event) => setMaterialInput(event.target.value)}
+              placeholder="搜索酒类、饮料或配料"
+              className="min-w-0 flex-1 rounded-full border border-[#E1E1DE] bg-[#F7F7F5] px-4 py-3 text-sm outline-none focus:border-neutral-950"
+            />
+            <button type="submit" className="cursor-pointer rounded-full bg-neutral-950 px-4 text-sm font-bold text-white active:scale-[0.98]">添加</button>
+          </form>
+
+          {suggestions.length > 0 && (
+            <div className="mt-2 rounded-2xl border border-[#E8E8E8] bg-[#FCFCFA] p-2">
+              {suggestions.map((item) => (
+                <button type="button" key={item.id} onClick={() => addMaterial(item.nameZh)} className="flex w-full cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-left active:scale-[0.99]">
+                  <span><span className="block text-xs font-bold text-neutral-900">{item.nameZh}</span><span className="block text-[11px] text-neutral-400">{item.nameEn}</span></span>
+                  <span className="text-[11px] font-bold text-neutral-400">{item.category}</span>
+                </button>
+              ))}
+            </div>
+          )}
+
+          <div className="mt-3 flex flex-wrap gap-2">
+            {popularQuickIngredients.map((item) => (
+              <button type="button" key={item} onClick={() => addMaterial(item)} className="cursor-pointer rounded-full bg-[#F2F2F2] px-3 py-1.5 text-xs font-bold text-neutral-600 active:scale-[0.98]">{item}</button>
+            ))}
+          </div>
+
+          {materials.length > 0 && (
+            <div className="mt-4 space-y-3">
+              {groupedMaterials.map((group) => (
+                <div key={group.label}>
+                  <p className="mb-1.5 text-[11px] font-bold text-neutral-400">{group.label}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {group.items.map((item) => (
+                      <button type="button" key={item.id} onClick={() => removeMaterial(item.id)} className="cursor-pointer rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-xs font-bold text-neutral-800 active:scale-[0.98]">{item.nameZh} ×</button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <button
+            type="button"
+            onClick={() => { setHasRecommended(true); if (materials.length > 0) setAssistantPage("material-results"); }}
+            className="mt-4 w-full cursor-pointer rounded-2xl bg-neutral-950 py-3.5 text-sm font-bold text-white active:scale-[0.99]"
+          >
+            生成我能做的酒卡
+          </button>
+          {hasRecommended && materials.length === 0 && <p className="mt-3 rounded-2xl bg-[#F7F7F5] p-3 text-xs leading-5 text-neutral-500">先添加 1–2 个材料，比如金酒、苏打水、养乐多或水溶C。</p>}
+        </section>
+      </div>
+    );
+  }
+
+  if (assistantPage === "material-results") {
+    return (
+      <div className="mx-auto max-w-[430px] space-y-5 pb-8">
+        <button
+          type="button"
+          onClick={() => setAssistantPage("material-picker")}
+          className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#E1E1DE] bg-white px-3.5 py-2 text-xs font-bold text-neutral-700 shadow-sm active:scale-[0.98]"
+        >
+          <span className="material-symbols-outlined text-sm">arrow_back</span>
+          返回我的材料
         </button>
 
         <section className="space-y-2">
@@ -600,7 +674,7 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
 
         {materials.length === 0 && (
           <section className="rounded-2xl border border-dashed border-[#d8d8d4] bg-white p-5 text-sm leading-6 text-neutral-500">
-            还没有材料。返回首页先添加金酒、苏打水、养乐多、水溶C这类材料。
+            还没有材料。返回材料页先添加金酒、苏打水、养乐多、水溶C这类材料。
           </section>
         )}
 
@@ -884,9 +958,24 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
 
       <section className="rounded-2xl border border-[#E8E8E8] bg-white p-4 shadow-[0_1px_10px_rgba(15,23,42,0.04)]">
         <div className="space-y-1">
-          <h3 className="text-lg font-bold text-neutral-950">我的材料</h3>
+          <h3 className="text-lg font-bold text-neutral-950">按材料找一杯</h3>
+          <p className="text-xs leading-5 text-neutral-500">进入后选择你手边已有的酒和饮料，生成现在能做的酒卡。</p>
         </div>
 
+        <button
+          type="button"
+          onClick={() => setAssistantPage("material-picker")}
+          className="mt-4 flex min-h-[104px] w-full cursor-pointer items-center gap-3 rounded-2xl border border-[#E8E8E8] bg-[#F7F7F5] p-4 text-left transition-all active:scale-[0.98]"
+        >
+          <span className="material-symbols-outlined rounded-2xl bg-white p-3 text-[28px] text-neutral-950">liquor</span>
+          <span className="min-w-0">
+            <span className="block text-base font-bold text-neutral-950">选择我的材料</span>
+            <span className="mt-1 block text-xs leading-5 text-neutral-500">{materials.length > 0 ? `已选择 ${materials.length} 种材料，继续编辑或查看推荐。` : "金酒、苏打水、果汁，有什么就从什么开始。"}</span>
+          </span>
+          <span className="material-symbols-outlined ml-auto text-neutral-400">chevron_right</span>
+        </button>
+
+        <div className="hidden" aria-hidden="true">
         <form
           className="mt-4 flex gap-2"
           onSubmit={(event) => {
@@ -974,6 +1063,7 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
           <p className="mt-3 rounded-2xl bg-[#F7F7F5] p-3 text-xs leading-5 text-neutral-500">先添加 1-2 个材料，比如金酒、苏打水、养乐多或水溶C。</p>
         )}
 
+        </div>
       </section>
 
       <section className="rounded-2xl border border-[#E8E8E8] bg-white p-4 shadow-[0_1px_10px_rgba(15,23,42,0.04)]">
