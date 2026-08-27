@@ -1,6 +1,6 @@
 import { z } from "zod";
 import prisma from "@/lib/db/prisma";
-import { createSupabaseAdminClient, createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 const schema = z.object({
   email: z.string().email().max(254),
@@ -18,14 +18,14 @@ async function emailAlreadyRegistered(email: string) {
   });
   if (appUser) return true;
 
-  const admin = createSupabaseAdminClient();
-  const perPage = 1000;
-  for (let page = 1; ; page += 1) {
-    const { data, error } = await admin.auth.admin.listUsers({ page, perPage });
-    if (error) throw error;
-    if (data.users.some((user) => user.email?.toLowerCase() === email)) return true;
-    if (data.users.length < perPage) return false;
-  }
+  const [authUser] = await prisma.$queryRaw<Array<{ exists: boolean }>>`
+    SELECT EXISTS (
+      SELECT 1
+      FROM auth.users
+      WHERE LOWER(email) = LOWER(${email})
+    ) AS "exists"
+  `;
+  return authUser?.exists === true;
 }
 
 export async function POST(request: Request) {
