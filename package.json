@@ -12,7 +12,8 @@
     "lint": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
     "db:migrate:deploy": "prisma migrate deploy",
-    "check": "npm run typecheck && npm run build"
+    "check": "npm run typecheck && npm run build",
+    "test:rag": "tsx --test src/lib/knowledge/rag/rag.test.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

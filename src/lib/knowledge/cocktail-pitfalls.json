@@ -1,0 +1,276 @@
+{
+  "version": 1,
+  "language": "zh-CN",
+  "status": "initial_seed_not_wired_to_chat",
+  "entries": [
+    {
+      "id": "carbonated-shaking",
+      "title": "气泡饮料能放进摇酒壶摇吗？",
+      "aliases": [
+        "可乐能摇吗",
+        "雪碧摇壶",
+        "苏打水摇和",
+        "气泡喷出来"
+      ],
+      "category": "技法",
+      "answer": "不要把含气泡饮料放进密闭摇酒壶摇。按配方先处理非气泡部分，倒入杯中后再加入汽水或苏打水。",
+      "scope": "适用于普通家庭摇酒壶；不是专业加压碳酸化操作说明。",
+      "evidenceType": "direct",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-09",
+      "sources": [
+        {
+          "title": "Cocktail preparation instructions, City of York licensing attachment",
+          "url": "https://democracy.york.gov.uk/documents/s11684/Annex%203.pdf"
+        },
+        {
+          "title": "Difford’s Guide — Fizz recipe",
+          "url": "https://www.diffordsguide.com/cocktails/recipe/754/fizz-generic-name"
+        }
+      ]
+    },
+    {
+      "id": "ice-dilution",
+      "title": "为什么按同样配方做出来却很水？",
+      "aliases": [
+        "太淡",
+        "融水",
+        "冰块融化",
+        "水味很重"
+      ],
+      "category": "冰与稀释",
+      "answer": "冰块表面的融水会影响稀释量。先检查是否用了已经化水的冰，再核对用量；下一杯用新鲜冰并保持制作条件一致。",
+      "scope": "不能仅凭“很水”判断原因，还需配方、用量、冰和制作方法。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-09",
+      "sources": [
+        {
+          "title": "Difford’s Guide — Ice",
+          "url": "https://www.diffordsguide.com/g/1150/how-to-make-cocktails/ice"
+        }
+      ]
+    },
+    {
+      "id": "reuse-ice",
+      "title": "摇过一杯的冰还能接着摇吗？",
+      "aliases": [
+        "重复用冰",
+        "旧冰块",
+        "摇壶里的冰"
+      ],
+      "category": "冰与稀释",
+      "answer": "下一杯使用新鲜冰。重复使用已经融化的摇酒冰，会使温度和稀释更难保持一致。",
+      "scope": "部分配方有明确的整杯倒出做法，遵循该配方；这里讨论重复制作下一杯。",
+      "evidenceType": "direct",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-09",
+      "sources": [
+        {
+          "title": "Difford’s Guide — Ice",
+          "url": "https://www.diffordsguide.com/g/1150/how-to-make-cocktails/ice"
+        }
+      ]
+    },
+    {
+      "id": "broken-glass-ice",
+      "title": "玻璃碎在冰桶附近怎么办？",
+      "aliases": [
+        "碎玻璃",
+        "杯子打碎",
+        "冰桶玻璃"
+      ],
+      "category": "食品安全",
+      "answer": "不要只捡出看得见的碎片。弃用可能受污染的整批冰，清洁容器后重新装冰。",
+      "scope": "碎片可能不可见；不建议过滤后继续使用。",
+      "evidenceType": "direct",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-09",
+      "sources": [
+        {
+          "title": "Difford’s Guide — Ice",
+          "url": "https://www.diffordsguide.com/g/1150/how-to-make-cocktails/ice"
+        }
+      ]
+    },
+    {
+      "id": "syrup-concentration",
+      "title": "换了糖浆为什么突然太甜？",
+      "aliases": [
+        "糖浆比例",
+        "1:1",
+        "2:1",
+        "浓糖浆",
+        "糖浆太甜"
+      ],
+      "category": "甜度",
+      "answer": "先核对配方与所用糖浆的浓度。1:1 和 2:1 糖浆的含糖量不同，不能默认等体积替换。具体换算需明确浓度和计量方式。",
+      "scope": "先区分重量比和体积比，不提供不明确条件下的固定换算量。",
+      "evidenceType": "direct",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-09",
+      "sources": [
+        {
+          "title": "Difford’s Guide — 2:1 rich syrup vs 1:1 simple syrup",
+          "url": "https://www.diffordsguide.com/encyclopedia/3593/cocktails/2-to-1-rich-sugar-syrup-versus-1-to-1-simple-syrup"
+        }
+      ]
+    },
+    {
+      "id": "measure-consistently",
+      "title": "没有量酒器怎么保持比例？",
+      "aliases": [
+        "没有量杯",
+        "凭感觉倒",
+        "量酒器",
+        "配方比例"
+      ],
+      "category": "工具",
+      "answer": "使用有刻度、适合食品的量具，并保持每项材料的计量方式一致。不要把随手一倒当作固定毫升数。",
+      "scope": "需要具体毫升数时必须能测量容量；瓶盖容量并不统一。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-09",
+      "sources": [
+        {
+          "title": "Difford’s Guide — Measuring cocktail ingredients",
+          "url": "https://www.diffordsguide.com/g/1150/how-to-make-cocktails/measuring-cocktail-ingredients"
+        }
+      ]
+    },
+    {
+      "id": "orange-liqueur",
+      "title": "君度、Triple Sec 和橙味利口酒是什么关系？",
+      "aliases": [
+        "君度",
+        "cointreau",
+        "triple sec",
+        "橙酒",
+        "橙味利口酒"
+      ],
+      "category": "材料辨识",
+      "answer": "君度属于橙味利口酒，也是 Triple Sec。“橙酒”叫法不够明确，先核对瓶身名称。橙汁不是同一种材料，不能仅凭都有橙味就视为等价。",
+      "scope": "来源支持君度的分类；“先确认模糊名称”和不自动等价替换是产品应用规则。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-09",
+      "sources": [
+        {
+          "title": "Cointreau — What is Cointreau?",
+          "url": "https://www.cointreau.com/us/en/what-cointreau"
+        }
+      ]
+    },
+    {
+      "id": "tonic-bitterness",
+      "title": "为什么用了汤力水会苦？",
+      "aliases": [
+        "汤力苦",
+        "金汤力苦",
+        "tonic",
+        "汤力水"
+      ],
+      "category": "材料辨识",
+      "answer": "汤力水含有奎宁并具有苦味，不能当作无味的气泡水。换成其他饮料会改变配方风味，先确认你想保留金汤力还是换一种长饮。",
+      "scope": "不同品牌的甜度与苦味有差异。更换配方是产品建议，不是等价替换结论。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-09",
+      "sources": [
+        {
+          "title": "Fever-Tree — Tonics",
+          "url": "https://fever-tree.com/en-us/range/tonics"
+        }
+      ]
+    },
+    {
+      "id": "raw-egg",
+      "title": "蛋白鸡尾酒可以用普通生鸡蛋吗？",
+      "aliases": [
+        "生蛋白",
+        "生鸡蛋",
+        "蛋清",
+        "沙门氏菌"
+      ],
+      "category": "食品安全",
+      "answer": "不加热或未充分加热的含蛋配方，应使用经过巴氏杀菌处理的蛋或蛋制品。不要把加入烈酒当成安全处理步骤。",
+      "scope": "具体产品按标签保存和使用；食品安全问题不依据社区经验覆盖官方资料。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-09",
+      "sources": [
+        {
+          "title": "FDA — What You Need to Know About Egg Safety",
+          "url": "https://www.fda.gov/food/buy-store-serve-safe-food/what-you-need-know-about-egg-safety"
+        }
+      ]
+    },
+    {
+      "id": "alcohol-content",
+      "title": "喝不出酒味是不是酒精很少？",
+      "aliases": [
+        "喝不出酒味",
+        "低酒感",
+        "酒精度",
+        "加果汁",
+        "加冰会解酒吗"
+      ],
+      "category": "酒精信息",
+      "answer": "不能靠入口感觉估算酒精含量。需要根据每种含酒精材料的用量和标示酒精度计算；加入无酒精饮料会增加总体积，但不会移除原有酒精。",
+      "scope": "NIAAA 使用美国标准杯定义，不直接套用到澳洲或其他地区；优先显示纯酒精量和估算酒精度。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-09",
+      "sources": [
+        {
+          "title": "NIAAA — Mixed Drink & Cocktail Calculator",
+          "url": "https://rethinkingdrinking.niaaa.nih.gov/tools/calculators/mixed-drink-and-cocktail-content-calculator"
+        }
+      ]
+    },
+    {
+      "id": "mojito-missing",
+      "title": "只有朗姆、青柠、苏打水就能做经典莫吉托吗？",
+      "aliases": [
+        "莫吉托材料",
+        "莫吉托没有薄荷",
+        "mojito",
+        "缺糖"
+      ],
+      "category": "经典配方",
+      "answer": "经典莫吉托还需要薄荷和糖。缺少必要材料时，不应标记为材料齐全的经典莫吉托；可以选择另一款符合现有材料的配方。",
+      "scope": "不把装饰用青柠角和配方中必要的青柠汁混为一谈。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-09",
+      "sources": [
+        {
+          "title": "International Bartenders Association — Mojito",
+          "url": "https://iba-world.com/iba-cocktail/mojito/"
+        }
+      ]
+    },
+    {
+      "id": "layer-failure",
+      "title": "为什么分层鸡尾酒混在一起了？",
+      "aliases": [
+        "分层失败",
+        "沉底",
+        "漂浮",
+        "彩虹酒"
+      ],
+      "category": "技法",
+      "answer": "分层与液体密度、温度以及倒入方式有关。慢慢倒入，通常先放更重的材料；不同品牌可能表现不同，不能只凭颜色确定顺序。",
+      "scope": "适用于分层配方，不意味着所有材料都能稳定分层。",
+      "evidenceType": "direct",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-09",
+      "sources": [
+        {
+          "title": "Difford’s Guide — How to layer cocktails",
+          "url": "https://www.diffordsguide.com/g/1150/how-to-make-cocktails/how-to-layer"
+        }
+      ]
+    }
+  ]
+}

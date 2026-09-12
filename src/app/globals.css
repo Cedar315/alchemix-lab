@@ -16,8 +16,8 @@ body {
 }
 
 @theme {
-  --font-sans: "Hanken Grotesk", "Inter", system-ui, sans-serif;
-  --font-serif: "Libre Caslon Text", "Playfair Display", serif;
+  --font-sans: "Hanken Grotesk", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-serif: "Hanken Grotesk", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
 
   --color-surface: #f9f9f9;
   --color-surface-dim: #dadada;
@@ -121,3 +121,12 @@ body::before {
   background: #c4c7c7;
   border-radius: 999px;
 }
+
+/* Shared typography: restrained sans-serif titles and technical numerals. */
+body { -webkit-font-smoothing: antialiased; }
+button, input, select, textarea { font-family: inherit; }
+.beginner-guide { font-variant-numeric: tabular-nums; }
+.beginner-guide button { cursor: pointer; }
+.beginner-guide button:disabled { cursor: not-allowed; }
+.beginner-guide button:focus-visible { outline: 2px solid #171717; outline-offset: 3px; }
+.beginner-guide svg { stroke-width: 1.35; }

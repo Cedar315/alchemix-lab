@@ -14,5 +14,5 @@ export default async function AdminPage() {
     if (error instanceof AuthorizationError) redirect("/?auth=forbidden");
     throw error;
   }
-  return <AdminConsoleClient />;
+  return <><div className="bg-white px-6 py-3 text-right text-sm"><a href="/admin/rag" className="underline">打开 RAG 测试台</a></div><AdminConsoleClient /></>;
 }

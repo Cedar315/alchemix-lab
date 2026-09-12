@@ -5,6 +5,8 @@ import { INSPIRATION_RECIPES, RecipeSeed } from "../lib/data/inspiration-catalog
 import { DrinkLogButton } from "./DrinkLog";
 
 interface AssistantScreenProps {
+  initialPage?: "home" | "material-picker";
+  onBackHome?: () => void;
   onSaveCocktail: (cocktail: SavedCocktail) => void;
   drinkLogs: DrinkLog[];
   onSaveDrinkLog: (log: DrinkLog) => void;
@@ -466,8 +468,8 @@ function RecipeCard({
   );
 }
 
-export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrinkLog }: AssistantScreenProps) {
-  const [assistantPage, setAssistantPage] = useState<"home" | "material-picker" | "material-results" | "mood-results" | "blind-box">("home");
+export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrinkLog, initialPage = "home", onBackHome }: AssistantScreenProps) {
+  const [assistantPage, setAssistantPage] = useState<"home" | "material-picker" | "material-results" | "mood-results" | "blind-box">(initialPage);
   const [materialInput, setMaterialInput] = useState("");
   const [materials, setMaterials] = useState<typeof labIngredientLibrary>([]);
   const [hasRecommended, setHasRecommended] = useState(false);
@@ -490,20 +492,14 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
   }, [materials]);
 
   const recommendations = useMemo(() => {
-    if (!hasRecommended || materials.length === 0) return { canMake: [], almostCanMake: [], suggestedAddons: [] as string[] };
+    if (!hasRecommended || materials.length === 0) return { canMake: [] };
     const analyzed = recipePool
       .map((recipe) => analyzeRecipe(recipe, materials))
       .filter((item) => item.matched.length > 0 || item.score > 12)
       .sort((a, b) => b.score - a.score);
 
     const canMake = analyzed.filter((item) => item.missing.length === 0).slice(0, 8);
-    const almostCanMake = analyzed.filter((item) => item.missing.length > 0 && item.missing.length <= 2).slice(0, 10);
-    const suggestedAddons = analyzed
-      .flatMap((item) => item.missing)
-      .reduce<string[]>((list, item) => (list.includes(item) ? list : [...list, item]), [])
-      .slice(0, 8);
-
-    return { canMake, almostCanMake, suggestedAddons };
+    return { canMake };
   }, [hasRecommended, materials]);
 
   const addMaterial = (value = materialInput, keepResults = false) => {
@@ -562,19 +558,18 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
   const noMaterialResults =
     hasRecommended &&
     materials.length > 0 &&
-    recommendations.canMake.length === 0 &&
-    recommendations.almostCanMake.length === 0;
+    recommendations.canMake.length === 0;
 
   if (assistantPage === "material-picker") {
     return (
       <div className="mx-auto max-w-[430px] space-y-5 pb-8">
         <button
           type="button"
-          onClick={() => setAssistantPage("home")}
+          onClick={() => onBackHome ? onBackHome() : setAssistantPage("home")}
           className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#E1E1DE] bg-white px-3.5 py-2 text-xs font-bold text-neutral-700 shadow-sm active:scale-[0.98]"
         >
           <span className="material-symbols-outlined text-sm">arrow_back</span>
-          返回 Drink Finder
+          返回调酒助手
         </button>
 
         <section className="space-y-2">
@@ -656,7 +651,7 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
             Material Match
           </span>
           <h2 className="text-[28px] font-bold leading-tight text-neutral-950">你可以做这些酒</h2>
-          <p className="text-sm leading-6 text-neutral-500">根据你添加的材料，生成可直接调制和差一点就能完成的酒卡。</p>
+          <p className="text-sm leading-6 text-neutral-500">只展示与你现有材料匹配、现在就能做的酒。</p>
         </section>
 
         {materials.length > 0 && (
@@ -680,7 +675,7 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
 
         {noMaterialResults && (
           <section className="rounded-2xl border border-[#E8E8E8] bg-white p-5 text-sm leading-6 text-neutral-500">
-            暂时没有完全匹配的酒卡。可以补一个常见材料：苏打水、橙汁、柠檬、可乐或乌龙茶。
+            暂时没有找到能用这些材料完成的配方。返回材料页，检查是否漏选了已有材料。
           </section>
         )}
 
@@ -696,36 +691,6 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
           </section>
         )}
 
-        {recommendations.almostCanMake.length > 0 && (
-          <section className="space-y-3">
-            <div>
-              <h3 className="text-lg font-bold text-neutral-950">差一点就能做</h3>
-              <p className="text-xs text-neutral-400">缺的材料标红，通常便利店能补齐。</p>
-            </div>
-            {recommendations.almostCanMake.map((item) => (
-              <RecipeCard key={item.recipe.slug} {...item} onSave={handleSave} drinkLogs={drinkLogs} onSaveDrinkLog={onSaveDrinkLog} sourcePage="assistant_materials" />
-            ))}
-          </section>
-        )}
-
-        {recommendations.suggestedAddons.length > 0 && (
-          <section className="rounded-2xl border border-[#E8E8E8] bg-white p-4">
-            <h3 className="text-sm font-bold text-neutral-950">推荐补充材料</h3>
-            <p className="mt-1 text-xs text-neutral-500">补一个材料后，可以解锁更多配方。</p>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {recommendations.suggestedAddons.map((item) => (
-                <button
-                  type="button"
-                  key={item}
-                  onClick={() => addMaterial(item, true)}
-                  className="cursor-pointer rounded-full bg-[#F2F2F2] px-3 py-1.5 text-xs font-bold text-neutral-700 active:scale-[0.98]"
-                >
-                  + {item}
-                </button>
-              ))}
-            </div>
-          </section>
-        )}
       </div>
     );
   }
@@ -735,11 +700,11 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
       <div className="mx-auto max-w-[430px] space-y-5 pb-8">
         <button
           type="button"
-          onClick={() => setAssistantPage("home")}
+          onClick={() => onBackHome ? onBackHome() : setAssistantPage("home")}
           className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#E1E1DE] bg-white px-3.5 py-2 text-xs font-bold text-neutral-700 shadow-sm active:scale-[0.98]"
         >
           <span className="material-symbols-outlined text-sm">arrow_back</span>
-          返回 Drink Finder
+          返回调酒助手
         </button>
 
         <section className="space-y-2">
@@ -804,11 +769,11 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
       <div className="mx-auto max-w-[430px] space-y-5 pb-8">
         <button
           type="button"
-          onClick={() => setAssistantPage("home")}
+          onClick={() => onBackHome ? onBackHome() : setAssistantPage("home")}
           className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#E1E1DE] bg-white px-3.5 py-2 text-xs font-bold text-neutral-700 shadow-sm active:scale-[0.98]"
         >
           <span className="material-symbols-outlined text-sm">arrow_back</span>
-          返回 Drink Finder
+          返回调酒助手
         </button>
 
         <section className="space-y-2">

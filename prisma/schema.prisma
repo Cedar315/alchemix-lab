@@ -604,3 +604,15 @@ model ClassicRecipeVariant {
   @@index([variantRecipeId])
   @@map("classic_recipe_variants")
 }
+
+// Access vector operations through parameterized SQL in the RAG server service.
+model RagChunk {
+  id               String                      @id
+  datasetVersion   String                      @map("dataset_version")
+  embeddingProfile String                      @map("embedding_profile")
+  document         Json
+  embedding        Unsupported("vector(1024)")
+  updatedAt        DateTime                    @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  @@map("rag_chunks")
+}

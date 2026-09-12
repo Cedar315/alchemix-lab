@@ -4,13 +4,15 @@ import React, { useState, useEffect } from "react";
 import { DrinkLog, SavedCocktail, MixTip } from "./types";
 import LabScreen from "./components/LabScreen";
 import AssistantScreen from "./components/AssistantScreen";
+import BeginnerHome from "./components/BeginnerHome";
 import InspirationScreen from "./components/InspirationScreen";
 import MyProfileScreen from "./components/MyProfileScreen";
 import { trackAnalyticsEvent } from "./lib/analytics";
 
 export default function App() {
   // Navigation State: "ASSISTANT" | "LAB" | "INSPIRATION" | "MY"
-  const [activeTab, setActiveTab] = useState<string>("LAB");
+  const [guideTab, setGuideTab] = useState<"classic" | "convenience" | undefined>();
+  const [activeTab, setActiveTab] = useState<string>("ASSISTANT");
 
   useEffect(() => {
     const authState = new URLSearchParams(window.location.search).get("auth");
@@ -200,8 +202,12 @@ export default function App() {
   const renderScreen = () => {
     switch (activeTab) {
       case "ASSISTANT":
+        return <BeginnerHome onMaterials={() => setActiveTab("MATERIALS")} onExplore={(tab) => { sessionStorage.removeItem("alchemix_guide_return"); setGuideTab(tab); setActiveTab("INSPIRATION"); }} />;
+      case "MATERIALS":
         return (
           <AssistantScreen
+            initialPage="material-picker"
+            onBackHome={() => setActiveTab("ASSISTANT")}
             onSaveCocktail={handleSaveCocktail}
             drinkLogs={drinkLogs}
             onSaveDrinkLog={handleSaveDrinkLog}
@@ -224,7 +230,11 @@ export default function App() {
         );
       case "INSPIRATION":
         return (
-          <InspirationScreen 
+          <InspirationScreen
+            key={guideTab ?? "browse"}
+            initialExploreTab={guideTab}
+            guided={Boolean(guideTab)}
+            onBackGuide={() => setActiveTab("ASSISTANT")}
             tips={tips} 
             onAddTip={handleAddTip} 
             onSaveCocktail={handleSaveCocktail}
@@ -317,7 +327,7 @@ export default function App() {
       </header>
 
       {/* Main Canvas Segment */}
-      <main className="flex-grow overflow-y-auto px-5 py-6">
+      <main className={`flex-grow overflow-y-auto px-5 py-6 ${activeTab === "ASSISTANT" ? "bg-[#F7F7F5]" : ""}`}>
         {renderScreen()}
       </main>
 
@@ -330,16 +340,16 @@ export default function App() {
             setActiveTab("ASSISTANT");
           }}
           className={`flex flex-col items-center justify-center p-1.5 transition-all w-16 duration-200 ${
-            activeTab === "ASSISTANT" ? "text-primary scale-105" : "text-outline-variant hover:text-outline"
+            (activeTab === "ASSISTANT" || activeTab === "MATERIALS") ? "text-primary scale-105" : "text-outline-variant hover:text-outline"
           }`}
         >
           <span 
             className="material-symbols-outlined text-2xl"
-            style={activeTab === "ASSISTANT" ? { fontVariationSettings: "'FILL' 1" } : {}}
+            style={(activeTab === "ASSISTANT" || activeTab === "MATERIALS") ? { fontVariationSettings: "'FILL' 1" } : {}}
           >
-            search
+            home
           </span>
-          <span className="text-[10px] font-bold uppercase tracking-tighter mt-1">Finder</span>
+          <span className="text-[10px] font-bold uppercase tracking-tighter mt-1">首页</span>
         </button>
 
         {/* Lab */}
@@ -358,13 +368,15 @@ export default function App() {
           >
             science
           </span>
-          <span className="text-[10px] font-bold uppercase tracking-tighter mt-1">Lab</span>
+          <span className="text-[10px] font-bold uppercase tracking-tighter mt-1">自由调配</span>
         </button>
 
         {/* Inspiration */}
         <button
           onClick={() => {
             trackAnalyticsEvent({ eventName: "tab_click", page: "inspiration", action: "click", target: "Inspiration" });
+            sessionStorage.removeItem("alchemix_guide_return");
+            setGuideTab(undefined);
             setActiveTab("INSPIRATION");
           }}
           className={`flex flex-col items-center justify-center p-1.5 transition-all w-16 duration-200 ${
@@ -377,7 +389,7 @@ export default function App() {
           >
             menu_book
           </span>
-          <span className="text-[10px] font-bold uppercase tracking-tighter mt-1">Inspiration</span>
+          <span className="text-[10px] font-bold uppercase tracking-tighter mt-1">找酒谱</span>
         </button>
 
         {/* My */}
@@ -396,7 +408,7 @@ export default function App() {
           >
             person
           </span>
-          <span className="text-[10px] font-bold uppercase tracking-tighter mt-1">My</span>
+          <span className="text-[10px] font-bold uppercase tracking-tighter mt-1">我的</span>
         </button>
       </nav>
 

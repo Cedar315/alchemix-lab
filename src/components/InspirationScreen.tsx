@@ -1,3 +1,4 @@
+import { classify, GuideDrink } from "../lib/recommendations/beginner";
 import Image from "next/image";
 import React, { useMemo, useState, useEffect } from "react";
 import { DrinkLog, DrinkLogRecipeSnapshot, MixTip } from "../types";
@@ -30,6 +31,8 @@ import {
 type InspirationView = "menu" | "classic-remix" | "convenience-mix" | "flavor" | "beginner" | "knowledge";
 
 interface InspirationScreenProps {
+  guided?: boolean;
+  onBackGuide?: () => void;
   tips: MixTip[];
   onAddTip: (tip: MixTip) => void;
   onSaveCocktail?: (cocktail: any) => void;
@@ -1117,6 +1120,11 @@ const convenienceExploreCocktails: InspirationCocktail[] = dedupeCocktails([
   ...generatedConvenienceCocktails,
 ]);
 
+export const BEGINNER_CATALOG: GuideDrink[] = [
+  ...classicExploreCocktails.map(d => classify(d, "classic")),
+  ...convenienceExploreCocktails.map(d => classify(d, "easy")),
+].filter((d): d is GuideDrink => d !== null);
+
 const getConvenienceRecipeGuide = (cocktail: InspirationCocktail): ConvenienceRecipeGuide => {
   const curated = convenienceRecipeGuides[cocktail.id];
   if (curated) return curated;
@@ -1574,7 +1582,7 @@ const extraMixProblemLibrary: MixProblem[] = extraMixProblemSeeds.map(([id, cate
 
 const mixProblemLibrary: MixProblem[] = [...baseMixProblemLibrary, ...extraMixProblemLibrary];
 
-export default function InspirationScreen({ tips, onAddTip, onSaveCocktail, drinkLogs = [], onSaveDrinkLog, onLoadToLab, initialView, initialCocktailId = "", initialExploreTab }: InspirationScreenProps) {
+export default function InspirationScreen({ tips, onAddTip, onSaveCocktail, drinkLogs = [], onSaveDrinkLog, onLoadToLab, initialView, initialCocktailId = "", initialExploreTab, guided = false, onBackGuide }: InspirationScreenProps) {
   const [view, setView] = useState<InspirationView>(initialView ?? "menu");
   const [loadedRecipes, setLoadedRecipes] = useState<RecipeSeed[]>([]);
   const [recipeSource, setRecipeSource] = useState<string>("local");
@@ -1585,6 +1593,17 @@ export default function InspirationScreen({ tips, onAddTip, onSaveCocktail, drin
   const [selectedProblemCategory, setSelectedProblemCategory] = useState<MixProblemCategory | "全部">("全部");
   const [showCatalogModal, setShowCatalogModal] = useState<boolean>(false);
   const [saveSuccess, setSaveSuccess] = useState<boolean>(false);
+  const [guideActive, setGuideActive] = useState(guided);
+  const [showAll, setShowAll] = useState(false);
+  useEffect(() => {
+    if (initialView && initialView !== "menu") return;
+    const saved = sessionStorage.getItem("alchemix_guide_return");
+    if (saved === "classic" || saved === "convenience") {
+      setGuideActive(true);
+      setExploreTab(saved);
+      sessionStorage.removeItem("alchemix_guide_return");
+    }
+  }, [initialView]);
   const [exploreTab, setExploreTab] = useState<ExploreTab>(initialExploreTab ?? "convenience");
   const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
@@ -1624,6 +1643,13 @@ export default function InspirationScreen({ tips, onAddTip, onSaveCocktail, drin
       return text.includes(query);
     });
   }, [exploreTab, searchQuery, selectedCategory]);
+
+  const guidedCocktails = useMemo(() => [...filteredExploreCocktails].sort((a, b) => {
+    const aMeta = getCocktailMvpMeta(a, exploreTab);
+    const bMeta = getCocktailMvpMeta(b, exploreTab);
+    return aMeta.difficulty - bMeta.difficulty || a.ingredients.length - b.ingredients.length;
+  }), [filteredExploreCocktails, exploreTab]);
+  const visibleCocktails = guideActive && !showAll ? guidedCocktails.slice(0, 3) : filteredExploreCocktails;
 
   useEffect(() => {
     setSelectedCategory("全部");
@@ -1698,6 +1724,11 @@ export default function InspirationScreen({ tips, onAddTip, onSaveCocktail, drin
   };
 
   const goBackToInspiration = () => {
+    if (sessionStorage.getItem("alchemix_beginner_detail") === "1") {
+      sessionStorage.removeItem("alchemix_beginner_detail");
+      window.location.href = "/?beginner=return";
+      return;
+    }
     if (initialView && typeof window !== "undefined") {
       const tab = initialView === "classic-remix" ? "classic" : "convenience";
       window.location.href = `/inspiration?tab=${tab}`;
@@ -2436,7 +2467,8 @@ export default function InspirationScreen({ tips, onAddTip, onSaveCocktail, drin
   const renderMenu = () => (
     <div className="mx-auto w-full max-w-[430px] bg-[#F7F7F5] px-4 pb-24">
       <section className="pt-6 text-center">
-        <h2 className="text-[28px] font-bold leading-tight text-neutral-950">探索</h2>
+        <h2 className="text-[28px] font-bold leading-tight text-neutral-950">找酒谱</h2>
+        {guideActive && <><button onClick={() => onBackGuide ? onBackGuide() : window.location.assign("/")} className="mt-3 text-xs text-neutral-500 underline">返回首页引导</button><h3 className="mt-6 text-xl font-medium">{showAll ? "继续找你喜欢的一杯" : "从这三杯开始"}</h3><p className="mt-2 text-xs leading-6 text-neutral-500">{exploreTab === "classic" ? "先认识经典，从操作简单的配方开始。" : "常见材料，简单调配。购买前确认门店有售。"}</p></>}
       </section>
 
       <section className="mt-6 border-b border-[#dededb]">
@@ -2450,7 +2482,7 @@ export default function InspirationScreen({ tips, onAddTip, onSaveCocktail, drin
             return (
               <button
                 key={tab.id}
-                onClick={() => setExploreTab(tab.id)}
+                onClick={() => { setExploreTab(tab.id); setShowAll(false); }}
                 className={`relative flex h-[54px] cursor-pointer items-center justify-center gap-2 text-[15px] font-bold transition-colors ${
                   active ? "text-neutral-950" : "text-neutral-400"
                 }`}
@@ -2517,11 +2549,14 @@ export default function InspirationScreen({ tips, onAddTip, onSaveCocktail, drin
             </div>
           ) : (
             <section className="mt-4 grid grid-cols-2 gap-3 min-[340px]:grid-cols-2 max-[339px]:grid-cols-1">
-              {filteredExploreCocktails.map((cocktail, index) => {
+              {visibleCocktails.map((cocktail, index) => {
                 const hasLogged = hasDrinkLogForExploreCocktail(cocktail, drinkLogs);
                 const meta = getCocktailMvpMeta(cocktail, exploreTab);
                 return (
                   <article
+                    role="link"
+                    tabIndex={0}
+                    onKeyDown={(event) => { if (event.key === "Enter") event.currentTarget.click(); }}
                     key={cocktail.id}
                     onClick={() => {
                       trackAnalyticsEvent({
@@ -2544,9 +2579,10 @@ export default function InspirationScreen({ tips, onAddTip, onSaveCocktail, drin
                         recipeId: cocktail.id,
                         source: exploreTab,
                       });
+                      if (guideActive) sessionStorage.setItem("alchemix_guide_return", exploreTab);
                       window.location.href = cocktail.href;
                     }}
-                    className="relative cursor-pointer overflow-hidden rounded-2xl border border-[#E8E8E8] bg-white shadow-[0_1px_8px_rgba(15,23,42,0.04)] transition-transform active:scale-[0.98]"
+                    className={`relative cursor-pointer overflow-hidden rounded-2xl border border-[#E8E8E8] bg-white shadow-[0_1px_8px_rgba(15,23,42,0.04)] transition-transform active:scale-[0.98] ${guideActive && !showAll && index === 0 ? "col-span-2 max-[339px]:col-span-1" : ""}`}
                   >
                     {hasLogged && (
                       <div className="absolute right-2 top-2 z-10 inline-flex items-center gap-1 rounded-full border border-white/70 bg-white/92 px-2 py-1 text-[10px] font-bold text-neutral-950 shadow-[0_4px_14px_rgba(15,23,42,0.12)] backdrop-blur">
@@ -2563,6 +2599,7 @@ export default function InspirationScreen({ tips, onAddTip, onSaveCocktail, drin
                           </span>
                         ))}
                       </div>
+                      {guideActive && !showAll && index === 0 && <p className="text-xs font-bold text-neutral-950">推荐先试 · {meta.tool}</p>}
                       <h3 className="text-[17px] font-bold leading-snug text-neutral-950 line-clamp-2">{cocktail.nameZh}</h3>
                       <p className="text-[13px] font-semibold leading-snug text-neutral-500">{cocktail.nameEn}</p>
                       <p className="text-[13px] leading-[1.5] text-neutral-500 line-clamp-3">{cocktail.description}</p>
@@ -2584,6 +2621,7 @@ export default function InspirationScreen({ tips, onAddTip, onSaveCocktail, drin
               })}
             </section>
           )}
+          {guideActive && !showAll && filteredExploreCocktails.length > 3 && <button onClick={() => setShowAll(true)} className="mt-5 min-h-12 w-full rounded-full bg-neutral-950 px-5 py-3 text-sm font-medium text-white">{exploreTab === "classic" ? "查看更多经典酒" : "查看更多便利店特调"}</button>}
         </>
     </div>
   );

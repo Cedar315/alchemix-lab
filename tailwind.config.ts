@@ -10,8 +10,8 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Hanken Grotesk', 'Inter', 'system-ui', 'sans-serif'],
-        serif: ['Libre Caslon Text', 'Playfair Display', 'serif'],
+        sans: ['Hanken Grotesk', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'sans-serif'],
+        serif: ['Hanken Grotesk', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'sans-serif'],
       },
       colors: {
         surface: {
