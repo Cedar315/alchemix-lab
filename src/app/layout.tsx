@@ -1,5 +1,6 @@
 import './globals.css';
 import React from 'react';
+import AssistantProvider from '@/components/assistant/AssistantProvider';
 
 export const metadata = {
   title: 'AlcheMix Lab',
@@ -21,7 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
-        <main>{children}</main>
+        <AssistantProvider><main>{children}</main></AssistantProvider>
       </body>
     </html>
   );

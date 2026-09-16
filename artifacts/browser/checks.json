@@ -1,0 +1,18 @@
+{
+  "at": "2026-09-13T15:03:41.135Z",
+  "checks": [
+    "mobile-no-overflow",
+    "no-duplicate-recommendation-form",
+    "draft-restored",
+    "citations-visible",
+    "no-supply-extraction-input",
+    "clarification-visible",
+    "recommendation-handoff",
+    "original-workflow-receives-request",
+    "recipe-context-restored",
+    "real-agent-route-rejects-anonymous",
+    "retired-route-410",
+    "no-browser-exceptions"
+  ],
+  "note": "Browser auth/answer fixtures; anonymous HTTP and retired route checks use real server. Real model/service evaluation is separate."
+}

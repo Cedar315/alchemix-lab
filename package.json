@@ -1,5 +1,5 @@
 {
-  "name": "react-example",
+  "name": "alchemix-lab",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -13,7 +13,23 @@
     "typecheck": "tsc --noEmit",
     "db:migrate:deploy": "prisma migrate deploy",
     "check": "npm run typecheck && npm run build",
-    "test:rag": "tsx --test src/lib/knowledge/rag/rag.test.ts"
+    "test:rag": "tsx --test src/lib/knowledge/rag/rag.test.ts",
+    "rag:status": "tsx scripts/rag.ts status",
+    "rag:ingest": "tsx scripts/rag.ts ingest",
+    "test:rag:live": "tsx scripts/rag.ts smoke",
+    "test": "tsx --test src/lib/knowledge/rag/rag.test.ts src/lib/recommendations/beginner.test.ts src/lib/agent/agent.test.ts src/lib/auth/return-path.test.ts src/lib/agent/preparation.test.ts src/lib/agent/companion.test.ts src/lib/knowledge/review/review.test.ts",
+    "test:agent": "tsx --test src/lib/agent/preparation.test.ts src/lib/agent/companion.test.ts",
+    "eval:rag": "tsx scripts/evaluate.ts rag",
+    "eval:agent": "tsx scripts/evaluate-companion.ts",
+    "db:status": "tsx scripts/database.ts status",
+    "db:deploy": "tsx scripts/database.ts deploy",
+    "test:budget:live": "tsx scripts/check-budget.ts",
+    "test:browser": "node scripts/check-companion-browser.mjs",
+    "eval:agent:legacy": "tsx scripts/evaluate.ts agent",
+    "eval:agent:preparation": "tsx scripts/evaluate-preparation.ts",
+    "test:browser:preparation": "node scripts/browser-check.mjs",
+    "test:knowledge": "tsx --test src/lib/knowledge/review/review.test.ts",
+    "test:knowledge:live": "tsx scripts/check-knowledge-store.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

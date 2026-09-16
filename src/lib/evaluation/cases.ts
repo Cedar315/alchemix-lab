@@ -1,0 +1,23 @@
+// Fixed cases: adjust prompts on development cases; report test cases without tuning to them.
+export const ragCases = [
+  { split:'dev', question:'苏打水能放进密闭摇酒壶摇吗？', ids:['carbonated-shaking'], status:'answered' },
+  { split:'dev', question:'换成同体积2:1糖浆之后为什么太甜？', ids:['syrup-concentration'], status:'answered' },
+  { split:'dev', question:'茶饮加牛奶后分层，是什么原因？', ids:['milk-curdling'], status:'answered' },
+  { split:'dev', question:'经典内格罗尼需要柠檬汁和糖浆吗？', ids:['classic-negroni'], status:'answered' },
+  { split:'dev', question:'蜂蜜在冷酒里混不开怎么办？', ids:['honey-mixing'], status:'answered' },
+  { split:'dev', question:'双重过滤怎么做？', ids:['double-strain'], status:'answered' },
+  { split:'dev', question:'汤力水为什么这么苦？', ids:['tonic-bitterness'], status:'answered' },
+  { split:'dev', question:'同样配方做出来很水，可能怎么回事？', ids:['ice-dilution'], status:'answered' },
+  { split:'dev', question:'没有量酒器，怎样保持比例一致？', ids:['measure-consistently'], status:'answered' },
+  { split:'dev', question:'如何用Python实现快速排序？', ids:[], status:'no_evidence' },
+  { split:'dev', question:'给出1:1糖浆换成2:1糖浆的精确毫升比例。', ids:['syrup-concentration'], status:'insufficient_evidence' },
+  { split:'dev', question:'君度和Triple Sec是什么关系？', ids:['orange-liqueur'], status:'answered' },
+  { split:'test', question:'做完上一杯，壶里的冰可不可以再用一次？', ids:['reuse-ice'], status:'answered' },
+  { split:'test', question:'薄荷捣得很碎以后发苦了，为什么？', ids:['mint-muddling'], status:'answered' },
+  { split:'test', question:'酒没有明显酒味，能说明酒精含量低吗？', ids:['alcohol-content'], status:'answered' },
+  { split:'test', question:'干摇是怎么操作的？', ids:['dry-shake'], status:'answered' },
+  { split:'test', question:'苏打水可以一起摇吗？另外蜂蜜一直混不开怎么办？', ids:['carbonated-shaking','honey-mixing'], status:'answered' },
+  { split:'test', question:'玛格丽特不做盐口还算符合IBA版本吗？', ids:['classic-margarita'], status:'answered' },
+  { split:'test', question:'请证明黎曼猜想。', ids:[], status:'no_evidence' },
+  { split:'test', question:'把1:1糖浆换成2:1，准确到小数点后两位应倒多少毫升？', ids:['syrup-concentration'], status:'insufficient_evidence' },
+];

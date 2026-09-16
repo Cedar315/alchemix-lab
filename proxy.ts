@@ -10,7 +10,7 @@ function rateLimit(request: NextRequest, userId?: string) {
   if (contentLength > 256_000) return NextResponse.json({ error: "Request body too large" }, { status: 413 });
 
   const path = request.nextUrl.pathname;
-  const isExpensive = path.startsWith("/api/ai/") || path === "/api/ingredients/ai-lookup" || path === "/api/cocktails/customize";
+  const isExpensive = path === "/api/ask" || path === "/api/agent" || path === "/api/admin/rag" || path.startsWith("/api/ai/") || path === "/api/ingredients/ai-lookup" || path === "/api/cocktails/customize";
   const isAiLookup = path === "/api/ingredients/ai-lookup";
   const isAuthEmail = path === "/api/auth/sign-up" || path === "/api/auth/forgot-password" || path === "/api/auth/resend-confirmation";
   const isSignIn = path === "/api/auth/sign-in";
@@ -57,6 +57,7 @@ export async function proxy(request: NextRequest) {
     if (!isAdmin) {
       const redirectUrl = request.nextUrl.clone();
       redirectUrl.pathname = "/";
+      redirectUrl.searchParams.set("next", request.nextUrl.pathname + request.nextUrl.search);
       redirectUrl.searchParams.set("auth", user ? "forbidden" : "required");
       return NextResponse.redirect(redirectUrl);
     }

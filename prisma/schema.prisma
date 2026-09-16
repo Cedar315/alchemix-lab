@@ -616,3 +616,36 @@ model RagChunk {
 
   @@map("rag_chunks")
 }
+
+
+// Server-only review queue; pending drafts never participate in vector retrieval.
+model KnowledgeCandidate {
+  id String @id
+  fingerprint String @unique
+  question String
+  recipeName String @map("recipe_name")
+  status String @default("pending")
+  draft Json
+  evidence Json @default("[]")
+  reason String @default("")
+  occurrences Int @default(1)
+  revision Int @default(1)
+  mergedInto String? @map("merged_into")
+  target KnowledgeCandidate? @relation("MergedKnowledge",fields:[mergedInto],references:[id],onDelete:NoAction,onUpdate:NoAction)
+  mergedCandidates KnowledgeCandidate[] @relation("MergedKnowledge")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+  reviews KnowledgeReview[]
+  @@index([status,updatedAt(sort:Desc)],map:"knowledge_candidates_status_updated")
+  @@map("knowledge_candidates")
+}
+model KnowledgeReview {
+  id BigInt @id @default(autoincrement())
+  candidateId String @map("candidate_id")
+  candidate KnowledgeCandidate @relation(fields:[candidateId],references:[id],onDelete:NoAction,onUpdate:NoAction)
+  actorId String @map("actor_id") @db.Uuid
+  action String
+  snapshot Json
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  @@map("knowledge_reviews")
+}

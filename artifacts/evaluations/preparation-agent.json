@@ -1,0 +1,323 @@
+{
+  "at": "2026-09-13T14:52:25.132Z",
+  "model": "MiniMax-M2.5",
+  "note": "Small live smoke; semantic correctness requires review. Not a held-out benchmark.",
+  "rows": [
+    {
+      "input": {
+        "question": "帮我推荐一杯清爽的酒",
+        "intent": "recommend"
+      },
+      "result": {
+        "status": "handoff",
+        "message": "选酒继续使用首页的材料和口味筛选；选好后可以带配方来问制作问题。",
+        "clarification": "",
+        "knowledge": null,
+        "calculations": [],
+        "handoff": {
+          "label": "去首页选酒",
+          "href": "/?tab=ASSISTANT"
+        },
+        "trace": [],
+        "model": "MiniMax-M2.5",
+        "usage": [
+          {
+            "total_tokens": 609,
+            "total_characters": 0,
+            "prompt_tokens": 402,
+            "completion_tokens": 207
+          }
+        ],
+        "intent": {
+          "intent": "recommend",
+          "dialogueAct": "new_task",
+          "taskRelation": "new",
+          "question": "帮我推荐一杯清爽的酒",
+          "knowledgeQuestion": "",
+          "destination": "finder"
+        },
+        "recipes": []
+      },
+      "pass": true,
+      "elapsedMs": 4118
+    },
+    {
+      "input": {
+        "question": "苏打水能放进密闭摇酒壶摇吗？",
+        "intent": "knowledge"
+      },
+      "result": {
+        "status": "answered",
+        "message": "已根据资料回答。",
+        "clarification": "",
+        "knowledge": {
+          "status": "answered",
+          "claims": [
+            {
+              "text": "苏打水不应放进密闭摇酒壶摇。应按配方先处理非气泡部分，倒入杯中后再加入苏打水。",
+              "evidenceIds": [
+                "carbonated-shaking"
+              ]
+            }
+          ],
+          "citations": [
+            {
+              "id": "carbonated-shaking",
+              "title": "气泡饮料能放进摇酒壶摇吗？",
+              "sources": [
+                {
+                  "title": "Cocktail preparation instructions, City of York licensing attachment",
+                  "url": "https://democracy.york.gov.uk/documents/s11684/Annex%203.pdf"
+                },
+                {
+                  "title": "Difford’s Guide — Fizz recipe",
+                  "url": "https://www.diffordsguide.com/cocktails/recipe/754/fizz-generic-name"
+                }
+              ]
+            }
+          ],
+          "model": "MiniMax-M2.5",
+          "usage": {
+            "total_tokens": 800,
+            "total_characters": 0,
+            "prompt_tokens": 509,
+            "completion_tokens": 291,
+            "prompt_tokens_details": {
+              "cached_tokens": 443
+            }
+          }
+        },
+        "calculations": [],
+        "handoff": null,
+        "trace": [
+          {
+            "tool": "search_knowledge",
+            "status": "answered",
+            "elapsedMs": 6962
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": [
+          {
+            "total_tokens": 821,
+            "total_characters": 0,
+            "prompt_tokens": 410,
+            "completion_tokens": 411
+          }
+        ],
+        "intent": {
+          "intent": "knowledge",
+          "dialogueAct": "new_task",
+          "taskRelation": "new",
+          "question": "苏打水能放进密闭摇酒壶摇吗？",
+          "knowledgeQuestion": "苏打水能放进密闭摇酒壶摇吗？",
+          "destination": "explore"
+        },
+        "recipes": []
+      },
+      "pass": true,
+      "elapsedMs": 12950
+    },
+    {
+      "input": {
+        "question": "不是糖浆，是蜂蜜。我已经加进去了，现在混不开。",
+        "context": "正在做一杯家庭金酒饮品，原配方写糖浆。",
+        "intent": "troubleshoot",
+        "act": "correction"
+      },
+      "result": {
+        "status": "unavailable",
+        "message": "助手暂时未能完成处理，请稍后重试。",
+        "clarification": "",
+        "knowledge": {
+          "status": "answered",
+          "claims": [
+            {
+              "text": "将蜂蜜与水预先混合成蜂蜜糖浆后再与其他材料混合，可以解决蜂蜜在冷饮或酒精液体中结块、不溶解的问题。",
+              "evidenceIds": [
+                "honey-mixing"
+              ]
+            }
+          ],
+          "citations": [
+            {
+              "id": "honey-mixing",
+              "title": "蜂蜜不好混匀怎么办？",
+              "sources": [
+                {
+                  "title": "Difford’s Guide — Honey syrup",
+                  "url": "https://www.diffordsguide.com/g/1109/honey-and-honey-syrup/honey-syrup"
+                }
+              ]
+            }
+          ],
+          "model": "MiniMax-M2.5",
+          "usage": {
+            "total_tokens": 774,
+            "total_characters": 0,
+            "prompt_tokens": 536,
+            "completion_tokens": 238
+          }
+        },
+        "calculations": [],
+        "handoff": null,
+        "trace": [
+          {
+            "tool": "search_knowledge",
+            "status": "answered",
+            "elapsedMs": 4721
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": [
+          {
+            "total_tokens": 775,
+            "total_characters": 0,
+            "prompt_tokens": 423,
+            "completion_tokens": 352
+          },
+          {
+            "total_tokens": 789,
+            "total_characters": 0,
+            "prompt_tokens": 455,
+            "completion_tokens": 334
+          }
+        ],
+        "intent": {
+          "intent": "troubleshoot",
+          "dialogueAct": "correction",
+          "taskRelation": "continue",
+          "question": "",
+          "knowledgeQuestion": "",
+          "destination": "lab"
+        },
+        "recipes": [],
+        "errorCode": "PROVIDER_OR_OUTPUT_ERROR"
+      },
+      "pass": false,
+      "elapsedMs": 31739
+    },
+    {
+      "input": {
+        "question": "容量 300 ml，已有 250 ml，拟加 100 ml。液体会超过杯子容量吗？我已经在做这杯了。",
+        "context": "当前杯子接近装满。",
+        "calculate": true
+      },
+      "result": {
+        "status": "answered",
+        "message": "已核对本次制作信息。",
+        "clarification": "",
+        "knowledge": null,
+        "calculations": [
+          {
+            "text": "按你提供的液体用量，250 + 100 = 350 ml，超过 300 ml 容器容量。未计冰块占用空间；这不代表实际可装下，也不代表该调整的风味或安全性已验证。",
+            "capacity": 300,
+            "current": 250,
+            "addition": 100
+          }
+        ],
+        "handoff": null,
+        "trace": [
+          {
+            "tool": "check_capacity",
+            "status": "ok",
+            "elapsedMs": 0
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": [
+          {
+            "total_tokens": 815,
+            "total_characters": 0,
+            "prompt_tokens": 430,
+            "completion_tokens": 385
+          },
+          {
+            "total_tokens": 847,
+            "total_characters": 0,
+            "prompt_tokens": 503,
+            "completion_tokens": 344
+          },
+          {
+            "total_tokens": 825,
+            "total_characters": 0,
+            "prompt_tokens": 555,
+            "completion_tokens": 270,
+            "prompt_tokens_details": {
+              "cached_tokens": 443
+            }
+          }
+        ],
+        "intent": {
+          "intent": "troubleshoot",
+          "dialogueAct": "answer",
+          "taskRelation": "new",
+          "question": "容量 300 ml，已有 250 ml，拟加 100 ml。液体会超过杯子容量吗？",
+          "knowledgeQuestion": "容量 300 ml，已有 250 ml，拟加 100 ml，液体会超过杯子容量吗？",
+          "destination": "lab"
+        },
+        "recipes": []
+      },
+      "pass": true,
+      "elapsedMs": 14579
+    },
+    {
+      "input": {
+        "question": "300",
+        "intent": "unclear"
+      },
+      "result": {
+        "status": "unavailable",
+        "message": "助手暂时未能完成处理，请稍后重试。",
+        "clarification": "",
+        "knowledge": null,
+        "calculations": [],
+        "handoff": null,
+        "trace": [],
+        "model": "MiniMax-M2.5",
+        "usage": [
+          {
+            "total_tokens": 579,
+            "total_characters": 0,
+            "prompt_tokens": 398,
+            "completion_tokens": 181
+          }
+        ],
+        "intent": null,
+        "recipes": [],
+        "errorCode": "INVALID_PROTOCOL"
+      },
+      "pass": false,
+      "elapsedMs": 3638
+    },
+    {
+      "input": {
+        "question": "算了，不做了",
+        "cancel": true
+      },
+      "result": {
+        "status": "unavailable",
+        "message": "助手暂时未能完成处理，请稍后重试。",
+        "clarification": "",
+        "knowledge": null,
+        "calculations": [],
+        "handoff": null,
+        "trace": [],
+        "model": "MiniMax-M2.5",
+        "usage": [
+          {
+            "total_tokens": 753,
+            "total_characters": 0,
+            "prompt_tokens": 400,
+            "completion_tokens": 353
+          }
+        ],
+        "intent": null,
+        "recipes": [],
+        "errorCode": "INVALID_PROTOCOL"
+      },
+      "pass": false,
+      "elapsedMs": 5148
+    }
+  ]
+}

@@ -1,0 +1,260 @@
+{
+  "at": "2026-09-14T10:49:06.657Z",
+  "implementation": "companion-v2",
+  "note": "Five live integration smoke cases, not an independent benchmark or human faithfulness audit.",
+  "rows": [
+    {
+      "name": "named-detail",
+      "input": "打开玛格丽特的酒单",
+      "pass": false,
+      "elapsedMs": 6464,
+      "result": {
+        "status": "answered",
+        "message": "",
+        "clarification": "",
+        "actions": [
+          {
+            "label": "查看制作步骤",
+            "action": {
+              "kind": "locate",
+              "target": "recipe"
+            }
+          }
+        ],
+        "recipes": [],
+        "knowledge": null,
+        "pending": null,
+        "taskId": "90339cf5-dcec-45d0-ad1c-014cf4d0ad13",
+        "contextVersion": 0,
+        "trace": [
+          {
+            "tool": "recognize_intent",
+            "status": "operate",
+            "elapsedMs": 0
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": {
+          "total_tokens": 800,
+          "total_characters": 0,
+          "prompt_tokens": 510,
+          "completion_tokens": 290
+        }
+      }
+    },
+    {
+      "name": "lab-exploration",
+      "input": "橙汁和伏特加配起来是什么味道？",
+      "pass": false,
+      "elapsedMs": 28936,
+      "result": {
+        "status": "answered",
+        "message": "现有资料还不足以确定这个问题的答案。",
+        "clarification": "",
+        "actions": [],
+        "recipes": [],
+        "knowledge": {
+          "status": "insufficient_evidence",
+          "claims": [],
+          "citations": []
+        },
+        "pending": null,
+        "taskId": "cf52d61c-d2da-49f5-b665-483539f027e3",
+        "contextVersion": 0,
+        "trace": [
+          {
+            "tool": "recognize_intent",
+            "status": "knowledge",
+            "elapsedMs": 0
+          },
+          {
+            "tool": "search_knowledge",
+            "status": "insufficient_evidence",
+            "elapsedMs": 21871
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": {
+          "total_tokens": 905,
+          "total_characters": 0,
+          "prompt_tokens": 514,
+          "completion_tokens": 391
+        }
+      }
+    },
+    {
+      "name": "two-categories",
+      "input": "我有龙舌兰、橙味利口酒、青柠、橙汁，这些材料能做什么酒？",
+      "pass": false,
+      "elapsedMs": 13307,
+      "result": {
+        "status": "answered",
+        "message": "",
+        "clarification": "",
+        "actions": [],
+        "recipes": [
+          {
+            "id": "paloma",
+            "name": "帕洛玛",
+            "category": "classic",
+            "reason": "已匹配你提供的材料：龙舌兰、西柚汽水。冰块和器具请在酒单中确认。",
+            "missing": [],
+            "action": {
+              "kind": "recipe",
+              "category": "classic",
+              "id": "paloma"
+            }
+          },
+          {
+            "id": "margarita",
+            "name": "玛格丽特",
+            "category": "classic",
+            "reason": "已匹配你提供的材料：龙舌兰、橙味利口酒、青柠。冰块和器具请在酒单中确认。",
+            "missing": [],
+            "action": {
+              "kind": "recipe",
+              "category": "classic",
+              "id": "margarita"
+            }
+          }
+        ],
+        "knowledge": null,
+        "pending": null,
+        "taskId": "1077fd8c-4aa4-4609-a9e5-f1cfbdc79314",
+        "contextVersion": 0,
+        "trace": [
+          {
+            "tool": "recognize_intent",
+            "status": "recommend",
+            "elapsedMs": 0
+          },
+          {
+            "tool": "match_workflow",
+            "status": "4",
+            "elapsedMs": 0
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": {
+          "total_tokens": 1313,
+          "total_characters": 0,
+          "prompt_tokens": 526,
+          "completion_tokens": 787
+        }
+      }
+    },
+    {
+      "name": "missing-current-ingredient",
+      "input": "我就想做当前这杯，但是没有橙味利口酒，怎么办？",
+      "pass": true,
+      "elapsedMs": 22677,
+      "result": {
+        "status": "answered",
+        "message": "先保留当前这杯，可以在便利店改良选项中查看已有调整。该功能不保证每种缺料都有替代。",
+        "clarification": "",
+        "actions": [
+          {
+            "label": "查看便利店改良选项",
+            "action": {
+              "kind": "locate",
+              "target": "substitute"
+            }
+          }
+        ],
+        "recipes": [],
+        "knowledge": {
+          "status": "insufficient_evidence",
+          "claims": [],
+          "citations": []
+        },
+        "pending": null,
+        "taskId": "8b998f64-7f87-4c9c-b93c-cdc2783489cf",
+        "contextVersion": 0,
+        "trace": [
+          {
+            "tool": "recognize_intent",
+            "status": "change",
+            "elapsedMs": 0
+          },
+          {
+            "tool": "search_knowledge",
+            "status": "insufficient_evidence",
+            "elapsedMs": 7741
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": {
+          "total_tokens": 989,
+          "total_characters": 0,
+          "prompt_tokens": 541,
+          "completion_tokens": 448,
+          "prompt_tokens_details": {
+            "cached_tokens": 443
+          }
+        }
+      }
+    },
+    {
+      "name": "knowledge",
+      "input": "气泡饮料能放进摇酒壶摇吗？",
+      "pass": true,
+      "elapsedMs": 16764,
+      "result": {
+        "status": "answered",
+        "message": "",
+        "clarification": "",
+        "actions": [],
+        "recipes": [],
+        "knowledge": {
+          "status": "answered",
+          "claims": [
+            {
+              "text": "不要把含气泡饮料放进密闭摇酒壶摇晃；应按配方先处理非气泡部分，倒入杯中后再加入汽水或苏打水",
+              "evidenceIds": [
+                "carbonated-shaking"
+              ]
+            }
+          ],
+          "citations": [
+            {
+              "id": "carbonated-shaking",
+              "title": "气泡饮料能放进摇酒壶摇吗？",
+              "sources": [
+                {
+                  "title": "Cocktail preparation instructions, City of York licensing attachment",
+                  "url": "https://democracy.york.gov.uk/documents/s11684/Annex%203.pdf"
+                },
+                {
+                  "title": "Difford’s Guide — Fizz recipe",
+                  "url": "https://www.diffordsguide.com/cocktails/recipe/754/fizz-generic-name"
+                }
+              ]
+            }
+          ]
+        },
+        "pending": null,
+        "taskId": "21259aee-680d-4b1f-bbe9-ec3601677e49",
+        "contextVersion": 0,
+        "trace": [
+          {
+            "tool": "recognize_intent",
+            "status": "knowledge",
+            "elapsedMs": 0
+          },
+          {
+            "tool": "search_knowledge",
+            "status": "answered",
+            "elapsedMs": 8929
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": {
+          "total_tokens": 810,
+          "total_characters": 0,
+          "prompt_tokens": 513,
+          "completion_tokens": 297
+        }
+      }
+    }
+  ]
+}

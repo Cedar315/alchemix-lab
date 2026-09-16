@@ -1,0 +1,337 @@
+{
+  "at": "2026-09-16T02:56:03.868Z",
+  "implementation": "companion-v2",
+  "note": "Seven live integration smoke cases, not an independent benchmark or human faithfulness audit.",
+  "rows": [
+    {
+      "name": "named-detail",
+      "input": "打开玛格丽特的酒单",
+      "pass": true,
+      "elapsedMs": 9110,
+      "result": {
+        "status": "answered",
+        "message": "找到玛格丽特的酒单。",
+        "clarification": "",
+        "actions": [
+          {
+            "label": "查看玛格丽特",
+            "action": {
+              "kind": "recipe",
+              "category": "classic",
+              "id": "margarita"
+            }
+          }
+        ],
+        "recipes": [],
+        "knowledge": null,
+        "pending": null,
+        "taskId": "1d22c3b2-2cd0-4710-a817-08545172e806",
+        "contextVersion": 0,
+        "trace": [
+          {
+            "tool": "recognize_intent",
+            "status": "named",
+            "elapsedMs": 0
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": {
+          "total_tokens": 998,
+          "total_characters": 0,
+          "prompt_tokens": 555,
+          "completion_tokens": 443
+        }
+      }
+    },
+    {
+      "name": "lab-exploration",
+      "input": "橙汁和伏特加配起来是什么味道？",
+      "pass": true,
+      "elapsedMs": 6031,
+      "result": {
+        "status": "answered",
+        "message": "把伏特加和橙汁带到实验室查看搭配，用量由你确认。",
+        "clarification": "",
+        "actions": [
+          {
+            "label": "到实验室查看搭配",
+            "action": {
+              "kind": "prefill",
+              "materials": [
+                {
+                  "name": "伏特加"
+                },
+                {
+                  "name": "橙汁"
+                }
+              ]
+            }
+          }
+        ],
+        "recipes": [],
+        "knowledge": null,
+        "pending": null,
+        "taskId": "ad637248-289a-4317-8ce2-0c34272d03ff",
+        "contextVersion": 0,
+        "trace": [
+          {
+            "tool": "recognize_intent",
+            "status": "explore",
+            "elapsedMs": 0
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": {
+          "total_tokens": 849,
+          "total_characters": 0,
+          "prompt_tokens": 558,
+          "completion_tokens": 291
+        }
+      }
+    },
+    {
+      "name": "two-categories",
+      "input": "我有龙舌兰、橙味利口酒、青柠、橙汁，这些材料能做什么酒？",
+      "pass": false,
+      "elapsedMs": 5120,
+      "result": {
+        "status": "answered",
+        "message": "把龙舌兰和橙味利口酒和青柠和橙汁带到实验室查看搭配，用量由你确认。",
+        "clarification": "",
+        "actions": [
+          {
+            "label": "到实验室查看搭配",
+            "action": {
+              "kind": "prefill",
+              "materials": [
+                {
+                  "name": "龙舌兰"
+                },
+                {
+                  "name": "橙味利口酒"
+                },
+                {
+                  "name": "青柠"
+                },
+                {
+                  "name": "橙汁"
+                }
+              ]
+            }
+          }
+        ],
+        "recipes": [],
+        "knowledge": null,
+        "pending": null,
+        "taskId": "e1cc5dba-03e6-4eae-8fca-42a0ed6d123a",
+        "contextVersion": 0,
+        "trace": [
+          {
+            "tool": "recognize_intent",
+            "status": "explore",
+            "elapsedMs": 0
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": {
+          "total_tokens": 978,
+          "total_characters": 0,
+          "prompt_tokens": 574,
+          "completion_tokens": 404
+        }
+      }
+    },
+    {
+      "name": "missing-current-ingredient",
+      "input": "我就想做当前这杯，但是没有橙味利口酒，怎么办？",
+      "pass": true,
+      "elapsedMs": 17181,
+      "result": {
+        "status": "answered",
+        "message": "先保留当前这杯，可以在便利店改良选项中查看已有调整。该功能不保证每种缺料都有替代。",
+        "clarification": "",
+        "actions": [
+          {
+            "label": "查看便利店改良选项",
+            "action": {
+              "kind": "locate",
+              "target": "substitute"
+            }
+          }
+        ],
+        "recipes": [],
+        "knowledge": {
+          "status": "insufficient_evidence",
+          "claims": [],
+          "citations": []
+        },
+        "pending": null,
+        "taskId": "e3034b08-de31-4462-ac49-39300d0aa778",
+        "contextVersion": 0,
+        "trace": [
+          {
+            "tool": "recognize_intent",
+            "status": "change",
+            "elapsedMs": 0
+          },
+          {
+            "tool": "search_knowledge",
+            "status": "insufficient_evidence",
+            "elapsedMs": 7790
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": {
+          "total_tokens": 1180,
+          "total_characters": 0,
+          "prompt_tokens": 559,
+          "completion_tokens": 621
+        }
+      }
+    },
+    {
+      "name": "highball-detail",
+      "input": "打开威士忌嗨棒的酒单",
+      "pass": false,
+      "elapsedMs": 6713,
+      "result": {
+        "status": "needs_info",
+        "message": "",
+        "clarification": "你想查看哪一类酒单：经典酒还是便利店调酒？",
+        "actions": [],
+        "recipes": [],
+        "knowledge": null,
+        "pending": null,
+        "taskId": "6a023b6d-828b-4d15-8f74-0671e67fbab4",
+        "contextVersion": 0,
+        "trace": [
+          {
+            "tool": "recognize_intent",
+            "status": "named",
+            "elapsedMs": 0
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": {
+          "total_tokens": 945,
+          "total_characters": 0,
+          "prompt_tokens": 559,
+          "completion_tokens": 386
+        }
+      }
+    },
+    {
+      "name": "paloma-detail",
+      "input": "打开帕洛玛的酒单",
+      "pass": true,
+      "elapsedMs": 7863,
+      "result": {
+        "status": "answered",
+        "message": "找到帕洛玛的酒单。",
+        "clarification": "",
+        "actions": [
+          {
+            "label": "查看帕洛玛",
+            "action": {
+              "kind": "recipe",
+              "category": "classic",
+              "id": "paloma"
+            }
+          }
+        ],
+        "recipes": [],
+        "knowledge": null,
+        "pending": null,
+        "taskId": "7ade4278-4821-4caf-aec1-7590ad935046",
+        "contextVersion": 0,
+        "trace": [
+          {
+            "tool": "recognize_intent",
+            "status": "named",
+            "elapsedMs": 0
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": {
+          "total_tokens": 929,
+          "total_characters": 0,
+          "prompt_tokens": 551,
+          "completion_tokens": 378
+        }
+      }
+    },
+    {
+      "name": "knowledge",
+      "input": "气泡饮料能放进摇酒壶摇吗？",
+      "pass": true,
+      "elapsedMs": 14406,
+      "result": {
+        "status": "answered",
+        "message": "",
+        "clarification": "",
+        "actions": [],
+        "recipes": [],
+        "knowledge": {
+          "status": "answered",
+          "claims": [
+            {
+              "text": "气泡饮料不应放入摇酒壶中摇晃",
+              "evidenceIds": [
+                "carbonated-shaking",
+                "classic-french-75"
+              ]
+            }
+          ],
+          "citations": [
+            {
+              "id": "carbonated-shaking",
+              "title": "气泡饮料能放进摇酒壶摇吗？",
+              "sources": [
+                {
+                  "title": "Cocktail preparation instructions, City of York licensing attachment",
+                  "url": "https://democracy.york.gov.uk/documents/s11684/Annex%203.pdf"
+                },
+                {
+                  "title": "Difford’s Guide — Fizz recipe",
+                  "url": "https://www.diffordsguide.com/cocktails/recipe/754/fizz-generic-name"
+                }
+              ]
+            },
+            {
+              "id": "classic-french-75",
+              "title": "法式75的香槟要一起摇吗？",
+              "sources": [
+                {
+                  "title": "IBA — French 75",
+                  "url": "https://iba-world.com/iba-cocktail/french-75/"
+                }
+              ]
+            }
+          ]
+        },
+        "pending": null,
+        "taskId": "a59b1ee6-7e21-40d4-9fee-3702b5f08f55",
+        "contextVersion": 0,
+        "trace": [
+          {
+            "tool": "recognize_intent",
+            "status": "knowledge",
+            "elapsedMs": 0
+          },
+          {
+            "tool": "search_knowledge",
+            "status": "answered",
+            "elapsedMs": 8286
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": {
+          "total_tokens": 921,
+          "total_characters": 0,
+          "prompt_tokens": 562,
+          "completion_tokens": 359
+        }
+      }
+    }
+  ]
+}

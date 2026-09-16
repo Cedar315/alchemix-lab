@@ -1,0 +1,90 @@
+{
+  "at": "2026-09-12T10:26:45.262Z",
+  "model": "MiniMax-M2.5",
+  "rows": [
+    {
+      "question": "我不知道该加多少冰",
+      "result": {
+        "status": "timeout",
+        "message": "助手暂时未能完成检查，请保留材料信息后重试。",
+        "clarification": "",
+        "recipes": [],
+        "knowledge": {
+          "status": "insufficient_evidence",
+          "claims": [],
+          "citations": [],
+          "model": "MiniMax-M2.5",
+          "usage": {
+            "total_tokens": 664,
+            "total_characters": 0,
+            "prompt_tokens": 468,
+            "completion_tokens": 196
+          }
+        },
+        "trace": [
+          {
+            "tool": "search_knowledge",
+            "status": "insufficient_evidence",
+            "elapsedMs": 8343
+          },
+          {
+            "tool": "search_knowledge",
+            "status": "insufficient_evidence",
+            "elapsedMs": 5217
+          },
+          {
+            "tool": "search_knowledge",
+            "status": "insufficient_evidence",
+            "elapsedMs": 4868
+          },
+          {
+            "tool": "search_knowledge",
+            "status": "insufficient_evidence",
+            "elapsedMs": 4938
+          },
+          {
+            "tool": "search_knowledge",
+            "status": "insufficient_evidence",
+            "elapsedMs": 4713
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": [
+          {
+            "total_tokens": 796,
+            "total_characters": 0,
+            "prompt_tokens": 589,
+            "completion_tokens": 207
+          },
+          {
+            "total_tokens": 828,
+            "total_characters": 0,
+            "prompt_tokens": 653,
+            "completion_tokens": 175,
+            "prompt_tokens_details": {
+              "cached_tokens": 443
+            }
+          },
+          {
+            "total_tokens": 968,
+            "total_characters": 0,
+            "prompt_tokens": 710,
+            "completion_tokens": 258,
+            "prompt_tokens_details": {
+              "cached_tokens": 443
+            }
+          },
+          {
+            "total_tokens": 953,
+            "total_characters": 0,
+            "prompt_tokens": 766,
+            "completion_tokens": 187,
+            "prompt_tokens_details": {
+              "cached_tokens": 443
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

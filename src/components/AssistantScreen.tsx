@@ -1,4 +1,6 @@
-import React, { useMemo, useState } from "react";
+import Link from "next/link";
+import { convenienceExploreCocktails, getConvenienceRecipeGuide } from "../lib/data/explore-catalog";
+import React, { useEffect, useMemo, useState } from "react";
 import { DrinkLog, DrinkLogRecipeSnapshot, SavedCocktail } from "../types";
 import { CONVENIENCE_DRINK_INGREDIENTS } from "../lib/data/convenience-drink-ingredients";
 import { INSPIRATION_RECIPES, RecipeSeed } from "../lib/data/inspiration-catalog";
@@ -385,11 +387,11 @@ function RecipeCard({
   };
 
   return (
-    <article className="rounded-2xl border border-[#E8E8E8] bg-white p-4 shadow-[0_1px_10px_rgba(15,23,42,0.04)]">
+    <article className="rounded-2xl border border-[#E8E8E8] bg-white p-4 shadow-none">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h3 className="text-lg font-bold leading-tight text-neutral-950">{recipe.nameCn}</h3>
-          <p className="mt-0.5 text-[11px] font-bold uppercase tracking-[0.14em] text-neutral-400">{recipe.nameEn}</p>
+          <h3 className="text-lg font-medium leading-tight text-neutral-950">{recipe.nameCn}</h3>
+          <p className="mt-0.5 text-[11px] font-medium uppercase tracking-[0.14em] text-neutral-400">{recipe.nameEn}</p>
         </div>
         <div className="flex shrink-0 items-center gap-1.5">
           <DrinkLogButton
@@ -402,7 +404,7 @@ function RecipeCard({
           <button
             type="button"
             onClick={handleFavorite}
-            className={`cursor-pointer rounded-full border px-3 py-1.5 text-[11px] font-bold active:scale-[0.98] ${
+            className={`cursor-pointer rounded-full border px-3 py-1.5 text-[11px] font-medium active:scale-[0.98] ${
               justSaved ? "border-neutral-950 bg-neutral-950 text-white" : "border-[#E8E8E8] text-neutral-600"
             }`}
           >
@@ -415,14 +417,14 @@ function RecipeCard({
 
       <div className="mt-3 flex flex-wrap gap-1.5">
         {recipe.tags.slice(0, 4).map((tag) => (
-          <span key={tag} className="rounded-full bg-[#F2F2F2] px-2.5 py-1 text-[10px] font-bold text-neutral-500">
+          <span key={tag} className="rounded-full bg-[#F2F2F2] px-2.5 py-1 text-[10px] font-medium text-neutral-500">
             {tag}
           </span>
         ))}
       </div>
 
       <div className="mt-4 space-y-2">
-        <p className="text-[11px] font-bold text-neutral-400">需要材料</p>
+        <p className="text-[11px] font-medium text-neutral-400">需要材料</p>
         <div className="flex flex-wrap gap-1.5">
           {required.map((item) => {
             const isMissing = missing.includes(item.nameCn);
@@ -430,7 +432,7 @@ function RecipeCard({
             return (
               <span
                 key={`${recipe.slug}-${item.nameCn}`}
-                className={`rounded-full border px-2.5 py-1 text-[11px] font-bold ${
+                className={`rounded-full border px-2.5 py-1 text-[11px] font-medium ${
                   isMissing
                     ? "border-red-100 bg-red-50 text-red-500"
                     : isMatched
@@ -446,8 +448,8 @@ function RecipeCard({
       </div>
 
       {!compact && (
-        <div className="mt-4 rounded-2xl bg-[#F7F7F5] p-3">
-          <p className="text-[11px] font-bold text-neutral-400">做法</p>
+        <div className="mt-4 rounded-2xl bg-[#f6f5f1] p-3">
+          <p className="text-[11px] font-medium text-neutral-400">做法</p>
           <p className="mt-1 text-xs leading-5 text-neutral-600">{recipe.method}</p>
         </div>
       )}
@@ -458,9 +460,9 @@ function RecipeCard({
           ["新手", recipe.beginnerScore],
           ["便利店", recipe.convenienceScore],
         ].map(([label, value]) => (
-          <div key={label} className="rounded-xl bg-[#F7F7F5] px-2 py-2">
+          <div key={label} className="rounded-xl bg-[#f6f5f1] px-2 py-2">
             <p className="text-[10px] text-neutral-400">{label}</p>
-            <p className="text-sm font-bold text-neutral-950">{value}/5</p>
+            <p className="text-sm font-medium text-neutral-950">{value}/5</p>
           </div>
         ))}
       </div>
@@ -473,6 +475,16 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
   const [materialInput, setMaterialInput] = useState("");
   const [materials, setMaterials] = useState<typeof labIngredientLibrary>([]);
   const [hasRecommended, setHasRecommended] = useState(false);
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(sessionStorage.getItem("alchemix_material_results") || "null");
+      if (Array.isArray(saved)) {
+        setMaterials(labIngredientLibrary.filter(item => saved.includes(item.id)));
+        setHasRecommended(true);
+        setAssistantPage("material-results");
+      }
+    } catch { /* Materials can still be selected when storage is unavailable. */ }
+  }, []);
   const [selectedMood, setSelectedMood] = useState<MoodOption | null>(null);
   const [moodRecipes, setMoodRecipes] = useState<RecipeSeed[]>([]);
   const [openedBox, setOpenedBox] = useState<BlindBox | null>(null);
@@ -493,12 +505,16 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
 
   const recommendations = useMemo(() => {
     if (!hasRecommended || materials.length === 0) return { canMake: [] };
-    const analyzed = recipePool
-      .map((recipe) => analyzeRecipe(recipe, materials))
-      .filter((item) => item.matched.length > 0 || item.score > 12)
-      .sort((a, b) => b.score - a.score);
-
-    const canMake = analyzed.filter((item) => item.missing.length === 0).slice(0, 8);
+    const canMake = convenienceExploreCocktails.filter((drink) => {
+      const required = getConvenienceRecipeGuide(drink).ingredientLines
+        .filter(line => !line.includes("可选") && !line.startsWith("冰块"))
+        .map(line => line.split(/\s+[A-Za-z0-9]/)[0].trim());
+      return required.length > 0 && required.every(name =>
+        materials.some(ingredient => [ingredient.nameZh, ingredient.nameEn, ...ingredient.aliases].some(alias => {
+          const term = normalize(alias);
+          return term.length > 0 && (normalize(name) === term || normalize(name).includes(term) || term.includes(normalize(name)));
+        })));
+    }).slice(0, 3);
     return { canMake };
   }, [hasRecommended, materials]);
 
@@ -566,35 +582,35 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
         <button
           type="button"
           onClick={() => onBackHome ? onBackHome() : setAssistantPage("home")}
-          className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#E1E1DE] bg-white px-3.5 py-2 text-xs font-bold text-neutral-700 shadow-sm active:scale-[0.98]"
+          className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#E1E1DE] bg-white px-3.5 py-2 text-xs font-medium text-neutral-700 shadow-none active:scale-[0.98]"
         >
           <span className="material-symbols-outlined text-sm">arrow_back</span>
           返回调酒助手
         </button>
 
         <section className="space-y-2">
-          <span className="inline-flex rounded-full border border-[#E8E8E8] bg-white px-3 py-1 text-[11px] font-bold text-neutral-500">Material Match</span>
-          <h2 className="text-[28px] font-bold leading-tight text-neutral-950">我的材料</h2>
+          <span className="inline-flex rounded-full border border-[#E8E8E8] bg-white px-3 py-1 text-[11px] font-medium text-neutral-500">Material Match</span>
+          <h2 className="text-[28px] font-medium leading-tight text-neutral-950">我的材料</h2>
           <p className="text-sm leading-6 text-neutral-500">选择你手边已有的酒和饮料，看看现在能做什么。</p>
         </section>
 
-        <section className="rounded-2xl border border-[#E8E8E8] bg-white p-4 shadow-[0_1px_10px_rgba(15,23,42,0.04)]">
+        <section className="rounded-2xl border border-[#E8E8E8] bg-white p-4 shadow-none">
           <form className="flex gap-2" onSubmit={(event) => { event.preventDefault(); addMaterial(); }}>
             <input
               value={materialInput}
               onChange={(event) => setMaterialInput(event.target.value)}
               placeholder="搜索酒类、饮料或配料"
-              className="min-w-0 flex-1 rounded-full border border-[#E1E1DE] bg-[#F7F7F5] px-4 py-3 text-sm outline-none focus:border-neutral-950"
+              className="min-w-0 flex-1 rounded-full border border-[#E1E1DE] bg-[#f6f5f1] px-4 py-3 text-sm outline-none focus:border-neutral-950"
             />
-            <button type="submit" className="cursor-pointer rounded-full bg-neutral-950 px-4 text-sm font-bold text-white active:scale-[0.98]">添加</button>
+            <button type="submit" className="cursor-pointer rounded-full bg-neutral-950 px-4 text-sm font-medium text-white active:scale-[0.98]">添加</button>
           </form>
 
           {suggestions.length > 0 && (
             <div className="mt-2 rounded-2xl border border-[#E8E8E8] bg-[#FCFCFA] p-2">
               {suggestions.map((item) => (
                 <button type="button" key={item.id} onClick={() => addMaterial(item.nameZh)} className="flex w-full cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-left active:scale-[0.99]">
-                  <span><span className="block text-xs font-bold text-neutral-900">{item.nameZh}</span><span className="block text-[11px] text-neutral-400">{item.nameEn}</span></span>
-                  <span className="text-[11px] font-bold text-neutral-400">{item.category}</span>
+                  <span><span className="block text-xs font-medium text-neutral-900">{item.nameZh}</span><span className="block text-[11px] text-neutral-400">{item.nameEn}</span></span>
+                  <span className="text-[11px] font-medium text-neutral-400">{item.category}</span>
                 </button>
               ))}
             </div>
@@ -602,7 +618,7 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
 
           <div className="mt-3 flex flex-wrap gap-2">
             {popularQuickIngredients.map((item) => (
-              <button type="button" key={item} onClick={() => addMaterial(item)} className="cursor-pointer rounded-full bg-[#F2F2F2] px-3 py-1.5 text-xs font-bold text-neutral-600 active:scale-[0.98]">{item}</button>
+              <button type="button" key={item} onClick={() => addMaterial(item)} className="cursor-pointer rounded-full bg-[#F2F2F2] px-3 py-1.5 text-xs font-medium text-neutral-600 active:scale-[0.98]">{item}</button>
             ))}
           </div>
 
@@ -610,10 +626,10 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
             <div className="mt-4 space-y-3">
               {groupedMaterials.map((group) => (
                 <div key={group.label}>
-                  <p className="mb-1.5 text-[11px] font-bold text-neutral-400">{group.label}</p>
+                  <p className="mb-1.5 text-[11px] font-medium text-neutral-400">{group.label}</p>
                   <div className="flex flex-wrap gap-2">
                     {group.items.map((item) => (
-                      <button type="button" key={item.id} onClick={() => removeMaterial(item.id)} className="cursor-pointer rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-xs font-bold text-neutral-800 active:scale-[0.98]">{item.nameZh} ×</button>
+                      <button type="button" key={item.id} onClick={() => removeMaterial(item.id)} className="cursor-pointer rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-800 active:scale-[0.98]">{item.nameZh} ×</button>
                     ))}
                   </div>
                 </div>
@@ -624,11 +640,11 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
           <button
             type="button"
             onClick={() => { setHasRecommended(true); if (materials.length > 0) setAssistantPage("material-results"); }}
-            className="mt-4 w-full cursor-pointer rounded-2xl bg-neutral-950 py-3.5 text-sm font-bold text-white active:scale-[0.99]"
+            className="mt-4 w-full cursor-pointer rounded-2xl bg-neutral-950 py-3.5 text-sm font-medium text-white active:scale-[0.99]"
           >
             生成我能做的酒卡
           </button>
-          {hasRecommended && materials.length === 0 && <p className="mt-3 rounded-2xl bg-[#F7F7F5] p-3 text-xs leading-5 text-neutral-500">先添加 1–2 个材料，比如金酒、苏打水、养乐多或水溶C。</p>}
+          {hasRecommended && materials.length === 0 && <p className="mt-3 rounded-2xl bg-[#f6f5f1] p-3 text-xs leading-5 text-neutral-500">先添加 1–2 个材料，比如金酒、苏打水、养乐多或水溶C。</p>}
         </section>
       </div>
     );
@@ -640,26 +656,26 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
         <button
           type="button"
           onClick={() => setAssistantPage("material-picker")}
-          className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#E1E1DE] bg-white px-3.5 py-2 text-xs font-bold text-neutral-700 shadow-sm active:scale-[0.98]"
+          className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#E1E1DE] bg-white px-3.5 py-2 text-xs font-medium text-neutral-700 shadow-none active:scale-[0.98]"
         >
           <span className="material-symbols-outlined text-sm">arrow_back</span>
           返回我的材料
         </button>
 
         <section className="space-y-2">
-          <span className="inline-flex rounded-full border border-[#E8E8E8] bg-white px-3 py-1 text-[11px] font-bold text-neutral-500">
+          <span className="inline-flex rounded-full border border-[#E8E8E8] bg-white px-3 py-1 text-[11px] font-medium text-neutral-500">
             Material Match
           </span>
-          <h2 className="text-[28px] font-bold leading-tight text-neutral-950">你可以做这些酒</h2>
-          <p className="text-sm leading-6 text-neutral-500">只展示与你现有材料匹配、现在就能做的酒。</p>
+          <h2 className="text-[28px] font-medium leading-tight text-neutral-950">你可以做这些酒</h2>
+          <p className="text-sm leading-6 text-neutral-500">先选一杯，再查看用量和做法。调制时有疑问，点击详情页的助手气泡。</p>
         </section>
 
         {materials.length > 0 && (
           <section className="rounded-2xl border border-[#E8E8E8] bg-white p-4">
-            <p className="text-[11px] font-bold text-neutral-400">已选材料</p>
+            <p className="text-[11px] font-medium text-neutral-400">已选材料</p>
             <div className="mt-2 flex flex-wrap gap-2">
               {materials.map((item) => (
-                <span key={item.id} className="rounded-full bg-[#F2F2F2] px-3 py-1.5 text-xs font-bold text-neutral-700">
+                <span key={item.id} className="rounded-full bg-[#F2F2F2] px-3 py-1.5 text-xs font-medium text-neutral-700">
                   {item.nameZh}
                 </span>
               ))}
@@ -682,11 +698,19 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
         {recommendations.canMake.length > 0 && (
           <section className="space-y-3">
             <div>
-              <h3 className="text-lg font-bold text-neutral-950">可以直接做</h3>
-              <p className="text-xs text-neutral-400">这些酒卡和你现有材料匹配度最高。</p>
+              <h3 className="text-lg font-medium text-neutral-950">可以直接做</h3>
+              <p className="text-xs text-neutral-400">按现有材料推荐，冰块请另备；不足三杯时只展示匹配的酒。</p>
             </div>
-            {recommendations.canMake.map((item) => (
-              <RecipeCard key={item.recipe.slug} {...item} onSave={handleSave} drinkLogs={drinkLogs} onSaveDrinkLog={onSaveDrinkLog} sourcePage="assistant_materials" />
+            {recommendations.canMake.map((drink) => (
+              <article key={drink.id} className="rounded-2xl border border-[#E1E1DE] bg-white p-4">
+                <h3 className="text-lg font-medium text-neutral-950">{drink.nameZh}</h3>
+                <p className="mt-1 text-xs text-neutral-400">{drink.nameEn}</p>
+                <p className="mt-2 text-sm leading-6 text-neutral-600">{drink.description}</p>
+                <p className="mt-2 text-xs text-neutral-500">{drink.ingredients.join(" · ")}</p>
+                <Link href={`${drink.href}&from=materials`} onClick={() => {
+                  try { sessionStorage.setItem("alchemix_material_results", JSON.stringify(materials.map(item => item.id))); } catch {}
+                }} className="mt-3 flex min-h-10 items-center justify-center rounded-full border border-neutral-200 text-xs text-neutral-950">查看做法</Link>
+              </article>
             ))}
           </section>
         )}
@@ -701,17 +725,17 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
         <button
           type="button"
           onClick={() => onBackHome ? onBackHome() : setAssistantPage("home")}
-          className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#E1E1DE] bg-white px-3.5 py-2 text-xs font-bold text-neutral-700 shadow-sm active:scale-[0.98]"
+          className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#E1E1DE] bg-white px-3.5 py-2 text-xs font-medium text-neutral-700 shadow-none active:scale-[0.98]"
         >
           <span className="material-symbols-outlined text-sm">arrow_back</span>
           返回调酒助手
         </button>
 
         <section className="space-y-2">
-          <span className="inline-flex rounded-full border border-[#E8E8E8] bg-white px-3 py-1 text-[11px] font-bold text-neutral-500">
+          <span className="inline-flex rounded-full border border-[#E8E8E8] bg-white px-3 py-1 text-[11px] font-medium text-neutral-500">
             Mood Match
           </span>
-          <h2 className="text-[28px] font-bold leading-tight text-neutral-950">今天是什么心情？</h2>
+          <h2 className="text-[28px] font-medium leading-tight text-neutral-950">今天是什么心情？</h2>
           <p className="text-sm leading-6 text-neutral-500">选一个心情标签，再生成适合当下状态的酒卡。</p>
         </section>
 
@@ -723,11 +747,11 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
                 key={mood.slug}
                 onClick={() => handleMoodSelect(mood)}
                 className={`cursor-pointer rounded-2xl border p-3 text-left active:scale-[0.98] ${
-                  selectedMood?.slug === mood.slug ? "border-neutral-950 bg-neutral-950 text-white" : "border-[#E8E8E8] bg-[#F7F7F5] text-neutral-700"
+                  selectedMood?.slug === mood.slug ? "border-neutral-950 bg-neutral-950 text-white" : "border-[#E8E8E8] bg-[#f6f5f1] text-neutral-700"
                 }`}
               >
                 <span className="material-symbols-outlined text-[21px]">{mood.icon}</span>
-                <span className="mt-1 block text-sm font-bold">{mood.label}</span>
+                <span className="mt-1 block text-sm font-medium">{mood.label}</span>
               </button>
             ))}
           </div>
@@ -735,14 +759,14 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
 
         {selectedMood && moodRecipes.length > 0 && (
           <section className="rounded-2xl border border-[#E8E8E8] bg-white p-4">
-            <p className="text-[11px] font-bold text-neutral-400">给现在的你</p>
+            <p className="text-[11px] font-medium text-neutral-400">给现在的你</p>
             <p className="mt-2 text-sm leading-6 text-neutral-600">{moodEncouragement(selectedMood, moodRecipes[0])}</p>
           </section>
         )}
 
         {moodRecipes.length > 0 ? (
           <section className="space-y-3">
-            <h3 className="text-lg font-bold text-neutral-950">推荐酒卡</h3>
+            <h3 className="text-lg font-medium text-neutral-950">推荐酒卡</h3>
             {moodRecipes.map((recipe, index) => (
               <RecipeCard
                 key={recipe.slug}
@@ -770,25 +794,25 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
         <button
           type="button"
           onClick={() => onBackHome ? onBackHome() : setAssistantPage("home")}
-          className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#E1E1DE] bg-white px-3.5 py-2 text-xs font-bold text-neutral-700 shadow-sm active:scale-[0.98]"
+          className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#E1E1DE] bg-white px-3.5 py-2 text-xs font-medium text-neutral-700 shadow-none active:scale-[0.98]"
         >
           <span className="material-symbols-outlined text-sm">arrow_back</span>
           返回调酒助手
         </button>
 
         <section className="space-y-2">
-          <span className="inline-flex rounded-full border border-[#E8E8E8] bg-white px-3 py-1 text-[11px] font-bold text-neutral-500">
+          <span className="inline-flex rounded-full border border-[#E8E8E8] bg-white px-3 py-1 text-[11px] font-medium text-neutral-500">
             Blind Box
           </span>
-          <h2 className="text-[28px] font-bold leading-tight text-neutral-950">{openedBox?.name ?? "随机一杯盲盒"}</h2>
+          <h2 className="text-[28px] font-medium leading-tight text-neutral-950">{openedBox?.name ?? "随机一杯盲盒"}</h2>
           <p className="text-sm leading-6 text-neutral-500">{openedBox?.subtitle ?? "从全部酒单随机装入 12 张隐藏酒卡，选一个 BOX 再翻牌。"}</p>
         </section>
 
         {openedBox ? (
-          <section className="overflow-hidden rounded-[22px] border border-[#E8E8E8] bg-[#F7F7F5] p-3">
+          <section className="overflow-hidden rounded-[22px] border border-[#E8E8E8] bg-[#f6f5f1] p-3">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <p className="text-sm font-bold text-neutral-950">{openedBox.name}</p>
+                <p className="text-sm font-medium text-neutral-950">{openedBox.name}</p>
                 <p className="text-[11px] text-neutral-400">本次随机装入 12 张，点击一个盒子后再反转卡片</p>
               </div>
             </div>
@@ -799,12 +823,12 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
                   type="button"
                   key={`${openedBox.slug}-${recipe.slug}-${index}`}
                   onClick={() => drawFromBox(index)}
-                  className={`flex min-h-[72px] cursor-pointer flex-col items-center justify-center rounded-2xl border p-2 text-center shadow-sm active:scale-[0.98] ${
+                  className={`flex min-h-[72px] cursor-pointer flex-col items-center justify-center rounded-2xl border p-2 text-center shadow-none active:scale-[0.98] ${
                     selectedBlindIndex === index ? "border-neutral-950 bg-neutral-950 text-white" : "border-white bg-white text-neutral-800"
                   }`}
                 >
-                  <p className="text-[10px] font-bold text-neutral-400">BOX</p>
-                  <p className={`mt-1 text-[20px] font-bold leading-none ${selectedBlindIndex === index ? "text-white" : "text-neutral-800"}`}>{index + 1}</p>
+                  <p className="text-[10px] font-medium text-neutral-400">BOX</p>
+                  <p className={`mt-1 text-[20px] font-medium leading-none ${selectedBlindIndex === index ? "text-white" : "text-neutral-800"}`}>{index + 1}</p>
                   <p className="mt-1 text-[9px] uppercase text-neutral-400">hidden</p>
                 </button>
               ))}
@@ -818,10 +842,10 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
 
         {blindRecipe && (
           <div className="fixed inset-0 z-[170] flex items-center justify-center bg-black/35 px-4 backdrop-blur-[2px]">
-            <section className="w-full max-w-[390px] rounded-[28px] border border-[#E8E8E8] bg-white p-4 shadow-[0_24px_70px_rgba(15,23,42,0.25)] animate-in fade-in zoom-in-95 duration-200">
+            <section className="w-full max-w-[390px] rounded-[28px] border border-[#E8E8E8] bg-white p-4 shadow-none animate-in fade-in zoom-in-95 duration-200">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-sm font-bold text-neutral-950">你抽的是 BOX {selectedBlindIndex !== null ? selectedBlindIndex + 1 : ""}</p>
+                  <p className="text-sm font-medium text-neutral-950">你抽的是 BOX {selectedBlindIndex !== null ? selectedBlindIndex + 1 : ""}</p>
                   <p className="text-xs text-neutral-400">{isBlindRevealed ? "翻开成功" : "点击反转查看酒名"}</p>
                 </div>
                 <div className="flex items-center gap-2">
@@ -829,7 +853,7 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
                     <button
                       type="button"
                       onClick={() => setIsBlindRevealed(true)}
-                      className="cursor-pointer rounded-full bg-neutral-950 px-4 py-2 text-xs font-bold text-white active:scale-[0.98]"
+                      className="cursor-pointer rounded-full bg-neutral-950 px-4 py-2 text-xs font-medium text-white active:scale-[0.98]"
                     >
                       点击反转
                     </button>
@@ -856,27 +880,27 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
                 >
                   <div className="absolute inset-0 flex min-h-[430px] flex-col items-center justify-center rounded-[24px] border border-neutral-900 bg-neutral-950 p-5 text-center text-white [backface-visibility:hidden]">
                     <span className="material-symbols-outlined text-[42px]">style</span>
-                    <p className="mt-3 text-xl font-bold">你抽到的是 BOX {selectedBlindIndex !== null ? selectedBlindIndex + 1 : ""}</p>
-                    <p className="mt-6 text-[11px] font-bold uppercase tracking-[0.18em] text-white/45">tap reverse</p>
+                    <p className="mt-3 text-xl font-medium">你抽到的是 BOX {selectedBlindIndex !== null ? selectedBlindIndex + 1 : ""}</p>
+                    <p className="mt-6 text-[11px] font-medium uppercase tracking-[0.18em] text-white/45">tap reverse</p>
                   </div>
 
-                  <div className="absolute inset-0 min-h-[430px] overflow-y-auto rounded-[24px] border border-[#E8E8E8] bg-[#F7F7F5] p-5 [backface-visibility:hidden] [transform:rotateY(180deg)]">
+                  <div className="absolute inset-0 min-h-[430px] overflow-y-auto rounded-[24px] border border-[#E8E8E8] bg-[#f6f5f1] p-5 [backface-visibility:hidden] [transform:rotateY(180deg)]">
                     <div className="flex min-h-[390px] flex-col gap-4">
                       <div>
                         <div className="flex flex-wrap gap-1.5">
                           {blindRecipe.tags.slice(0, 3).map((tag) => (
-                            <span key={tag} className="rounded-full bg-white px-2.5 py-1 text-[10px] font-bold text-neutral-500">
+                            <span key={tag} className="rounded-full bg-white px-2.5 py-1 text-[10px] font-medium text-neutral-500">
                               #{tag}
                             </span>
                           ))}
                         </div>
-                        <h3 className="mt-4 text-2xl font-bold leading-tight text-neutral-950">{blindRecipe.nameCn}</h3>
-                        <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.16em] text-neutral-400">{blindRecipe.nameEn}</p>
+                        <h3 className="mt-4 text-2xl font-medium leading-tight text-neutral-950">{blindRecipe.nameCn}</h3>
+                        <p className="mt-1 text-[11px] font-medium uppercase tracking-[0.16em] text-neutral-400">{blindRecipe.nameEn}</p>
                         <p className="mt-3 text-sm leading-6 text-neutral-600">{blindRecipe.description}</p>
                       </div>
 
                       <div className="rounded-2xl bg-white p-3">
-                        <p className="text-[11px] font-bold text-neutral-400">材料</p>
+                        <p className="text-[11px] font-medium text-neutral-400">材料</p>
                         <div className="mt-2 space-y-1.5">
                           {blindRecipe.ingredients.slice(0, 4).map((item) => (
                             <div key={`${blindRecipe.slug}-${item.nameCn}`} className="flex items-center justify-between gap-3 text-xs">
@@ -888,7 +912,7 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
                       </div>
 
                       <div className="rounded-2xl bg-white p-3">
-                        <p className="text-[11px] font-bold text-neutral-400">做法</p>
+                        <p className="text-[11px] font-medium text-neutral-400">做法</p>
                         <p className="mt-1 text-xs leading-5 text-neutral-600">{blindRecipe.method}</p>
                       </div>
 
@@ -914,27 +938,27 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
   return (
     <div className="mx-auto max-w-[430px] space-y-6 pb-8">
       <section className="space-y-2">
-        <span className="inline-flex rounded-full border border-[#E8E8E8] bg-white px-3 py-1 text-[11px] font-bold text-neutral-500">
+        <span className="inline-flex rounded-full border border-[#E8E8E8] bg-white px-3 py-1 text-[11px] font-medium text-neutral-500">
           Drink Finder
         </span>
-        <h2 className="text-[30px] font-bold leading-tight text-neutral-950">找一杯</h2>
+        <h2 className="text-[30px] font-medium leading-tight text-neutral-950">找一杯</h2>
         <p className="text-sm leading-6 text-neutral-500">按材料、心情或随机盲盒，找到一杯现在能做的酒。</p>
       </section>
 
-      <section className="rounded-2xl border border-[#E8E8E8] bg-white p-4 shadow-[0_1px_10px_rgba(15,23,42,0.04)]">
+      <section className="rounded-2xl border border-[#E8E8E8] bg-white p-4 shadow-none">
         <div className="space-y-1">
-          <h3 className="text-lg font-bold text-neutral-950">按材料找一杯</h3>
+          <h3 className="text-lg font-medium text-neutral-950">按材料找一杯</h3>
           <p className="text-xs leading-5 text-neutral-500">进入后选择你手边已有的酒和饮料，生成现在能做的酒卡。</p>
         </div>
 
         <button
           type="button"
           onClick={() => setAssistantPage("material-picker")}
-          className="mt-4 flex min-h-[104px] w-full cursor-pointer items-center gap-3 rounded-2xl border border-[#E8E8E8] bg-[#F7F7F5] p-4 text-left transition-all active:scale-[0.98]"
+          className="mt-4 flex min-h-[104px] w-full cursor-pointer items-center gap-3 rounded-2xl border border-[#E8E8E8] bg-[#f6f5f1] p-4 text-left transition-all active:scale-[0.98]"
         >
           <span className="material-symbols-outlined rounded-2xl bg-white p-3 text-[28px] text-neutral-950">liquor</span>
           <span className="min-w-0">
-            <span className="block text-base font-bold text-neutral-950">选择我的材料</span>
+            <span className="block text-base font-medium text-neutral-950">选择我的材料</span>
             <span className="mt-1 block text-xs leading-5 text-neutral-500">{materials.length > 0 ? `已选择 ${materials.length} 种材料，继续编辑或查看推荐。` : "金酒、苏打水、果汁，有什么就从什么开始。"}</span>
           </span>
           <span className="material-symbols-outlined ml-auto text-neutral-400">chevron_right</span>
@@ -952,9 +976,9 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
             value={materialInput}
             onChange={(event) => setMaterialInput(event.target.value)}
             placeholder="搜索酒类、饮料或配料，例如：金酒、水溶C、养乐多"
-            className="min-w-0 flex-1 rounded-full border border-[#E1E1DE] bg-[#F7F7F5] px-4 py-3 text-sm outline-none focus:border-neutral-950"
+            className="min-w-0 flex-1 rounded-full border border-[#E1E1DE] bg-[#f6f5f1] px-4 py-3 text-sm outline-none focus:border-neutral-950"
           />
-          <button type="submit" className="cursor-pointer rounded-full bg-neutral-950 px-4 text-sm font-bold text-white active:scale-[0.98]">
+          <button type="submit" className="cursor-pointer rounded-full bg-neutral-950 px-4 text-sm font-medium text-white active:scale-[0.98]">
             添加
           </button>
         </form>
@@ -969,10 +993,10 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
                 className="flex w-full cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-left active:scale-[0.99]"
               >
                 <span>
-                  <span className="block text-xs font-bold text-neutral-900">{item.nameZh}</span>
+                  <span className="block text-xs font-medium text-neutral-900">{item.nameZh}</span>
                   <span className="block text-[11px] text-neutral-400">{item.nameEn}</span>
                 </span>
-                <span className="text-[11px] font-bold text-neutral-400">{item.category}</span>
+                <span className="text-[11px] font-medium text-neutral-400">{item.category}</span>
               </button>
             ))}
           </div>
@@ -984,7 +1008,7 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
               type="button"
               key={item}
               onClick={() => addMaterial(item)}
-              className="cursor-pointer rounded-full bg-[#F2F2F2] px-3 py-1.5 text-xs font-bold text-neutral-600 active:scale-[0.98]"
+              className="cursor-pointer rounded-full bg-[#F2F2F2] px-3 py-1.5 text-xs font-medium text-neutral-600 active:scale-[0.98]"
             >
               {item}
             </button>
@@ -995,14 +1019,14 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
           <div className="mt-4 space-y-3">
             {groupedMaterials.map((group) => (
               <div key={group.label}>
-                <p className="mb-1.5 text-[11px] font-bold text-neutral-400">{group.label}</p>
+                <p className="mb-1.5 text-[11px] font-medium text-neutral-400">{group.label}</p>
                 <div className="flex flex-wrap gap-2">
                   {group.items.map((item) => (
                     <button
                       type="button"
                       key={item.id}
                       onClick={() => removeMaterial(item.id)}
-                      className="cursor-pointer rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-xs font-bold text-neutral-800 active:scale-[0.98]"
+                      className="cursor-pointer rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-800 active:scale-[0.98]"
                     >
                       {item.nameZh} ×
                     </button>
@@ -1019,21 +1043,21 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
             setHasRecommended(true);
             if (materials.length > 0) setAssistantPage("material-results");
           }}
-          className="mt-4 w-full cursor-pointer rounded-2xl bg-neutral-950 py-3.5 text-sm font-bold text-white active:scale-[0.99]"
+          className="mt-4 w-full cursor-pointer rounded-2xl bg-neutral-950 py-3.5 text-sm font-medium text-white active:scale-[0.99]"
         >
           生成我能做的酒卡
         </button>
 
         {hasRecommended && materials.length === 0 && (
-          <p className="mt-3 rounded-2xl bg-[#F7F7F5] p-3 text-xs leading-5 text-neutral-500">先添加 1-2 个材料，比如金酒、苏打水、养乐多或水溶C。</p>
+          <p className="mt-3 rounded-2xl bg-[#f6f5f1] p-3 text-xs leading-5 text-neutral-500">先添加 1-2 个材料，比如金酒、苏打水、养乐多或水溶C。</p>
         )}
 
         </div>
       </section>
 
-      <section className="rounded-2xl border border-[#E8E8E8] bg-white p-4 shadow-[0_1px_10px_rgba(15,23,42,0.04)]">
+      <section className="rounded-2xl border border-[#E8E8E8] bg-white p-4 shadow-none">
         <div className="space-y-1">
-          <h3 className="text-lg font-bold text-neutral-950">心情实验室</h3>
+          <h3 className="text-lg font-medium text-neutral-950">心情实验室</h3>
           <p className="text-xs leading-5 text-neutral-500">进入后选择今天的心情标签，系统会生成一张适合当下状态的酒卡。</p>
         </div>
         <button
@@ -1043,31 +1067,31 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
             setMoodRecipes([]);
             setAssistantPage("mood-results");
           }}
-          className="mt-4 flex min-h-[104px] w-full cursor-pointer items-center gap-3 rounded-2xl border border-[#E8E8E8] bg-[#F7F7F5] p-4 text-left transition-all active:scale-[0.98]"
+          className="mt-4 flex min-h-[104px] w-full cursor-pointer items-center gap-3 rounded-2xl border border-[#E8E8E8] bg-[#f6f5f1] p-4 text-left transition-all active:scale-[0.98]"
         >
           <span className="material-symbols-outlined rounded-2xl bg-white p-3 text-[28px] text-neutral-950">psychology</span>
           <span className="min-w-0">
-            <span className="block text-base font-bold text-neutral-950">选择心情生成酒卡</span>
+            <span className="block text-base font-medium text-neutral-950">选择心情生成酒卡</span>
             <span className="mt-1 block text-xs leading-5 text-neutral-500">开心、难过、焦虑、疲惫，都可以先被好好接住。</span>
           </span>
           <span className="material-symbols-outlined ml-auto text-neutral-400">chevron_right</span>
         </button>
       </section>
 
-      <section className="rounded-2xl border border-[#E8E8E8] bg-white p-4 shadow-[0_1px_10px_rgba(15,23,42,0.04)]">
+      <section className="rounded-2xl border border-[#E8E8E8] bg-white p-4 shadow-none">
         <div className="space-y-1">
-          <h3 className="text-lg font-bold text-neutral-950">随机一杯盲盒</h3>
+          <h3 className="text-lg font-medium text-neutral-950">随机一杯盲盒</h3>
           <p className="text-xs leading-5 text-neutral-500">点进去后，从全部酒单随机装入 12 张隐藏酒卡。你只需要选一个 BOX。</p>
         </div>
 
         <button
           type="button"
           onClick={handleBlindBoxOpen}
-          className="mt-4 flex min-h-[104px] w-full cursor-pointer items-center gap-3 rounded-2xl border border-[#E8E8E8] bg-[#F7F7F5] p-4 text-left transition-all active:scale-[0.98]"
+          className="mt-4 flex min-h-[104px] w-full cursor-pointer items-center gap-3 rounded-2xl border border-[#E8E8E8] bg-[#f6f5f1] p-4 text-left transition-all active:scale-[0.98]"
         >
           <span className="material-symbols-outlined rounded-2xl bg-white p-3 text-[28px] text-neutral-950">{blindBoxConfig.icon}</span>
           <span className="min-w-0">
-            <span className="block text-base font-bold text-neutral-950">{blindBoxConfig.name}</span>
+            <span className="block text-base font-medium text-neutral-950">{blindBoxConfig.name}</span>
             <span className="mt-1 block text-xs leading-5 text-neutral-500">{blindBoxConfig.subtitle}</span>
           </span>
           <span className="material-symbols-outlined ml-auto text-neutral-400">chevron_right</span>
@@ -1077,8 +1101,8 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
 
       <section className="space-y-3">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-bold text-neutral-950">实验室精选</h3>
-          <span className="text-[11px] font-bold text-neutral-400">今日推荐酒单</span>
+          <h3 className="text-lg font-medium text-neutral-950">实验室精选</h3>
+          <span className="text-[11px] font-medium text-neutral-400">今日推荐酒单</span>
         </div>
         {featured.map((recipe) => (
           <RecipeCard

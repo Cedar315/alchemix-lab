@@ -1,0 +1,35 @@
+{
+  "requestId": "ab2434e4-3115-4747-a634-b95d3acb931d",
+  "elapsedMs": 5,
+  "note": "Live service replay; no HTTP auth/budget timing; candidate collection skipped.",
+  "events": [
+    {
+      "event": "agent_diagnostic",
+      "requestId": "ab2434e4-3115-4747-a634-b95d3acb931d",
+      "stage": "intent",
+      "intent": "change",
+      "dialogueAct": "new_task",
+      "needsClarification": false,
+      "knowledgeQuestion": "西柚啤酒：我没有西柚了可以换什么饮料啊"
+    }
+  ],
+  "result": {
+    "status": "needs_info",
+    "message": "",
+    "clarification": "你手边有哪些可以替换的饮料？告诉我两三种，我按这杯的风味和气泡需求帮你比较。",
+    "actions": [],
+    "recipes": [],
+    "knowledge": null,
+    "pending": null,
+    "taskId": "1d6b3431-7d6e-42f4-ab09-abe857aa8ccf",
+    "contextVersion": 0,
+    "trace": [
+      {
+        "tool": "recognize_intent",
+        "status": "change",
+        "elapsedMs": 0
+      }
+    ],
+    "model": ""
+  }
+}

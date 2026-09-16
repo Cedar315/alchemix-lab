@@ -1,0 +1,324 @@
+{
+  "kind": "agent",
+  "split": "smoke",
+  "started": "2026-09-12T10:08:37.560Z",
+  "datasetVersion": "c1ea3f6d1051b5c5444f8dc3a8144271d3906f5e027e0d0021371e8a5ae3d622",
+  "catalogVersion": "fa01e7627f41e19193dae29368f18bb20a87c7a007422b4f9c20b145f0f0ec57",
+  "caseVersion": "f25e13c4cd74832838c93bc1482878ae43d0e3b3815d03f9f7fe6f1f7c8bacdb",
+  "model": "MiniMax-M2.5",
+  "embeddingModel": "qwen3.7-text-embedding",
+  "threshold": "0.5",
+  "sampleCount": 4,
+  "passed": 4,
+  "recallAt3": null,
+  "mrr": null,
+  "p50Ms": 8716,
+  "p95Ms": 20137,
+  "note": "Automatic contract/retrieval checks only. Human faithfulness review pending; live smoke is not an independent Agent benchmark.",
+  "rows": [
+    {
+      "name": "one-ready",
+      "input": {
+        "question": "请只推荐一杯清爽不甜的酒。",
+        "inventory": [
+          {
+            "name": "伏特加",
+            "amount": 100,
+            "unit": "ml"
+          },
+          {
+            "name": "苏打水",
+            "amount": 300,
+            "unit": "ml"
+          }
+        ],
+        "ice": true,
+        "tools": [
+          "杯子",
+          "量杯",
+          "搅拌勺"
+        ]
+      },
+      "expected": "ready",
+      "elapsedMs": 20137,
+      "pass": true,
+      "status": "ready",
+      "message": "这些配方已通过本次材料、用量和器具检查。",
+      "recipes": [
+        {
+          "id": "house-vodka-soda",
+          "name": "伏特加苏打",
+          "ingredients": [
+            {
+              "name": "伏特加",
+              "amount": 30,
+              "unit": "ml"
+            },
+            {
+              "name": "苏打水",
+              "amount": 120,
+              "unit": "ml"
+            }
+          ],
+          "steps": [
+            "杯中加满冰块。",
+            "量取 30 ml 伏特加倒入杯中。",
+            "加入 120 ml 苏打水，用搅拌勺轻轻搅匀。"
+          ],
+          "tools": [
+            "杯子",
+            "量杯",
+            "搅拌勺"
+          ],
+          "ice": true,
+          "tags": [
+            "清爽",
+            "不甜"
+          ],
+          "source": "AlcheMix 家庭调饮配方（非经典标准配方）"
+        }
+      ],
+      "knowledge": null,
+      "trace": [
+        {
+          "tool": "find_recipes",
+          "status": "ok",
+          "elapsedMs": 0
+        },
+        {
+          "tool": "check_recipe",
+          "recipeId": "house-vodka-soda",
+          "status": "pass",
+          "elapsedMs": 0
+        }
+      ],
+      "model": "MiniMax-M2.5",
+      "usage": [
+        {
+          "total_tokens": 437,
+          "total_characters": 0,
+          "prompt_tokens": 341,
+          "completion_tokens": 96
+        },
+        {
+          "total_tokens": 1306,
+          "total_characters": 0,
+          "prompt_tokens": 934,
+          "completion_tokens": 372
+        },
+        {
+          "total_tokens": 1344,
+          "total_characters": 0,
+          "prompt_tokens": 960,
+          "completion_tokens": 384,
+          "prompt_tokens_details": {
+            "cached_tokens": 891
+          }
+        },
+        {
+          "total_tokens": 1314,
+          "total_characters": 0,
+          "prompt_tokens": 988,
+          "completion_tokens": 326,
+          "prompt_tokens_details": {
+            "cached_tokens": 891
+          }
+        }
+      ],
+      "humanReview": {
+        "faithful": null,
+        "useful": null,
+        "notes": ""
+      }
+    },
+    {
+      "name": "unknown-quantity",
+      "input": {
+        "question": "请只推荐一杯清爽不甜的酒。",
+        "inventory": [
+          {
+            "name": "伏特加",
+            "amount": null,
+            "unit": "ml"
+          },
+          {
+            "name": "苏打水",
+            "amount": null,
+            "unit": "ml"
+          }
+        ],
+        "ice": true,
+        "tools": [
+          "杯子",
+          "量杯",
+          "搅拌勺"
+        ]
+      },
+      "expected": "needs_info",
+      "elapsedMs": 6394,
+      "pass": true,
+      "status": "needs_info",
+      "message": "请确认您实际拥有的伏特加和苏打水各有多少毫升？",
+      "recipes": [],
+      "knowledge": null,
+      "trace": [
+        {
+          "tool": "find_recipes",
+          "status": "ok",
+          "elapsedMs": 0
+        }
+      ],
+      "model": "MiniMax-M2.5",
+      "usage": [
+        {
+          "total_tokens": 423,
+          "total_characters": 0,
+          "prompt_tokens": 341,
+          "completion_tokens": 82
+        },
+        {
+          "total_tokens": 1345,
+          "total_characters": 0,
+          "prompt_tokens": 972,
+          "completion_tokens": 373
+        }
+      ],
+      "humanReview": {
+        "faithful": null,
+        "useful": null,
+        "notes": ""
+      }
+    },
+    {
+      "name": "no-ice",
+      "input": {
+        "question": "请只推荐一杯清爽不甜的酒。",
+        "inventory": [
+          {
+            "name": "伏特加",
+            "amount": 100,
+            "unit": "ml"
+          },
+          {
+            "name": "苏打水",
+            "amount": 300,
+            "unit": "ml"
+          }
+        ],
+        "ice": false,
+        "tools": [
+          "杯子",
+          "量杯",
+          "搅拌勺"
+        ]
+      },
+      "expected": "needs_info",
+      "elapsedMs": 8716,
+      "pass": true,
+      "status": "needs_info",
+      "message": "配方“伏特加苏打”需要满杯冰块，但您的库存中没有冰块。请问您可以准备冰块吗？或者接受不加冰的版本？",
+      "recipes": [],
+      "knowledge": null,
+      "trace": [
+        {
+          "tool": "find_recipes",
+          "status": "ok",
+          "elapsedMs": 1
+        }
+      ],
+      "model": "MiniMax-M2.5",
+      "usage": [
+        {
+          "total_tokens": 442,
+          "total_characters": 0,
+          "prompt_tokens": 341,
+          "completion_tokens": 101
+        },
+        {
+          "total_tokens": 1442,
+          "total_characters": 0,
+          "prompt_tokens": 968,
+          "completion_tokens": 474
+        }
+      ],
+      "humanReview": {
+        "faithful": null,
+        "useful": null,
+        "notes": ""
+      }
+    },
+    {
+      "name": "knowledge-only",
+      "input": {
+        "question": "苏打水可以放进密闭摇壶吗？"
+      },
+      "expected": "answered",
+      "elapsedMs": 14387,
+      "pass": true,
+      "status": "answered",
+      "message": "已查阅调酒资料。",
+      "recipes": [],
+      "knowledge": {
+        "status": "answered",
+        "claims": [
+          {
+            "text": "不要把含气泡饮料放进密闭摇壶摇，按配方先处理非气泡部分，倒入杯中后再加入汽水或苏打水",
+            "evidenceIds": [
+              "carbonated-shaking"
+            ]
+          }
+        ],
+        "citations": [
+          {
+            "id": "carbonated-shaking",
+            "title": "气泡饮料能放进摇酒壶摇吗？",
+            "sources": [
+              {
+                "title": "Cocktail preparation instructions, City of York licensing attachment",
+                "url": "https://democracy.york.gov.uk/documents/s11684/Annex%203.pdf"
+              },
+              {
+                "title": "Difford’s Guide — Fizz recipe",
+                "url": "https://www.diffordsguide.com/cocktails/recipe/754/fizz-generic-name"
+              }
+            ]
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": {
+          "total_tokens": 700,
+          "total_characters": 0,
+          "prompt_tokens": 469,
+          "completion_tokens": 231
+        }
+      },
+      "trace": [
+        {
+          "tool": "search_knowledge",
+          "status": "answered",
+          "elapsedMs": 7707
+        }
+      ],
+      "model": "MiniMax-M2.5",
+      "usage": [
+        {
+          "total_tokens": 395,
+          "total_characters": 0,
+          "prompt_tokens": 310,
+          "completion_tokens": 85
+        },
+        {
+          "total_tokens": 830,
+          "total_characters": 0,
+          "prompt_tokens": 494,
+          "completion_tokens": 336
+        }
+      ],
+      "humanReview": {
+        "faithful": null,
+        "useful": null,
+        "notes": ""
+      }
+    }
+  ]
+}

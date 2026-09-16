@@ -1,6 +1,8 @@
+import CocktailLineArt from "./CocktailLineArt";
+import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, GlassWater, Leaf, RotateCcw, Sparkles } from "lucide-react";
-import { BEGINNER_CATALOG } from "./InspirationScreen";
+import { BEGINNER_CATALOG } from "../lib/data/explore-catalog";
 import { Answers, emptyAnswers, matchDrinks, replaceDrink, repairSlots, mixerOptions } from "../lib/recommendations/beginner";
 
 type Field = keyof Answers;
@@ -34,7 +36,10 @@ function reconcile(a: Answers, field: Field): Answers {
 }
 
 export default function BeginnerHome({ onMaterials }: { onMaterials: () => void; onExplore?: (tab: "classic" | "convenience") => void }) {
+  const [assistantRequest,setAssistantRequest] = useState('');
+  useEffect(()=>{try{setAssistantRequest(sessionStorage.getItem('alchemix_workflow_request') || '');sessionStorage.removeItem('alchemix_workflow_request');}catch{}},[]);
   const [screen, setScreen] = useState<"home" | "quiz" | "results" | "edit">("home");
+  useEffect(() => { const reset = (event: PageTransitionEvent) => { if(event.persisted) setScreen('home'); }; window.addEventListener('pageshow',reset); return () => window.removeEventListener('pageshow',reset); }, []);
   const [answers, setAnswers] = useState<Answers>(emptyAnswers);
   const [draft, setDraft] = useState<Answers>(emptyAnswers);
   const [answered, setAnswered] = useState<Field[]>([]);
@@ -64,8 +69,8 @@ export default function BeginnerHome({ onMaterials }: { onMaterials: () => void;
           setSlots([...new Set<string>(value.slots)].filter(id => pool.some(d => d.href === id)).slice(0, 3));
           setSeen(Array.isArray(value.seen) ? value.seen : []);
           setUndo(value.undo && typeof value.undo === "object" ? Object.fromEntries(Object.entries(value.undo).filter(([, id]) => pool.some(d => d.href === id))) as Record<number, string> : {});
-          setScreen(value.screen === "results" || new URLSearchParams(location.search).has("beginner") ? "results" : "home");
-          requestAnimationFrame(() => { const el = scroller(); if (el) el.scrollTop = Number(value.scroll) || 0; });
+          setScreen("home");
+          requestAnimationFrame(() => { const el = scroller(); if (el) el.scrollTop = 0; });
         }
       }
     } catch { /* An outdated or unavailable browser session can safely start fresh. */ }
@@ -136,9 +141,12 @@ export default function BeginnerHome({ onMaterials }: { onMaterials: () => void;
 
   return <section ref={root} className="beginner-guide pb-6 text-neutral-950">
     {screen === "home" && <>
-      <div className="pt-4 text-center"><span className="inline-flex items-center gap-2 font-mono text-[10px] tracking-[0.16em] text-neutral-500"><Leaf size={13} /> START / YOUR FIRST DRINK</span><h2 className="mt-5 text-[28px] font-semibold tracking-wide">你的调酒助手</h2><p className="mt-3 text-sm leading-6 text-neutral-500">不知道喝什么，也不懂怎么调？<br />一起找到适合你的第一杯。</p></div>
-      <div className="mx-auto mt-7 h-8 w-px bg-neutral-300" /><p className="mx-auto w-fit rounded-full border border-[#E1E1DE] px-5 py-2 text-xs">你现在是哪种情况？</p>
-      <div className="ml-3 space-y-4 border-l border-neutral-300 py-5 pl-5">{[{ title: "完全没头绪，带我开始", text: "回答几个小问题，找到适合你的三杯酒。", icon: Sparkles, action: () => { setAnswers(emptyAnswers); setAnswered([]); setExcluded([]); setPendingIngredient(null); setSlots([]); setSeen([]); setUndo({}); setNotice(""); setStep(0); setScreen("quiz"); top(); } }, { title: "手边已经有些材料", text: "有什么就用什么，只看现在能做的酒。", icon: GlassWater, action: onMaterials }].map(({ title, text, icon: Icon, action }) => <div key={title} className="relative"><span className="absolute -left-5 top-1/2 h-px w-5 bg-neutral-300" /><button onClick={action} className="w-full rounded-2xl border border-[#E1E1DE] bg-white p-5 text-left"><Icon size={23} /><span className="mt-4 flex items-center justify-between font-medium">{title}<ArrowRight size={17} /></span><span className="mt-2 block text-xs leading-6 text-neutral-500">{text}</span></button></div>)}</div>
+      {assistantRequest&&<div className="mb-4 rounded-xl border border-neutral-200 bg-white p-4 text-sm"><p>刚才的需求：{assistantRequest}</p><p className="mt-2 text-xs text-neutral-500">请在下面的选酒流程中确认材料和口味，聊天内容不会自动替你勾选。</p><button className="mt-2 underline" onClick={()=>setAssistantRequest('')}>收起</button></div>}
+      <div className="home-intro"><p className="eyebrow">ALCHEMIX / YOUR FIRST DRINK</p><div className="home-symbol" aria-hidden="true"><svg viewBox="0 0 80 80" fill="none" stroke="currentColor" strokeWidth="1.2"><circle cx="40" cy="40" r="29"/><circle cx="40" cy="40" r="10"/><path d="M40 11v9m0 40v9M11 40h9m40 0h9"/></svg></div><h2>从一杯开始</h2><p>选酒、调配、记录。<br />找到属于你的那一点比例。</p></div>
+      <div className="home-paths">{[{ title: "帮我选一杯", text: "回答几个小问题，找到适合你的三杯酒。", label: "01 / DISCOVER", kind: "coupe" as const, action: () => { setAnswers(emptyAnswers); setAnswered([]); setExcluded([]); setPendingIngredient(null); setSlots([]); setSeen([]); setUndo({}); setNotice(""); setStep(0); setScreen("quiz"); top(); } }, { title: "用现有材料找酒", text: "有什么就用什么，看看现在能做哪一杯。", label: "02 / INGREDIENTS", kind: "highball" as const, action: onMaterials }, { title: "浏览酒单", text: "看看经典酒与便利店调酒，找到想做的一杯。", label: "03 / EXPLORE", kind: "rocks" as const, href: "/inspiration" }].map(({ title, text, label, kind, action, href }) => {
+        const content = <><CocktailLineArt name={title} kind={kind} className="home-path-art" /><span className="home-path-copy"><span className="eyebrow">{label}</span><span className="home-path-title">{title}</span><span className="home-path-description">{text}</span></span><ArrowRight size={17} aria-hidden="true" /></>;
+        return href ? <Link key={title} href={href} className="home-path">{content}</Link> : <button key={title} onClick={action} className="home-path">{content}</button>;
+      })}</div>
       {slots.length > 0 && <button className="mt-3 w-full text-xs underline" onClick={() => setScreen("results")}>继续看上次选出的酒</button>}
     </>}
     {screen === "quiz" && <>

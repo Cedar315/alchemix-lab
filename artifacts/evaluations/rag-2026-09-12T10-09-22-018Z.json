@@ -1,0 +1,458 @@
+{
+  "kind": "rag",
+  "split": "test",
+  "started": "2026-09-12T10:09:22.018Z",
+  "datasetVersion": "c1ea3f6d1051b5c5444f8dc3a8144271d3906f5e027e0d0021371e8a5ae3d622",
+  "catalogVersion": "fa01e7627f41e19193dae29368f18bb20a87c7a007422b4f9c20b145f0f0ec57",
+  "caseVersion": "f25e13c4cd74832838c93bc1482878ae43d0e3b3815d03f9f7fe6f1f7c8bacdb",
+  "model": "MiniMax-M2.5",
+  "embeddingModel": "qwen3.7-text-embedding",
+  "threshold": "0.5",
+  "sampleCount": 8,
+  "passed": 8,
+  "recallAt3": 1,
+  "mrr": 1,
+  "p50Ms": 4252,
+  "p95Ms": 6038,
+  "note": "Automatic contract/retrieval checks only. Human faithfulness review pending; live smoke is not an independent Agent benchmark.",
+  "rows": [
+    {
+      "case": 1,
+      "split": "test",
+      "question": "做完上一杯，壶里的冰可不可以再用一次？",
+      "ids": [
+        "reuse-ice"
+      ],
+      "status": "answered",
+      "elapsedMs": 5185,
+      "pass": true,
+      "recallAt3": 1,
+      "reciprocalRank": 1,
+      "falseHit": false,
+      "retrieved": [
+        "reuse-ice",
+        "broken-glass-ice",
+        "crushed-ice"
+      ],
+      "answer": {
+        "status": "answered",
+        "claims": [
+          {
+            "text": "壶里的冰建议直接弃用，下一杯使用新鲜冰。重复使用已融化的摇酒冰会使温度和稀释更难保持一致。",
+            "evidenceIds": [
+              "reuse-ice"
+            ]
+          }
+        ],
+        "citations": [
+          {
+            "id": "reuse-ice",
+            "title": "摇过一杯的冰还能接着摇吗？",
+            "sources": [
+              {
+                "title": "Difford’s Guide — Ice",
+                "url": "https://www.diffordsguide.com/g/1150/how-to-make-cocktails/ice"
+              }
+            ]
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": {
+          "total_tokens": 644,
+          "total_characters": 0,
+          "prompt_tokens": 432,
+          "completion_tokens": 212
+        }
+      },
+      "embeddingUsage": {
+        "prompt_tokens": 27,
+        "total_tokens": 27
+      },
+      "humanReview": {
+        "faithful": null,
+        "useful": null,
+        "notes": ""
+      }
+    },
+    {
+      "case": 2,
+      "split": "test",
+      "question": "薄荷捣得很碎以后发苦了，为什么？",
+      "ids": [
+        "mint-muddling"
+      ],
+      "status": "answered",
+      "elapsedMs": 4256,
+      "pass": true,
+      "recallAt3": 1,
+      "reciprocalRank": 1,
+      "falseHit": false,
+      "retrieved": [
+        "mint-muddling",
+        "classic-mint-julep",
+        "tonic-bitterness"
+      ],
+      "answer": {
+        "status": "answered",
+        "claims": [
+          {
+            "text": "薄荷捣碎后发苦可能是因为过度捣碎导致叶片被碾碎，释放出了苦味成分。薄荷宜轻捣以释放香气，避免碾碎叶片带出苦味。",
+            "evidenceIds": [
+              "mint-muddling"
+            ]
+          }
+        ],
+        "citations": [
+          {
+            "id": "mint-muddling",
+            "title": "薄荷捣碎后为什么发苦？",
+            "sources": [
+              {
+                "title": "Malts — Mint Julep bartender tip",
+                "url": "https://www.malts.com/en-au/recipes/mint-julep"
+              }
+            ]
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": {
+          "total_tokens": 723,
+          "total_characters": 0,
+          "prompt_tokens": 459,
+          "completion_tokens": 264
+        }
+      },
+      "embeddingUsage": {
+        "prompt_tokens": 27,
+        "total_tokens": 27
+      },
+      "humanReview": {
+        "faithful": null,
+        "useful": null,
+        "notes": ""
+      }
+    },
+    {
+      "case": 3,
+      "split": "test",
+      "question": "酒没有明显酒味，能说明酒精含量低吗？",
+      "ids": [
+        "alcohol-content"
+      ],
+      "status": "answered",
+      "elapsedMs": 4252,
+      "pass": true,
+      "recallAt3": 1,
+      "reciprocalRank": 1,
+      "falseHit": false,
+      "retrieved": [
+        "alcohol-content",
+        "measure-consistently"
+      ],
+      "answer": {
+        "status": "answered",
+        "claims": [
+          {
+            "text": "酒没有明显酒味不能说明酒精含量低，不能靠入口感觉估算酒精含量",
+            "evidenceIds": [
+              "alcohol-content"
+            ]
+          }
+        ],
+        "citations": [
+          {
+            "id": "alcohol-content",
+            "title": "喝不出酒味是不是酒精很少？",
+            "sources": [
+              {
+                "title": "NIAAA — Mixed Drink & Cocktail Calculator",
+                "url": "https://rethinkingdrinking.niaaa.nih.gov/tools/calculators/mixed-drink-and-cocktail-content-calculator"
+              }
+            ]
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": {
+          "total_tokens": 618,
+          "total_characters": 0,
+          "prompt_tokens": 374,
+          "completion_tokens": 244
+        }
+      },
+      "embeddingUsage": {
+        "prompt_tokens": 29,
+        "total_tokens": 29
+      },
+      "humanReview": {
+        "faithful": null,
+        "useful": null,
+        "notes": ""
+      }
+    },
+    {
+      "case": 4,
+      "split": "test",
+      "question": "干摇是怎么操作的？",
+      "ids": [
+        "dry-shake"
+      ],
+      "status": "answered",
+      "elapsedMs": 4701,
+      "pass": true,
+      "recallAt3": 1,
+      "reciprocalRank": 1,
+      "falseHit": false,
+      "retrieved": [
+        "dry-shake",
+        "reverse-dry-shake",
+        "classic-dry-martini"
+      ],
+      "answer": {
+        "status": "answered",
+        "claims": [
+          {
+            "text": "干摇是先不加冰摇和，再加冰摇和冷却，常用于含蛋或奶油的配方，以促进乳化和泡沫形成。",
+            "evidenceIds": [
+              "dry-shake"
+            ]
+          }
+        ],
+        "citations": [
+          {
+            "id": "dry-shake",
+            "title": "干摇是什么意思，为什么不先加冰？",
+            "sources": [
+              {
+                "title": "Difford’s Guide — How to Dry Shake",
+                "url": "https://www.diffordsguide.com/g/1150/how-to-make-cocktails/how-to-dry-shake"
+              }
+            ]
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": {
+          "total_tokens": 713,
+          "total_characters": 0,
+          "prompt_tokens": 427,
+          "completion_tokens": 286
+        }
+      },
+      "embeddingUsage": {
+        "prompt_tokens": 21,
+        "total_tokens": 21
+      },
+      "humanReview": {
+        "faithful": null,
+        "useful": null,
+        "notes": ""
+      }
+    },
+    {
+      "case": 5,
+      "split": "test",
+      "question": "苏打水可以一起摇吗？另外蜂蜜一直混不开怎么办？",
+      "ids": [
+        "carbonated-shaking",
+        "honey-mixing"
+      ],
+      "status": "answered",
+      "elapsedMs": 6038,
+      "pass": true,
+      "recallAt3": 1,
+      "reciprocalRank": 1,
+      "falseHit": false,
+      "retrieved": [
+        "carbonated-shaking",
+        "honey-mixing",
+        "mixing-vessel"
+      ],
+      "answer": {
+        "status": "answered",
+        "claims": [
+          {
+            "text": "不要把苏打水放进密闭摇酒壶摇，应按配方先处理非气泡部分，倒入杯中后再加入汽水或苏打水。",
+            "evidenceIds": [
+              "carbonated-shaking"
+            ]
+          },
+          {
+            "text": "可将蜂蜜与水混合成蜂蜜糖浆后再与其他材料混合，会更容易倒取、计量并混匀。",
+            "evidenceIds": [
+              "honey-mixing"
+            ]
+          }
+        ],
+        "citations": [
+          {
+            "id": "carbonated-shaking",
+            "title": "气泡饮料能放进摇酒壶摇吗？",
+            "sources": [
+              {
+                "title": "Cocktail preparation instructions, City of York licensing attachment",
+                "url": "https://democracy.york.gov.uk/documents/s11684/Annex%203.pdf"
+              },
+              {
+                "title": "Difford’s Guide — Fizz recipe",
+                "url": "https://www.diffordsguide.com/cocktails/recipe/754/fizz-generic-name"
+              }
+            ]
+          },
+          {
+            "id": "honey-mixing",
+            "title": "蜂蜜不好混匀怎么办？",
+            "sources": [
+              {
+                "title": "Difford’s Guide — Honey syrup",
+                "url": "https://www.diffordsguide.com/g/1109/honey-and-honey-syrup/honey-syrup"
+              }
+            ]
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": {
+          "total_tokens": 852,
+          "total_characters": 0,
+          "prompt_tokens": 435,
+          "completion_tokens": 417
+        }
+      },
+      "embeddingUsage": {
+        "prompt_tokens": 30,
+        "total_tokens": 30
+      },
+      "humanReview": {
+        "faithful": null,
+        "useful": null,
+        "notes": ""
+      }
+    },
+    {
+      "case": 6,
+      "split": "test",
+      "question": "玛格丽特不做盐口还算符合IBA版本吗？",
+      "ids": [
+        "classic-margarita"
+      ],
+      "status": "answered",
+      "elapsedMs": 3793,
+      "pass": true,
+      "recallAt3": 1,
+      "reciprocalRank": 1,
+      "falseHit": false,
+      "retrieved": [
+        "classic-margarita",
+        "vermouth-recipe-choice",
+        "citrus-recipe-choice"
+      ],
+      "answer": {
+        "status": "answered",
+        "claims": [
+          {
+            "text": "IBA玛格丽特的半圈盐口为可选项，不做盐口也符合该版本标准",
+            "evidenceIds": [
+              "classic-margarita"
+            ]
+          }
+        ],
+        "citations": [
+          {
+            "id": "classic-margarita",
+            "title": "玛格丽特一定要做盐口吗？",
+            "sources": [
+              {
+                "title": "IBA — Margarita",
+                "url": "https://iba-world.com/iba-cocktail/margarita/"
+              }
+            ]
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": {
+          "total_tokens": 629,
+          "total_characters": 0,
+          "prompt_tokens": 477,
+          "completion_tokens": 152
+        }
+      },
+      "embeddingUsage": {
+        "prompt_tokens": 28,
+        "total_tokens": 28
+      },
+      "humanReview": {
+        "faithful": null,
+        "useful": null,
+        "notes": ""
+      }
+    },
+    {
+      "case": 7,
+      "split": "test",
+      "question": "请证明黎曼猜想。",
+      "ids": [],
+      "status": "no_evidence",
+      "elapsedMs": 641,
+      "pass": true,
+      "recallAt3": null,
+      "reciprocalRank": null,
+      "falseHit": false,
+      "retrieved": [],
+      "answer": {
+        "status": "no_evidence",
+        "claims": [],
+        "citations": [],
+        "message": "知识库暂时没有足够相关的资料。请补充配方、材料或具体问题。",
+        "model": null,
+        "usage": null
+      },
+      "embeddingUsage": {
+        "prompt_tokens": 22,
+        "total_tokens": 22
+      },
+      "humanReview": {
+        "faithful": null,
+        "useful": null,
+        "notes": ""
+      }
+    },
+    {
+      "case": 8,
+      "split": "test",
+      "question": "把1:1糖浆换成2:1，准确到小数点后两位应倒多少毫升？",
+      "ids": [
+        "syrup-concentration"
+      ],
+      "status": "insufficient_evidence",
+      "elapsedMs": 3719,
+      "pass": true,
+      "recallAt3": 1,
+      "reciprocalRank": 1,
+      "falseHit": false,
+      "retrieved": [
+        "syrup-concentration",
+        "measure-consistently",
+        "honey-mixing"
+      ],
+      "answer": {
+        "status": "insufficient_evidence",
+        "claims": [],
+        "citations": [],
+        "model": "MiniMax-M2.5",
+        "usage": {
+          "total_tokens": 669,
+          "total_characters": 0,
+          "prompt_tokens": 449,
+          "completion_tokens": 220
+        }
+      },
+      "embeddingUsage": {
+        "prompt_tokens": 36,
+        "total_tokens": 36
+      },
+      "humanReview": {
+        "faithful": null,
+        "useful": null,
+        "notes": ""
+      }
+    }
+  ]
+}

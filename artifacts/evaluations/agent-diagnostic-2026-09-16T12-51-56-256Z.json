@@ -1,0 +1,242 @@
+{
+  "requestId": "496fe5c9-b4a8-42a8-99aa-5ff0980fd313",
+  "elapsedMs": 20739,
+  "note": "Live service replay; no HTTP auth/budget timing; candidate collection skipped.",
+  "events": [
+    {
+      "event": "agent_diagnostic",
+      "requestId": "496fe5c9-b4a8-42a8-99aa-5ff0980fd313",
+      "stage": "intent",
+      "intent": "change",
+      "dialogueAct": "new_task",
+      "needsClarification": false,
+      "knowledgeQuestion": "西柚啤酒：我没有西柚了可以换什么饮料啊"
+    },
+    {
+      "event": "agent_diagnostic",
+      "requestId": "496fe5c9-b4a8-42a8-99aa-5ff0980fd313",
+      "stage": "knowledge_input",
+      "question": "西柚啤酒：我没有西柚了可以换什么饮料啊"
+    },
+    {
+      "event": "agent_diagnostic",
+      "requestId": "496fe5c9-b4a8-42a8-99aa-5ff0980fd313",
+      "stage": "local_retrieval",
+      "status": "ok",
+      "elapsedMs": 2465
+    },
+    {
+      "event": "agent_diagnostic",
+      "requestId": "496fe5c9-b4a8-42a8-99aa-5ff0980fd313",
+      "stage": "local_hits",
+      "threshold": 0.5,
+      "hits": [
+        {
+          "id": "classic-moscow-mule",
+          "score": 0.5290496016681707,
+          "semanticScore": 0.6224112960802008,
+          "keywordScore": 0
+        },
+        {
+          "id": "citrus-recipe-choice",
+          "score": 0.4840802867316892,
+          "semanticScore": 0.5695062196843402,
+          "keywordScore": 0
+        },
+        {
+          "id": "carbonated-shaking",
+          "score": 0.4597769415910383,
+          "semanticScore": 0.5409140489306333,
+          "keywordScore": 0
+        }
+      ]
+    },
+    {
+      "event": "agent_diagnostic",
+      "requestId": "496fe5c9-b4a8-42a8-99aa-5ff0980fd313",
+      "stage": "local_answer",
+      "status": "ok",
+      "elapsedMs": 5413
+    },
+    {
+      "event": "agent_diagnostic",
+      "requestId": "496fe5c9-b4a8-42a8-99aa-5ff0980fd313",
+      "stage": "local_result",
+      "status": "insufficient_evidence",
+      "claims": 0
+    },
+    {
+      "event": "agent_diagnostic",
+      "requestId": "496fe5c9-b4a8-42a8-99aa-5ff0980fd313",
+      "stage": "minimax_queries",
+      "toolCalls": 1,
+      "queries": [
+        "grapefruit beer cocktail substitute grapefruit juice site:diffordsguide.com OR site:liquor.com"
+      ],
+      "queryVisibility": "returned_by_provider"
+    },
+    {
+      "event": "agent_diagnostic",
+      "requestId": "496fe5c9-b4a8-42a8-99aa-5ff0980fd313",
+      "stage": "minimax_results",
+      "rawCount": 10,
+      "parsedCount": 10,
+      "rejectedItems": 0,
+      "passedToFilter": 10
+    },
+    {
+      "event": "agent_diagnostic",
+      "requestId": "496fe5c9-b4a8-42a8-99aa-5ff0980fd313",
+      "stage": "web_filter",
+      "domain": "www.liquor.com",
+      "contentLength": 144,
+      "minimumExclusive": 40,
+      "reason": "kept"
+    },
+    {
+      "event": "agent_diagnostic",
+      "requestId": "496fe5c9-b4a8-42a8-99aa-5ff0980fd313",
+      "stage": "web_filter",
+      "domain": "www.diffordsguide.com",
+      "contentLength": 130,
+      "minimumExclusive": 40,
+      "reason": "kept"
+    },
+    {
+      "event": "agent_diagnostic",
+      "requestId": "496fe5c9-b4a8-42a8-99aa-5ff0980fd313",
+      "stage": "web_filter",
+      "domain": "www.liquor.com",
+      "contentLength": 118,
+      "minimumExclusive": 40,
+      "reason": "kept"
+    },
+    {
+      "event": "agent_diagnostic",
+      "requestId": "496fe5c9-b4a8-42a8-99aa-5ff0980fd313",
+      "stage": "web_filter",
+      "domain": "www.liquor.com",
+      "contentLength": 129,
+      "minimumExclusive": 40,
+      "reason": "kept"
+    },
+    {
+      "event": "agent_diagnostic",
+      "requestId": "496fe5c9-b4a8-42a8-99aa-5ff0980fd313",
+      "stage": "web_filter",
+      "domain": "www.liquor.com",
+      "contentLength": 161,
+      "minimumExclusive": 40,
+      "reason": "kept"
+    },
+    {
+      "event": "agent_diagnostic",
+      "requestId": "496fe5c9-b4a8-42a8-99aa-5ff0980fd313",
+      "stage": "web_filter",
+      "domain": "www.liquor.com",
+      "contentLength": 109,
+      "minimumExclusive": 40,
+      "reason": "result_limit"
+    },
+    {
+      "event": "agent_diagnostic",
+      "requestId": "496fe5c9-b4a8-42a8-99aa-5ff0980fd313",
+      "stage": "web_filter",
+      "domain": "www.diffordsguide.com",
+      "contentLength": 138,
+      "minimumExclusive": 40,
+      "reason": "result_limit"
+    },
+    {
+      "event": "agent_diagnostic",
+      "requestId": "496fe5c9-b4a8-42a8-99aa-5ff0980fd313",
+      "stage": "web_filter",
+      "domain": "www.liquor.com",
+      "contentLength": 166,
+      "minimumExclusive": 40,
+      "reason": "result_limit"
+    },
+    {
+      "event": "agent_diagnostic",
+      "requestId": "496fe5c9-b4a8-42a8-99aa-5ff0980fd313",
+      "stage": "web_filter",
+      "domain": "www.diffordsguide.com",
+      "contentLength": 162,
+      "minimumExclusive": 40,
+      "reason": "result_limit"
+    },
+    {
+      "event": "agent_diagnostic",
+      "requestId": "496fe5c9-b4a8-42a8-99aa-5ff0980fd313",
+      "stage": "web_filter",
+      "domain": "www.diffordsguide.com",
+      "contentLength": 142,
+      "minimumExclusive": 40,
+      "reason": "result_limit"
+    },
+    {
+      "event": "agent_diagnostic",
+      "requestId": "496fe5c9-b4a8-42a8-99aa-5ff0980fd313",
+      "stage": "web_filter_summary",
+      "rawCount": 10,
+      "keptCount": 5
+    },
+    {
+      "event": "agent_diagnostic",
+      "requestId": "496fe5c9-b4a8-42a8-99aa-5ff0980fd313",
+      "stage": "web_search",
+      "status": "ok",
+      "elapsedMs": 5785
+    },
+    {
+      "event": "agent_diagnostic",
+      "requestId": "496fe5c9-b4a8-42a8-99aa-5ff0980fd313",
+      "stage": "web_answer",
+      "status": "ok",
+      "elapsedMs": 7069
+    },
+    {
+      "event": "agent_diagnostic",
+      "requestId": "496fe5c9-b4a8-42a8-99aa-5ff0980fd313",
+      "stage": "web_result",
+      "evidenceCount": 5,
+      "status": "insufficient_evidence",
+      "claims": 0
+    },
+    {
+      "event": "agent_diagnostic",
+      "requestId": "496fe5c9-b4a8-42a8-99aa-5ff0980fd313",
+      "stage": "knowledge_collection",
+      "status": "ok",
+      "elapsedMs": 0
+    }
+  ],
+  "result": {
+    "status": "answered",
+    "message": "我还没查到能支持等味或等量替代的可靠依据。告诉我你手边有的两三种饮料，我可以继续比较哪一种更适合这杯。",
+    "clarification": "",
+    "actions": [],
+    "recipes": [],
+    "knowledge": {
+      "status": "insufficient_evidence",
+      "claims": [],
+      "citations": []
+    },
+    "pending": null,
+    "taskId": "e6b0daf8-79d4-4e7b-b3fa-9c36b7902023",
+    "contextVersion": 0,
+    "trace": [
+      {
+        "tool": "recognize_intent",
+        "status": "change",
+        "elapsedMs": 0
+      },
+      {
+        "tool": "search_knowledge",
+        "status": "insufficient_evidence",
+        "elapsedMs": 20735
+      }
+    ],
+    "model": ""
+  }
+}

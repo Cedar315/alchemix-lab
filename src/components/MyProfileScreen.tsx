@@ -1,3 +1,5 @@
+import CocktailLineArt from "./CocktailLineArt";
+import { safeReturnPath } from "@/lib/auth/return-path";
 import React, { useEffect, useMemo, useState } from "react";
 import { DrinkLog, SavedCocktail } from "../types";
 
@@ -118,7 +120,8 @@ export default function MyProfileScreen({
         setShowAccountSheet(false);
         onAuthChanged(true);
         if (accountMode === "login" && new URLSearchParams(window.location.search).get("auth") === "required") {
-          window.location.assign("/admin");
+          const next = new URLSearchParams(window.location.search).get("next");
+          window.location.assign(safeReturnPath(next));
         }
       }
     } catch (error) {
@@ -359,8 +362,8 @@ export default function MyProfileScreen({
             }`}
           >
             <span className="material-symbols-outlined text-[20px]">{category.icon}</span>
-            <p className="mt-0.5 text-xs font-bold">{category.label}</p>
-            <p className={`text-[10px] font-bold ${active ? "text-white/55" : "text-neutral-400"}`}>{counts[category.id]} 杯</p>
+            <p className="mt-0.5 text-xs font-medium">{category.label}</p>
+            <p className={`text-[10px] font-medium ${active ? "text-white/55" : "text-neutral-400"}`}>{counts[category.id]} 杯</p>
           </button>
         );
       })}
@@ -372,24 +375,20 @@ export default function MyProfileScreen({
     const rating = getRatingValue(log);
     const tags = (log.moodTags?.length ? log.moodTags : snapshot.tags ?? []).slice(0, 4);
     return (
-      <article key={log.id} className="rounded-3xl border border-[#E8E8E8] bg-white p-4 shadow-[0_2px_14px_rgba(15,23,42,0.05)]">
+      <article key={log.id} className="rounded-3xl border border-[#E8E8E8] bg-white p-4 shadow-none">
         <div className="flex items-start gap-3">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-[#E8E8E8] bg-[#F7F7F5]">
-            {snapshot.imageUrl || log.imageUrl ? (
-              <img src={snapshot.imageUrl || log.imageUrl} alt={log.recipeName} className="h-full w-full object-cover" />
-            ) : (
-              <span className="material-symbols-outlined text-2xl text-neutral-700">local_bar</span>
-            )}
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-[#E8E8E8] bg-[#f6f5f1]">
+            <CocktailLineArt name={log.recipeName} className="h-full w-full" />
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0">
-                <h4 className="truncate text-base font-bold text-neutral-950">{log.recipeName}</h4>
+                <h4 className="truncate text-base font-medium text-neutral-950">{log.recipeName}</h4>
                 <p className="truncate text-[11px] font-semibold uppercase tracking-wide text-neutral-400">
                   {snapshot.nameEn || log.sourcePage}
                 </p>
               </div>
-              <span className="shrink-0 rounded-full bg-[#F7F7F5] px-2.5 py-1 text-xs font-bold text-neutral-800">
+              <span className="shrink-0 rounded-full bg-[#f6f5f1] px-2.5 py-1 text-xs font-medium text-neutral-800">
                 ★ {rating.toFixed(1)}
               </span>
             </div>
@@ -401,13 +400,13 @@ export default function MyProfileScreen({
 
         {log.note && (
           <div className="mt-3 rounded-2xl border border-[#ECECEC] bg-[#FCFCFB] p-3">
-            <p className="text-[11px] font-bold text-neutral-400">心得</p>
+            <p className="text-[11px] font-medium text-neutral-400">心得</p>
             <p className="mt-1 text-sm leading-6 text-neutral-700">{log.note}</p>
           </div>
         )}
 
         {snapshot.ingredients?.length ? (
-          <div className="mt-3 space-y-1.5 rounded-2xl bg-[#F7F7F5] p-3">
+          <div className="mt-3 space-y-1.5 rounded-2xl bg-[#f6f5f1] p-3">
             {snapshot.ingredients.slice(0, 4).map((ingredient, index) => (
               <div key={`${ingredient.name}-${index}`} className="flex items-center justify-between gap-2 text-xs">
                 <span className="truncate font-semibold text-neutral-600">{ingredient.name}</span>
@@ -422,7 +421,7 @@ export default function MyProfileScreen({
         {tags.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-1.5">
             {tags.map((tag) => (
-              <span key={tag} className="rounded-full border border-[#E8E8E8] bg-white px-2.5 py-1 text-[11px] font-bold text-neutral-600">
+              <span key={tag} className="rounded-full border border-[#E8E8E8] bg-white px-2.5 py-1 text-[11px] font-medium text-neutral-600">
                 {tag}
               </span>
             ))}
@@ -433,26 +432,26 @@ export default function MyProfileScreen({
   };
 
   const renderSavedCocktailCard = (cocktail: SavedCocktail) => (
-    <article key={cocktail.id} className="rounded-3xl border border-[#E8E8E8] bg-white p-4 shadow-[0_2px_14px_rgba(15,23,42,0.05)]">
+    <article key={cocktail.id} className="rounded-3xl border border-[#E8E8E8] bg-white p-4 shadow-none">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h4 className="truncate text-base font-bold text-neutral-950">{cocktail.chineseName}</h4>
+          <h4 className="truncate text-base font-medium text-neutral-950">{cocktail.chineseName}</h4>
           <p className="mt-0.5 truncate text-[11px] font-semibold uppercase tracking-wide text-neutral-400">{cocktail.name}</p>
           {cocktail.subtitle && <p className="mt-2 line-clamp-2 text-xs leading-5 text-neutral-500">{cocktail.subtitle}</p>}
         </div>
-        <span className="shrink-0 rounded-full bg-[#F7F7F5] px-2.5 py-1 text-xs font-bold text-neutral-800">
+        <span className="shrink-0 rounded-full bg-[#f6f5f1] px-2.5 py-1 text-xs font-medium text-neutral-800">
           ★ {(cocktail.ratingValue ?? 0).toFixed(1)}
         </span>
       </div>
 
       <div className="mt-3 grid grid-cols-2 gap-2">
-        <div className="rounded-2xl bg-[#F7F7F5] p-3">
-          <p className="text-[10px] font-bold text-neutral-400">基酒</p>
-          <p className="mt-1 line-clamp-2 text-xs font-bold text-neutral-700">{cocktail.spirit}</p>
+        <div className="rounded-2xl bg-[#f6f5f1] p-3">
+          <p className="text-[10px] font-medium text-neutral-400">基酒</p>
+          <p className="mt-1 line-clamp-2 text-xs font-medium text-neutral-700">{cocktail.spirit}</p>
         </div>
-        <div className="rounded-2xl bg-[#F7F7F5] p-3">
-          <p className="text-[10px] font-bold text-neutral-400">搭配</p>
-          <p className="mt-1 line-clamp-2 text-xs font-bold text-neutral-700">{cocktail.mixer}</p>
+        <div className="rounded-2xl bg-[#f6f5f1] p-3">
+          <p className="text-[10px] font-medium text-neutral-400">搭配</p>
+          <p className="mt-1 line-clamp-2 text-xs font-medium text-neutral-700">{cocktail.mixer}</p>
         </div>
       </div>
 
@@ -465,7 +464,7 @@ export default function MyProfileScreen({
       {(cocktail.tags ?? []).length > 0 && (
         <div className="mt-3 flex flex-wrap gap-1.5">
           {(cocktail.tags ?? []).slice(0, 4).map((tag) => (
-            <span key={tag} className="rounded-full border border-[#E8E8E8] bg-white px-2.5 py-1 text-[11px] font-bold text-neutral-600">
+            <span key={tag} className="rounded-full border border-[#E8E8E8] bg-white px-2.5 py-1 text-[11px] font-medium text-neutral-600">
               {tag}
             </span>
           ))}
@@ -532,17 +531,17 @@ export default function MyProfileScreen({
 
     return (
       <div className="mx-auto flex max-w-2xl flex-col gap-6 pb-12">
-        <div className="sticky top-0 z-20 -mx-5 border-b border-[#E8E8E8] bg-[#F7F7F5]/95 px-5 py-3 backdrop-blur">
+        <div className="sticky top-0 z-20 -mx-5 border-b border-[#E8E8E8] bg-[#f6f5f1]/95 px-5 py-3 backdrop-blur">
           <button
             type="button"
             onClick={() => setProfileView("home")}
-            className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-2xl border border-[#E8E8E8] bg-white px-3 text-sm font-bold text-neutral-700 active:scale-[0.98]"
+            className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-2xl border border-[#E8E8E8] bg-white px-3 text-sm font-medium text-neutral-700 active:scale-[0.98]"
           >
             <span className="material-symbols-outlined text-[18px]">arrow_back</span>
             返回档案
           </button>
           <div className="mt-4">
-            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-neutral-400">
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-neutral-400">
               {isDrinkList ? "Drink List" : "Favorite List"}
             </p>
             <h2 className="mt-1 text-3xl font-serif text-neutral-950">{isDrinkList ? "我喝过的酒单" : "收藏酒单"}</h2>
@@ -560,7 +559,7 @@ export default function MyProfileScreen({
           ) : (
             <div className="rounded-3xl border border-dashed border-[#DADAD6] bg-white p-6 text-center">
               <span className="material-symbols-outlined text-4xl text-neutral-300">local_bar</span>
-              <p className="mt-2 text-sm font-bold text-neutral-700">这个类别还没有喝过记录。</p>
+              <p className="mt-2 text-sm font-medium text-neutral-700">这个类别还没有喝过记录。</p>
             </div>
           )
         ) : activeSavedCocktails.length > 0 ? (
@@ -568,7 +567,7 @@ export default function MyProfileScreen({
         ) : (
           <div className="rounded-3xl border border-dashed border-[#DADAD6] bg-white p-6 text-center">
             <span className="material-symbols-outlined text-4xl text-neutral-300">favorite</span>
-            <p className="mt-2 text-sm font-bold text-neutral-700">这个类别还没有收藏。</p>
+            <p className="mt-2 text-sm font-medium text-neutral-700">这个类别还没有收藏。</p>
           </div>
         )}
       </div>
@@ -580,7 +579,7 @@ export default function MyProfileScreen({
       {/* Top Header */}
       <div className="space-y-2">
         <div className="flex items-center gap-3">
-          <span className="text-xs font-bold text-outline tracking-widest uppercase bg-surface-container px-2.5 py-1 rounded-sm">
+          <span className="text-xs font-medium text-outline tracking-widest uppercase bg-surface-container px-2.5 py-1 rounded-sm">
             USER RECORDS
           </span>
           <div className="h-[1px] flex-grow bg-outline-variant/30"></div>
@@ -589,20 +588,20 @@ export default function MyProfileScreen({
       </div>
 
       {/* Account / User Info Segment */}
-      <section className="relative overflow-hidden rounded-[24px] border border-[#E8E8E8] bg-white p-5 shadow-[0_10px_30px_rgba(15,23,42,0.06)]">
+      <section className="relative overflow-hidden rounded-[24px] border border-[#E8E8E8] bg-white p-5 shadow-none">
         <div className="absolute inset-0 notebook-grid opacity-[0.025] pointer-events-none"></div>
         <div className="relative z-10 flex items-center justify-between gap-4">
           <div className="flex min-w-0 items-center gap-4">
-            <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-[#E8E8E8] bg-[#F7F7F5]">
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-[#E8E8E8] bg-[#f6f5f1]">
               {accountProfile ? (
-                <span className="text-2xl font-bold text-neutral-950">{accountProfile.nickname.slice(0, 1).toUpperCase()}</span>
+                <span className="text-2xl font-medium text-neutral-950">{accountProfile.nickname.slice(0, 1).toUpperCase()}</span>
               ) : (
                 <span className="material-symbols-outlined text-3xl text-neutral-500">person</span>
               )}
             </div>
             <div className="min-w-0">
-              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-neutral-400">账号档案</p>
-              <h3 className="mt-1 truncate text-xl font-bold text-neutral-950">
+              <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-neutral-400">账号档案</p>
+              <h3 className="mt-1 truncate text-xl font-medium text-neutral-950">
                 {accountProfile ? accountProfile.nickname : "登录后同步酒记"}
               </h3>
               <p className="mt-1 truncate text-xs font-semibold text-neutral-500">
@@ -612,8 +611,8 @@ export default function MyProfileScreen({
           </div>
 
           <div className="shrink-0 text-right">
-            <p className="text-3xl font-bold text-neutral-950">{drinkLogs.length}</p>
-            <p className="text-[10px] font-bold text-neutral-400">已喝记录</p>
+            <p className="text-3xl font-medium text-neutral-950">{drinkLogs.length}</p>
+            <p className="text-[10px] font-medium text-neutral-400">已喝记录</p>
           </div>
         </div>
 
@@ -622,13 +621,13 @@ export default function MyProfileScreen({
             <>
               <button
                 onClick={() => openAccountSheet("profile")}
-                className="h-11 cursor-pointer rounded-2xl border border-[#E8E8E8] bg-white text-sm font-bold text-neutral-700 hover:bg-[#F7F7F5] active:scale-[0.98]"
+                className="h-11 cursor-pointer rounded-2xl border border-[#E8E8E8] bg-white text-sm font-medium text-neutral-700 hover:bg-[#f6f5f1] active:scale-[0.98]"
               >
                 设置档案
               </button>
               <button
                 onClick={logoutAccount}
-                className="h-11 cursor-pointer rounded-2xl bg-neutral-950 text-sm font-bold text-white hover:bg-neutral-800 active:scale-[0.98]"
+                className="h-11 cursor-pointer rounded-2xl bg-neutral-950 text-sm font-medium text-white hover:bg-neutral-800 active:scale-[0.98]"
               >
                 退出登录
               </button>
@@ -637,13 +636,13 @@ export default function MyProfileScreen({
             <>
               <button
                 onClick={() => openAccountSheet("login")}
-                className="h-11 cursor-pointer rounded-2xl border border-[#E8E8E8] bg-white text-sm font-bold text-neutral-700 hover:bg-[#F7F7F5] active:scale-[0.98]"
+                className="h-11 cursor-pointer rounded-2xl border border-[#E8E8E8] bg-white text-sm font-medium text-neutral-700 hover:bg-[#f6f5f1] active:scale-[0.98]"
               >
                 登录
               </button>
               <button
                 onClick={() => openAccountSheet("register")}
-                className="h-11 cursor-pointer rounded-2xl bg-neutral-950 text-sm font-bold text-white hover:bg-neutral-800 active:scale-[0.98]"
+                className="h-11 cursor-pointer rounded-2xl bg-neutral-950 text-sm font-medium text-white hover:bg-neutral-800 active:scale-[0.98]"
               >
                 注册
               </button>
@@ -660,13 +659,13 @@ export default function MyProfileScreen({
             aria-label="关闭账号设置"
           ></button>
 
-          <div className="relative z-10 max-h-[calc(100dvh-1rem)] w-full max-w-[430px] overflow-y-auto rounded-t-[28px] border border-[#E8E8E8] bg-[#F7F7F5] shadow-[0_-18px_42px_rgba(15,23,42,0.18)] animate-in slide-in-from-bottom-8 fade-in duration-300">
+          <div className="relative z-10 max-h-[calc(100dvh-1rem)] w-full max-w-[430px] overflow-y-auto rounded-t-[28px] border border-[#E8E8E8] bg-[#f6f5f1] shadow-none animate-in slide-in-from-bottom-8 fade-in duration-300">
             <div className="border-b border-[#E8E8E8] bg-white px-4 pb-4 pt-3">
               <div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-neutral-300"></div>
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-neutral-400">Account Card</p>
-                  <h3 className="mt-1 text-xl font-bold text-neutral-950">
+                  <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-neutral-400">Account Card</p>
+                  <h3 className="mt-1 text-xl font-medium text-neutral-950">
                     {accountMode === "login" ? "登录 AlcheMix Lab" : accountMode === "profile" ? "设置账号档案" : "注册 AlcheMix Lab"}
                   </h3>
                   <p className="mt-1 text-sm leading-5 text-neutral-500">
@@ -684,20 +683,20 @@ export default function MyProfileScreen({
             </div>
 
             <div className="space-y-4 px-4 py-4">
-              <div className="rounded-3xl border border-[#E8E8E8] bg-white p-4 shadow-[0_1px_12px_rgba(15,23,42,0.05)]">
-                {accountMode !== "profile" && <div className="grid grid-cols-2 gap-2 rounded-2xl bg-[#F7F7F5] p-1">
+              <div className="rounded-3xl border border-[#E8E8E8] bg-white p-4 shadow-none">
+                {accountMode !== "profile" && <div className="grid grid-cols-2 gap-2 rounded-2xl bg-[#f6f5f1] p-1">
                   <button
                     onClick={() => { setAccountMode("login"); setConfirmationEmailSent(false); setAccountError(""); }}
-                    className={`h-10 cursor-pointer rounded-xl text-sm font-bold transition-all ${
-                      accountMode === "login" ? "bg-white text-neutral-950 shadow-sm" : "text-neutral-500"
+                    className={`h-10 cursor-pointer rounded-xl text-sm font-medium transition-all ${
+                      accountMode === "login" ? "bg-white text-neutral-950 shadow-none" : "text-neutral-500"
                     }`}
                   >
                     登录
                   </button>
                   <button
                     onClick={() => { setAccountMode("register"); setConfirmationEmailSent(false); setAccountError(""); }}
-                    className={`h-10 cursor-pointer rounded-xl text-sm font-bold transition-all ${
-                      accountMode === "register" ? "bg-white text-neutral-950 shadow-sm" : "text-neutral-500"
+                    className={`h-10 cursor-pointer rounded-xl text-sm font-medium transition-all ${
+                      accountMode === "register" ? "bg-white text-neutral-950 shadow-none" : "text-neutral-500"
                     }`}
                   >
                     注册
@@ -707,7 +706,7 @@ export default function MyProfileScreen({
                 <div className="mt-4 space-y-3">
                   {(accountMode === "register" || accountMode === "profile") && (
                     <label className="block">
-                      <span className="text-xs font-bold text-neutral-500">昵称</span>
+                      <span className="text-xs font-medium text-neutral-500">昵称</span>
                       <input
                         value={accountNickname}
                         onChange={(event) => setAccountNickname(event.target.value)}
@@ -718,7 +717,7 @@ export default function MyProfileScreen({
                   )}
 
                   {accountMode !== "profile" && <label className="block">
-                    <span className="text-xs font-bold text-neutral-500">邮箱</span>
+                    <span className="text-xs font-medium text-neutral-500">邮箱</span>
                     <input
                       value={accountEmail}
                       onChange={(event) => setAccountEmail(event.target.value)}
@@ -727,10 +726,10 @@ export default function MyProfileScreen({
                       className="mt-1 h-12 w-full rounded-2xl border border-[#E8E8E8] bg-[#FCFCFB] px-3 text-sm font-semibold text-neutral-900 outline-none focus:border-neutral-950"
                     />
                   </label>}
-                  {accountMode === "login" && <button type="button" onClick={requestPasswordReset} disabled={accountPending} className="text-left text-xs font-bold text-neutral-500 underline underline-offset-4">忘记密码？发送重置邮件</button>}
+                  {accountMode === "login" && <button type="button" onClick={requestPasswordReset} disabled={accountPending} className="text-left text-xs font-medium text-neutral-500 underline underline-offset-4">忘记密码？发送重置邮件</button>}
 
                   {accountMode !== "profile" && <label className="block">
-                    <span className="text-xs font-bold text-neutral-500">密码</span>
+                    <span className="text-xs font-medium text-neutral-500">密码</span>
                     <input
                       value={accountPassword}
                       onChange={(event) => setAccountPassword(event.target.value)}
@@ -750,23 +749,23 @@ export default function MyProfileScreen({
                       />
                       <span className="text-xs leading-5 text-neutral-600">
                         我已阅读并同意
-                        <a href="/terms" target="_blank" rel="noreferrer" className="font-bold text-neutral-950 underline underline-offset-2">《用户协议》</a>
-                        <a href="/privacy" target="_blank" rel="noreferrer" className="font-bold text-neutral-950 underline underline-offset-2">《隐私政策》</a>
+                        <a href="/terms" target="_blank" rel="noreferrer" className="font-medium text-neutral-950 underline underline-offset-2">《用户协议》</a>
+                        <a href="/privacy" target="_blank" rel="noreferrer" className="font-medium text-neutral-950 underline underline-offset-2">《隐私政策》</a>
                         和
-                        <a href="/responsible-drinking" target="_blank" rel="noreferrer" className="font-bold text-neutral-950 underline underline-offset-2">《饮酒安全提示》</a>
+                        <a href="/responsible-drinking" target="_blank" rel="noreferrer" className="font-medium text-neutral-950 underline underline-offset-2">《饮酒安全提示》</a>
                       </span>
                     </label>
                   )}
                 </div>
 
-                <div className="mt-4 rounded-2xl border border-[#ECECEC] bg-[#F7F7F5] p-3">
+                <div className="mt-4 rounded-2xl border border-[#ECECEC] bg-[#f6f5f1] p-3">
                   <p className="text-xs leading-5 text-neutral-500">账号由 Supabase Auth 安全验证。注册后可能需要先完成邮箱验证。</p>
                   {accountNotice && <p className="mt-2 text-xs font-semibold text-emerald-700">{accountNotice}</p>}
                   {confirmationEmailSent && (
                     <div className="mt-3 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-xs leading-5 text-emerald-800">
-                      <p className="font-bold">验证邮件已发送</p>
+                      <p className="font-medium">验证邮件已发送</p>
                       <p>请打开邮箱中的链接完成验证，也请检查垃圾邮件目录。</p>
-                      <button type="button" onClick={resendConfirmationEmail} disabled={accountPending} className="mt-2 font-bold underline underline-offset-4 disabled:opacity-50">
+                      <button type="button" onClick={resendConfirmationEmail} disabled={accountPending} className="mt-2 font-medium underline underline-offset-4 disabled:opacity-50">
                         {accountPending ? "正在发送…" : "重新发送验证邮件"}
                       </button>
                     </div>
@@ -780,9 +779,9 @@ export default function MyProfileScreen({
               <button
                 onClick={confirmationEmailSent ? () => { setAccountMode("login"); setConfirmationEmailSent(false); setAccountPassword(""); setAccountError(""); } : saveAccountProfile}
                 disabled={!confirmationEmailSent && (accountMode === "profile" ? !accountNickname.trim() || accountPending : !accountEmail.trim() || !accountPassword || accountPending || (accountMode === "register" && !acceptedPolicies))}
-                className={`h-[52px] w-full rounded-2xl text-sm font-bold active:scale-[0.98] ${
+                className={`h-[52px] w-full rounded-2xl text-sm font-medium active:scale-[0.98] ${
                   confirmationEmailSent || ((accountMode === "profile" ? accountNickname.trim() : accountEmail.trim() && accountPassword) && !accountPending && (accountMode !== "register" || acceptedPolicies))
-                    ? "cursor-pointer bg-neutral-950 text-white shadow-[0_10px_24px_rgba(15,23,42,0.14)]"
+                    ? "cursor-pointer bg-neutral-950 text-white shadow-none"
                     : "cursor-not-allowed bg-neutral-200 text-neutral-400"
                 }`}
               >
@@ -793,7 +792,7 @@ export default function MyProfileScreen({
         </div>
       )}
 
-      <section className="order-2 rounded-3xl border border-[#E8E8E8] bg-white p-4 shadow-[0_2px_16px_rgba(15,23,42,0.05)]">
+      <section className="order-2 rounded-3xl border border-[#E8E8E8] bg-white p-4 shadow-none">
         <button
           type="button"
           onClick={() => {
@@ -807,20 +806,20 @@ export default function MyProfileScreen({
               <span className="material-symbols-outlined text-[24px]">format_list_bulleted</span>
             </div>
             <div className="min-w-0">
-              <h3 className="text-base font-bold text-neutral-950">我喝过的酒单</h3>
+              <h3 className="text-base font-medium text-neutral-950">我喝过的酒单</h3>
               <p className="mt-1 text-xs leading-5 text-neutral-500">
                 Lab、便利店特调、经典鸡尾酒分开整理
               </p>
             </div>
           </div>
           <div className="flex shrink-0 items-center gap-2">
-            <span className="rounded-full bg-[#F7F7F5] px-2.5 py-1 text-xs font-bold text-neutral-700">{drinkLogs.length} 杯</span>
+            <span className="rounded-full bg-[#f6f5f1] px-2.5 py-1 text-xs font-medium text-neutral-700">{drinkLogs.length} 杯</span>
             <span className="material-symbols-outlined text-[22px] text-neutral-400">chevron_right</span>
           </div>
         </button>
       </section>
 
-      <section className="order-2 rounded-3xl border border-[#E8E8E8] bg-white p-4 shadow-[0_2px_16px_rgba(15,23,42,0.05)]">
+      <section className="order-2 rounded-3xl border border-[#E8E8E8] bg-white p-4 shadow-none">
         <button
           type="button"
           onClick={() => {
@@ -834,14 +833,14 @@ export default function MyProfileScreen({
               <span className="material-symbols-outlined text-[24px]">favorite</span>
             </div>
             <div className="min-w-0">
-              <h3 className="text-base font-bold text-neutral-950">收藏酒单</h3>
+              <h3 className="text-base font-medium text-neutral-950">收藏酒单</h3>
               <p className="mt-1 text-xs leading-5 text-neutral-500">
                 收藏过的 Lab、便利店特调、经典鸡尾酒
               </p>
             </div>
           </div>
           <div className="flex shrink-0 items-center gap-2">
-            <span className="rounded-full bg-[#F7F7F5] px-2.5 py-1 text-xs font-bold text-neutral-700">{savedCocktails.length} 杯</span>
+            <span className="rounded-full bg-[#f6f5f1] px-2.5 py-1 text-xs font-medium text-neutral-700">{savedCocktails.length} 杯</span>
             <span className="material-symbols-outlined text-[22px] text-neutral-400">chevron_right</span>
           </div>
         </button>
@@ -862,7 +861,7 @@ export default function MyProfileScreen({
             </p>
             <button
               onClick={onNavigateToLab}
-              className="px-5 py-2.5 bg-primary text-on-primary text-xs font-bold uppercase tracking-wider rounded-lg hover:opacity-90"
+              className="px-5 py-2.5 bg-primary text-on-primary text-xs font-medium uppercase tracking-wider rounded-lg hover:opacity-90"
             >
               去实验室记录一杯
             </button>
@@ -877,24 +876,24 @@ export default function MyProfileScreen({
               return (
               <div
                 key={log.id}
-                className="bg-white border border-outline-variant/30 rounded-xl p-5 relative flex-shrink-0 w-64 shadow-sm flex flex-col justify-between"
+                className="bg-white border border-outline-variant/30 rounded-xl p-5 relative flex-shrink-0 w-64 shadow-none flex flex-col justify-between"
               >
                 <div className="space-y-4">
-                  <span className="text-[10px] font-mono font-bold text-outline-variant">
+                  <span className="text-[10px] font-mono font-medium text-outline-variant">
                     #{String(index + 1).padStart(2, "0")}
                   </span>
 
                   <div className="space-y-1">
                     <div className="flex items-center justify-between">
-                      <h4 className="text-base font-bold text-on-surface line-clamp-1">{log.recipeName}</h4>
+                      <h4 className="text-base font-medium text-on-surface line-clamp-1">{log.recipeName}</h4>
                       <div className="flex text-primary items-center">
                         <span className="material-symbols-outlined text-xs" style={{ fontVariationSettings: "'FILL' 1" }}>
                           star
                         </span>
-                        <span className="text-xs ml-1 font-bold">{rating.toFixed(1)}</span>
+                        <span className="text-xs ml-1 font-medium">{rating.toFixed(1)}</span>
                       </div>
                     </div>
-                    <p className="text-[10px] text-outline uppercase tracking-wider font-bold">
+                    <p className="text-[10px] text-outline uppercase tracking-wider font-medium">
                       {snapshot.nameEn || sourceLabel}
                     </p>
                   </div>
@@ -903,12 +902,12 @@ export default function MyProfileScreen({
                     {(log.moodTags.length ? log.moodTags : snapshot.tags ?? []).slice(0, 2).map((t) => (
                       <span
                         key={t}
-                        className="px-2 py-0.5 border border-outline-variant/30 text-[9px] font-bold uppercase tracking-wider text-on-surface-variant rounded bg-surface-container-low"
+                        className="px-2 py-0.5 border border-outline-variant/30 text-[9px] font-medium uppercase tracking-wider text-on-surface-variant rounded bg-surface-container-low"
                       >
                         {t}
                       </span>
                     ))}
-                    <span className="px-2 py-0.5 border border-outline-variant/30 text-[9px] font-bold uppercase tracking-wider text-on-surface-variant rounded bg-surface-container-low">
+                    <span className="px-2 py-0.5 border border-outline-variant/30 text-[9px] font-medium uppercase tracking-wider text-on-surface-variant rounded bg-surface-container-low">
                       {sourceLabel}
                     </span>
                   </div>
@@ -931,50 +930,50 @@ export default function MyProfileScreen({
       {/* Section 2: 调酒日历 (Journal-style calendar) */}
       <section className="space-y-4 order-1">
         <div className="space-y-1 border-b border-outline-variant/20 pb-3">
-          <h3 className="text-xl font-bold text-on-surface">调酒日历</h3>
+          <h3 className="text-xl font-medium text-on-surface">调酒日历</h3>
           <p className="text-sm text-on-surface-variant">记录每一杯实验结果。</p>
         </div>
 
         <div className="grid grid-cols-3 gap-2.5">
-          <div className="rounded-2xl border border-[#E8E8E8] bg-white px-3 py-3 shadow-[0_1px_8px_rgba(15,23,42,0.04)]">
-            <p className="text-[10px] font-bold text-neutral-400">本月杯数</p>
-            <p className="mt-1 text-lg font-bold text-neutral-950">{currentMonthRecords.length} 杯</p>
+          <div className="rounded-2xl border border-[#E8E8E8] bg-white px-3 py-3 shadow-none">
+            <p className="text-[10px] font-medium text-neutral-400">本月杯数</p>
+            <p className="mt-1 text-lg font-medium text-neutral-950">{currentMonthRecords.length} 杯</p>
           </div>
-          <div className="rounded-2xl border border-[#E8E8E8] bg-white px-3 py-3 shadow-[0_1px_8px_rgba(15,23,42,0.04)]">
-            <p className="text-[10px] font-bold text-neutral-400">最高评分</p>
-            <p className="mt-1 text-lg font-bold text-neutral-950">{monthBestRating}</p>
+          <div className="rounded-2xl border border-[#E8E8E8] bg-white px-3 py-3 shadow-none">
+            <p className="text-[10px] font-medium text-neutral-400">最高评分</p>
+            <p className="mt-1 text-lg font-medium text-neutral-950">{monthBestRating}</p>
           </div>
-          <div className="rounded-2xl border border-[#E8E8E8] bg-white px-3 py-3 shadow-[0_1px_8px_rgba(15,23,42,0.04)] min-w-0">
-            <p className="text-[10px] font-bold text-neutral-400">本月最爱</p>
-            <p className="mt-1 text-sm font-bold text-neutral-950 truncate">
+          <div className="rounded-2xl border border-[#E8E8E8] bg-white px-3 py-3 shadow-none min-w-0">
+            <p className="text-[10px] font-medium text-neutral-400">本月最爱</p>
+            <p className="mt-1 text-sm font-medium text-neutral-950 truncate">
               {monthBestRecord?.recipeName || "暂无"}
             </p>
           </div>
         </div>
 
-        <div className="rounded-[24px] border border-[#E6E6E6] bg-white p-4 shadow-[0_14px_36px_rgba(15,23,42,0.08)] relative overflow-hidden">
+        <div className="rounded-[24px] border border-[#E6E6E6] bg-white p-4 shadow-none relative overflow-hidden">
           <div className="absolute inset-0 notebook-grid opacity-[0.025] pointer-events-none"></div>
           <div className="relative z-10">
             <div className="mb-4 flex items-center justify-center gap-3">
-              <span className="h-2.5 w-2.5 rounded-full border border-neutral-300 bg-[#F7F7F5] shadow-inner"></span>
-              <span className="h-2.5 w-2.5 rounded-full border border-neutral-300 bg-[#F7F7F5] shadow-inner"></span>
+              <span className="h-2.5 w-2.5 rounded-full border border-neutral-300 bg-[#f6f5f1] shadow-inner"></span>
+              <span className="h-2.5 w-2.5 rounded-full border border-neutral-300 bg-[#f6f5f1] shadow-inner"></span>
               <span className="h-[1px] flex-1 bg-neutral-100"></span>
             </div>
 
             <div className="mb-4 flex items-center justify-between">
               <button
                 onClick={() => changeMonth(-1)}
-                className="h-9 w-9 rounded-full border border-[#E8E8E8] bg-white text-neutral-700 hover:bg-[#F7F7F5] active:scale-95 transition-all flex items-center justify-center cursor-pointer"
+                className="h-9 w-9 rounded-full border border-[#E8E8E8] bg-white text-neutral-700 hover:bg-[#f6f5f1] active:scale-95 transition-all flex items-center justify-center cursor-pointer"
                 title="上个月"
               >
                 <span className="material-symbols-outlined text-lg">chevron_left</span>
               </button>
-              <h4 className="text-lg font-bold text-neutral-950">
+              <h4 className="text-lg font-medium text-neutral-950">
                 {visibleMonth.getFullYear()}年{visibleMonth.getMonth() + 1}月
               </h4>
               <button
                 onClick={() => changeMonth(1)}
-                className="h-9 w-9 rounded-full border border-[#E8E8E8] bg-white text-neutral-700 hover:bg-[#F7F7F5] active:scale-95 transition-all flex items-center justify-center cursor-pointer"
+                className="h-9 w-9 rounded-full border border-[#E8E8E8] bg-white text-neutral-700 hover:bg-[#f6f5f1] active:scale-95 transition-all flex items-center justify-center cursor-pointer"
                 title="下个月"
               >
                 <span className="material-symbols-outlined text-lg">chevron_right</span>
@@ -983,7 +982,7 @@ export default function MyProfileScreen({
 
             <div className="grid grid-cols-7 gap-1.5 text-center">
               {["一", "二", "三", "四", "五", "六", "日"].map((label) => (
-                <span key={label} className="pb-1 text-[11px] font-bold text-neutral-400">
+                <span key={label} className="pb-1 text-[11px] font-medium text-neutral-400">
                   {label}
                 </span>
               ))}
@@ -1002,11 +1001,11 @@ export default function MyProfileScreen({
                     onClick={() => setSelectedDateKey(item.key)}
                     className={`relative min-h-[58px] rounded-xl border p-1.5 text-left transition-all active:scale-[0.96] cursor-pointer ${
                       selected
-                        ? "bg-neutral-950 border-neutral-950 text-white shadow-sm"
+                        ? "bg-neutral-950 border-neutral-950 text-white shadow-none"
                         : item.isToday
                           ? "bg-white border-neutral-950 text-neutral-950"
                           : recordCount > 0
-                            ? "bg-white border-neutral-300 text-neutral-950 shadow-[0_1px_6px_rgba(15,23,42,0.04)]"
+                            ? "bg-white border-neutral-300 text-neutral-950 shadow-none"
                             : "bg-[#FCFCFB] border-[#ECECEC] text-neutral-500 hover:border-neutral-300"
                     } ${!item.current ? "opacity-35" : ""}`}
                   >
@@ -1015,9 +1014,9 @@ export default function MyProfileScreen({
                         ★
                       </span>
                     )}
-                    <span className="block text-[12px] font-bold leading-none">{item.day}</span>
+                    <span className="block text-[12px] font-medium leading-none">{item.day}</span>
                     {recordCount > 0 && (
-                      <span className={`mt-2 block text-[10px] font-bold ${selected ? "text-white/85" : "text-neutral-600"}`}>
+                      <span className={`mt-2 block text-[10px] font-medium ${selected ? "text-white/85" : "text-neutral-600"}`}>
                         {recordCount}杯
                       </span>
                     )}
@@ -1047,13 +1046,13 @@ export default function MyProfileScreen({
             aria-label="关闭日历详情"
           ></button>
 
-          <div className="relative z-10 w-full max-w-[430px] max-h-[82vh] overflow-y-auto rounded-t-[28px] border border-[#E8E8E8] bg-[#F7F7F5] p-4 shadow-[0_-18px_42px_rgba(15,23,42,0.18)] animate-in slide-in-from-bottom-8 fade-in duration-300">
+          <div className="relative z-10 w-full max-w-[430px] max-h-[82vh] overflow-y-auto rounded-t-[28px] border border-[#E8E8E8] bg-[#f6f5f1] p-4 shadow-none animate-in slide-in-from-bottom-8 fade-in duration-300">
             <div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-neutral-300"></div>
 
-            <div className="rounded-3xl border border-[#E8E8E8] bg-white p-4 shadow-[0_1px_12px_rgba(15,23,42,0.05)]">
+            <div className="rounded-3xl border border-[#E8E8E8] bg-white p-4 shadow-none">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <h4 className="text-xl font-bold text-neutral-950">{formatDisplayDate(selectedDateKey)}</h4>
+                  <h4 className="text-xl font-medium text-neutral-950">{formatDisplayDate(selectedDateKey)}</h4>
                   <p className="mt-1 text-sm text-neutral-500">
                     {selectedRecords.length > 0
                       ? `今天记录了 ${selectedRecords.length} 杯实验`
@@ -1062,7 +1061,7 @@ export default function MyProfileScreen({
                 </div>
                 <button
                   onClick={() => setSelectedDateKey(null)}
-                  className="h-9 w-9 rounded-full border border-[#E8E8E8] bg-white text-neutral-500 hover:bg-[#F7F7F5] flex items-center justify-center cursor-pointer"
+                  className="h-9 w-9 rounded-full border border-[#E8E8E8] bg-white text-neutral-500 hover:bg-[#f6f5f1] flex items-center justify-center cursor-pointer"
                   title="关闭"
                 >
                   <span className="material-symbols-outlined text-lg">close</span>
@@ -1071,13 +1070,13 @@ export default function MyProfileScreen({
 
               {selectedRecords.length > 0 && (
                 <div className="mt-4 grid grid-cols-2 gap-2">
-                  <div className="rounded-2xl bg-[#F7F7F5] border border-[#ECECEC] px-3 py-2">
-                    <p className="text-[10px] font-bold text-neutral-400">今日最高分</p>
-                    <p className="text-base font-bold text-neutral-950">{selectedBestRating}</p>
+                  <div className="rounded-2xl bg-[#f6f5f1] border border-[#ECECEC] px-3 py-2">
+                    <p className="text-[10px] font-medium text-neutral-400">今日最高分</p>
+                    <p className="text-base font-medium text-neutral-950">{selectedBestRating}</p>
                   </div>
                   {selectedRecords.some(isFeaturedRecord) && (
                     <div className="rounded-2xl bg-[#FFF8D8] border border-[#FDE68A] px-3 py-2">
-                      <p className="text-[10px] font-bold text-yellow-700">这天有一杯高分实验 ✦</p>
+                      <p className="text-[10px] font-medium text-yellow-700">这天有一杯高分实验 ✦</p>
                       <p className="text-xs font-semibold text-neutral-700">值得再复刻一次</p>
                     </div>
                   )}
@@ -1087,16 +1086,16 @@ export default function MyProfileScreen({
 
             <div className="mt-3 space-y-3">
               {selectedRecords.length === 0 ? (
-                <div className="rounded-3xl border border-dashed border-neutral-300 bg-white p-6 text-center shadow-[0_1px_12px_rgba(15,23,42,0.04)]">
+                <div className="rounded-3xl border border-dashed border-neutral-300 bg-white p-6 text-center shadow-none">
                   <span className="material-symbols-outlined text-4xl text-neutral-300">local_bar</span>
-                  <p className="mt-3 text-base font-bold text-neutral-950">这天还没有酒记。</p>
+                  <p className="mt-3 text-base font-medium text-neutral-950">这天还没有酒记。</p>
                   <p className="mt-1 text-sm text-neutral-500">要不要记录一杯新的实验结果？</p>
                   <button
                     onClick={() => {
                       setSelectedDateKey(null);
                       onNavigateToLab();
                     }}
-                    className="mt-5 h-11 px-5 rounded-2xl bg-neutral-950 text-white text-sm font-bold hover:bg-neutral-800 active:scale-[0.98] transition-all cursor-pointer"
+                    className="mt-5 h-11 px-5 rounded-2xl bg-neutral-950 text-white text-sm font-medium hover:bg-neutral-800 active:scale-[0.98] transition-all cursor-pointer"
                   >
                     记录一杯
                   </button>
@@ -1108,28 +1107,28 @@ export default function MyProfileScreen({
                   return (
                     <article
                       key={log.id}
-                      className="rounded-3xl border border-[#E8E8E8] bg-white p-4 shadow-[0_3px_14px_rgba(15,23,42,0.06)]"
+                      className="rounded-3xl border border-[#E8E8E8] bg-white p-4 shadow-none"
                     >
                       <div className="flex items-start gap-3">
-                        <div className="h-12 w-12 shrink-0 rounded-2xl border border-[#E8E8E8] bg-[#F7F7F5] flex items-center justify-center text-neutral-700">
+                        <div className="h-12 w-12 shrink-0 rounded-2xl border border-[#E8E8E8] bg-[#f6f5f1] flex items-center justify-center text-neutral-700">
                           <span className="material-symbols-outlined text-2xl">local_bar</span>
                         </div>
                         <div className="min-w-0 flex-1">
                           <div className="flex items-start justify-between gap-2">
                             <div className="min-w-0">
-                              <h5 className="text-base font-bold text-neutral-950 truncate">{log.recipeName}</h5>
+                              <h5 className="text-base font-medium text-neutral-950 truncate">{log.recipeName}</h5>
                               <p className="text-[11px] font-semibold uppercase tracking-wide text-neutral-400 truncate">
                                 {snapshot.nameEn || log.sourcePage}
                               </p>
                             </div>
                             {isFeaturedRecord(log) && (
-                              <span className="rounded-full border border-[#FDE68A] bg-[#FFF8D8] px-2 py-1 text-[10px] font-bold text-yellow-700">
+                              <span className="rounded-full border border-[#FDE68A] bg-[#FFF8D8] px-2 py-1 text-[10px] font-medium text-yellow-700">
                                 ★
                               </span>
                             )}
                           </div>
 
-                          <div className="mt-2 flex items-center gap-1 text-xs font-bold">
+                          <div className="mt-2 flex items-center gap-1 text-xs font-medium">
                             <span className="tracking-[-0.08em]">{renderStars(rating)}</span>
                             <span className="ml-1 text-neutral-800">{rating.toFixed(1)}</span>
                           </div>
@@ -1140,7 +1139,7 @@ export default function MyProfileScreen({
                       </div>
 
                       <div className="mt-4 rounded-2xl border border-[#ECECEC] bg-[#FCFCFB] p-3">
-                        <p className="text-[11px] font-bold text-neutral-400">心得：</p>
+                        <p className="text-[11px] font-medium text-neutral-400">心得：</p>
                         <p className="mt-1 text-sm leading-6 text-neutral-700">
                           {log.note || "这杯还没有写心得。"}
                         </p>
@@ -1150,14 +1149,14 @@ export default function MyProfileScreen({
                         {((log.moodTags?.length ? log.moodTags : snapshot.tags) ?? ["清爽", "低酒感"]).slice(0, 4).map((tag: string) => (
                           <span
                             key={tag}
-                            className="rounded-full border border-[#E8E8E8] bg-white px-2.5 py-1 text-[11px] font-bold text-neutral-600"
+                            className="rounded-full border border-[#E8E8E8] bg-white px-2.5 py-1 text-[11px] font-medium text-neutral-600"
                           >
                             {tag}
                           </span>
                         ))}
                       </div>
 
-                      <button className="mt-4 h-10 w-full rounded-2xl border border-neutral-900 bg-white text-sm font-bold text-neutral-950 hover:bg-neutral-950 hover:text-white active:scale-[0.98] transition-all cursor-pointer">
+                      <button className="mt-4 h-10 w-full rounded-2xl border border-neutral-900 bg-white text-sm font-medium text-neutral-950 hover:bg-neutral-950 hover:text-white active:scale-[0.98] transition-all cursor-pointer">
                         查看配方
                       </button>
                     </article>
@@ -1177,13 +1176,13 @@ export default function MyProfileScreen({
           </div>
           <div className="space-y-2.5">
             {drinkLogs.slice(0, 5).map((log) => (
-              <div key={log.id} className="rounded-2xl border border-[#E8E8E8] bg-white p-3 shadow-[0_1px_8px_rgba(15,23,42,0.04)]">
+              <div key={log.id} className="rounded-2xl border border-[#E8E8E8] bg-white p-3 shadow-none">
                 <div className="flex items-center justify-between gap-3">
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-bold text-neutral-950">{log.recipeName}</p>
+                    <p className="truncate text-sm font-medium text-neutral-950">{log.recipeName}</p>
                     <p className="mt-0.5 text-[11px] text-neutral-400">{log.drinkDate} · {log.isFinished ? "已喝完" : "没喝完"}</p>
                   </div>
-                  <div className="shrink-0 rounded-full bg-[#F7F7F5] px-2.5 py-1 text-xs font-bold text-neutral-800">
+                  <div className="shrink-0 rounded-full bg-[#f6f5f1] px-2.5 py-1 text-xs font-medium text-neutral-800">
                     ★ {log.rating.toFixed(1)}
                   </div>
                 </div>
@@ -1202,12 +1201,12 @@ export default function MyProfileScreen({
           </div>
           <div className="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
             {drinkLogs.filter((log) => log.isFavorite).slice(0, 8).map((log) => (
-              <div key={log.id} className="w-44 shrink-0 rounded-2xl border border-[#E8E8E8] bg-white p-3 shadow-[0_1px_8px_rgba(15,23,42,0.04)]">
-                <p className="line-clamp-2 text-sm font-bold text-neutral-950">{log.recipeName}</p>
-                <p className="mt-2 text-xs font-bold text-neutral-500">★ {log.rating.toFixed(1)}</p>
+              <div key={log.id} className="w-44 shrink-0 rounded-2xl border border-[#E8E8E8] bg-white p-3 shadow-none">
+                <p className="line-clamp-2 text-sm font-medium text-neutral-950">{log.recipeName}</p>
+                <p className="mt-2 text-xs font-medium text-neutral-500">★ {log.rating.toFixed(1)}</p>
                 <div className="mt-2 flex flex-wrap gap-1">
                   {(log.moodTags.length ? log.moodTags : log.recipeSnapshot.tags ?? []).slice(0, 2).map((tag) => (
-                    <span key={tag} className="rounded-full bg-[#F7F7F5] px-2 py-0.5 text-[10px] font-bold text-neutral-500">{tag}</span>
+                    <span key={tag} className="rounded-full bg-[#f6f5f1] px-2 py-0.5 text-[10px] font-medium text-neutral-500">{tag}</span>
                   ))}
                 </div>
               </div>
@@ -1229,23 +1228,23 @@ export default function MyProfileScreen({
             ["你可能不太喜欢", avoidDirections.length ? avoidDirections.join(" / ") : "暂时没有明显踩雷方向"],
             ["下次推荐方向", recommendedDirections.join(" / ")],
           ].map(([title, body]) => (
-            <div key={title} className="rounded-2xl border border-[#E8E8E8] bg-white p-4 shadow-[0_1px_8px_rgba(15,23,42,0.04)]">
-              <p className="text-[11px] font-bold text-neutral-400">{title}</p>
-              <p className="mt-2 text-sm font-bold leading-6 text-neutral-900">{body}</p>
+            <div key={title} className="rounded-2xl border border-[#E8E8E8] bg-white p-4 shadow-none">
+              <p className="text-[11px] font-medium text-neutral-400">{title}</p>
+              <p className="mt-2 text-sm font-medium leading-6 text-neutral-900">{body}</p>
             </div>
           ))}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Dynamic Progress Bars */}
-          <div className="bg-white p-6 rounded-2xl border border-outline-variant/30 shadow-sm md:col-span-2 space-y-6">
-            <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-[0.2em] mb-4">
+          <div className="bg-white p-6 rounded-2xl border border-outline-variant/30 shadow-none md:col-span-2 space-y-6">
+            <p className="text-[10px] font-medium text-on-surface-variant uppercase tracking-[0.2em] mb-4">
               Recent Taste Index
             </p>
             <div className="space-y-5">
               {/* Sour */}
               <div>
-                <div className="flex justify-between text-xs font-bold tracking-wider mb-2">
+                <div className="flex justify-between text-xs font-medium tracking-wider mb-2">
                   <span className="font-mono text-outline">SOUR 酸味</span>
                   <span className="text-on-surface">{sour}%</span>
                 </div>
@@ -1259,7 +1258,7 @@ export default function MyProfileScreen({
 
               {/* Sweet */}
               <div>
-                <div className="flex justify-between text-xs font-bold tracking-wider mb-2">
+                <div className="flex justify-between text-xs font-medium tracking-wider mb-2">
                   <span className="font-mono text-outline">SWEET 甜度</span>
                   <span className="text-on-surface">{sweet}%</span>
                 </div>
@@ -1273,7 +1272,7 @@ export default function MyProfileScreen({
 
               {/* Bitter */}
               <div>
-                <div className="flex justify-between text-xs font-bold tracking-wider mb-2">
+                <div className="flex justify-between text-xs font-medium tracking-wider mb-2">
                   <span className="font-mono text-outline">BITTER 苦度</span>
                   <span className="text-on-surface">{bitter}%</span>
                 </div>
@@ -1290,13 +1289,13 @@ export default function MyProfileScreen({
           {/* Auxiliary preferences metrics panels */}
           <div className="flex flex-col gap-4">
             {/* Preferred Spirits */}
-            <div className="bg-surface-container-lowest p-5 rounded-2xl border border-outline-variant/30 shadow-sm flex-1">
-              <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-3">
+            <div className="bg-surface-container-lowest p-5 rounded-2xl border border-outline-variant/30 shadow-none flex-1">
+              <p className="text-[10px] font-medium text-on-surface-variant uppercase tracking-widest mb-3">
                 常用基酒 (FAVORITE)
               </p>
               <div className="flex flex-col gap-2.5">
                 {prefSpirits.map((pref, i) => (
-                  <span key={i} className="text-xs font-bold text-on-surface">
+                  <span key={i} className="text-xs font-medium text-on-surface">
                     {pref.name}
                   </span>
                 ))}
@@ -1304,13 +1303,13 @@ export default function MyProfileScreen({
             </div>
 
             {/* Avoid ingredients panel */}
-            <div className="bg-surface-container-lowest p-5 rounded-2xl border border-outline-variant/30 shadow-sm flex-1">
-              <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-3">
+            <div className="bg-surface-container-lowest p-5 rounded-2xl border border-outline-variant/30 shadow-none flex-1">
+              <p className="text-[10px] font-medium text-on-surface-variant uppercase tracking-widest mb-3">
                 常踩雷 (AVOID)
               </p>
               <div className="flex flex-col gap-2">
-                <span className="text-xs font-bold text-red-600">太甜 SWEET+</span>
-                <span className="text-xs font-bold text-red-600/60">人工香精 Essence</span>
+                <span className="text-xs font-medium text-red-600">太甜 SWEET+</span>
+                <span className="text-xs font-medium text-red-600/60">人工香精 Essence</span>
               </div>
             </div>
           </div>

@@ -391,7 +391,7 @@ export default function AdminConsoleClient() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F7F7F5] text-neutral-950">
+    <div className="min-h-screen bg-[#f6f5f1] text-neutral-950">
       <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-4 py-5 sm:px-6 lg:px-8">
         <header className="flex flex-col gap-4 border-b border-[#E8E8E8] pb-5 lg:flex-row lg:items-center lg:justify-between">
           <div className="space-y-3">
@@ -411,24 +411,24 @@ export default function AdminConsoleClient() {
               </button>
             </div>
             <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#E8E8E8] bg-white px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-neutral-500">
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#E8E8E8] bg-white px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-neutral-500">
                 <Database size={13} />
                 Admin Console
               </div>
-              <h1 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">AlcheMix Console</h1>
+              <h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">AlcheMix Console</h1>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-neutral-500">
                 调酒数据控制台。先管理本地事实库、可信度和审核队列，真正写入数据库前由这里确认。
               </p>
             </div>
           </div>
 
-          <div className="rounded-3xl border border-[#E8E8E8] bg-white p-4 shadow-[0_12px_34px_rgba(15,23,42,0.06)]">
+          <div className="rounded-3xl border border-[#E8E8E8] bg-white p-4 shadow-none">
             <div className="flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-neutral-950 text-white">
                 <ShieldCheck size={20} />
               </div>
               <div>
-                <p className="text-sm font-bold">数据库优先</p>
+                <p className="text-sm font-medium">数据库优先</p>
                 <p className="text-xs leading-5 text-neutral-500">估算资料不直接入库</p>
               </div>
             </div>
@@ -447,10 +447,10 @@ export default function AdminConsoleClient() {
                 if (stat.label === "问题库") setActiveTab("problems");
                 if (stat.label === "待审核") setActiveTab("data-review");
               }}
-              className="cursor-pointer rounded-3xl border border-[#E8E8E8] bg-white p-4 text-left shadow-[0_8px_24px_rgba(15,23,42,0.04)] transition hover:border-neutral-300 active:scale-[0.99]"
+              className="cursor-pointer rounded-3xl border border-[#E8E8E8] bg-white p-4 text-left shadow-none transition hover:border-neutral-300 active:scale-[0.99]"
             >
-              <p className="text-xs font-bold text-neutral-500">{stat.label}</p>
-              <p className="mt-2 text-3xl font-black">{stat.value}</p>
+              <p className="text-xs font-medium text-neutral-500">{stat.label}</p>
+              <p className="mt-2 text-3xl font-semibold">{stat.value}</p>
               <p className="mt-1 flex items-center justify-between gap-2 text-xs leading-5 text-neutral-500">
                 {stat.note}
                 <ChevronRight size={14} />
@@ -459,7 +459,7 @@ export default function AdminConsoleClient() {
           ))}
         </section>
 
-        <div className="sticky top-0 z-20 -mx-4 border-y border-[#E8E8E8] bg-[#F7F7F5]/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+        <div className="sticky top-0 z-20 -mx-4 border-y border-[#E8E8E8] bg-[#f6f5f1]/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             <nav className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {tabs.map((tab) => {
@@ -470,7 +470,7 @@ export default function AdminConsoleClient() {
                     key={tab.id}
                     type="button"
                     onClick={() => setActiveTab(tab.id)}
-                    className={`inline-flex h-11 shrink-0 cursor-pointer items-center gap-2 rounded-2xl border px-4 text-sm font-bold transition active:scale-[0.98] ${
+                    className={`inline-flex h-11 shrink-0 cursor-pointer items-center gap-2 rounded-2xl border px-4 text-sm font-medium transition active:scale-[0.98] ${
                       selected
                         ? "border-neutral-950 bg-neutral-950 text-white"
                         : "border-[#E8E8E8] bg-white text-neutral-500 hover:text-neutral-950"
@@ -498,9 +498,9 @@ export default function AdminConsoleClient() {
         <main className="flex-1 py-5">
           {activeTab === "mvp" && (
             <section className="space-y-4">
-              <div className="flex flex-col gap-3 rounded-[2rem] border border-[#E8E8E8] bg-white p-5 shadow-[0_12px_34px_rgba(15,23,42,0.05)] sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex flex-col gap-3 rounded-[2rem] border border-[#E8E8E8] bg-white p-5 shadow-none sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <h2 className="text-xl font-black">MVP 数据看板</h2>
+                  <h2 className="text-xl font-semibold">MVP 数据看板</h2>
                   <p className="mt-1 text-sm leading-6 text-neutral-500">
                     用真实点击和酒记验证核心路径：Lab 调制、探索找酒、记录一杯、形成口味画像。
                   </p>
@@ -511,7 +511,7 @@ export default function AdminConsoleClient() {
                     refreshMvpData();
                     showToast("MVP 数据已刷新。");
                   }}
-                  className="inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-2xl bg-neutral-950 px-4 text-sm font-bold text-white active:scale-[0.98]"
+                  className="inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-2xl bg-neutral-950 px-4 text-sm font-medium text-white active:scale-[0.98]"
                 >
                   <BarChart3 size={16} />
                   刷新数据
@@ -520,36 +520,36 @@ export default function AdminConsoleClient() {
 
               <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                 {mvpDashboard.cards.map((card) => (
-                  <article key={card.label} className="rounded-3xl border border-[#E8E8E8] bg-white p-4 shadow-[0_8px_24px_rgba(15,23,42,0.035)]">
-                    <p className="text-xs font-bold text-neutral-500">{card.label}</p>
-                    <p className="mt-2 text-3xl font-black">{card.value}</p>
+                  <article key={card.label} className="rounded-3xl border border-[#E8E8E8] bg-white p-4 shadow-none">
+                    <p className="text-xs font-medium text-neutral-500">{card.label}</p>
+                    <p className="mt-2 text-3xl font-semibold">{card.value}</p>
                     <p className="mt-1 text-xs leading-5 text-neutral-500">{card.note}</p>
                   </article>
                 ))}
               </div>
 
               <div className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
-                <section className="rounded-[2rem] border border-[#E8E8E8] bg-white p-5 shadow-[0_8px_24px_rgba(15,23,42,0.035)]">
-                  <h3 className="text-lg font-black">Lab 核心漏斗</h3>
+                <section className="rounded-[2rem] border border-[#E8E8E8] bg-white p-5 shadow-none">
+                  <h3 className="text-lg font-semibold">Lab 核心漏斗</h3>
                   <p className="mt-1 text-sm leading-6 text-neutral-500">进入 Lab → 添加材料 → 开始实验 → 查看结果 → 记录一杯。</p>
                   <div className="mt-5 space-y-3">
                     {mvpDashboard.labFunnel.map((step) => (
-                      <div key={step.label} className="rounded-3xl border border-[#E8E8E8] bg-[#F7F7F5] p-3">
+                      <div key={step.label} className="rounded-3xl border border-[#E8E8E8] bg-[#f6f5f1] p-3">
                         <div className="flex items-center justify-between gap-3 text-sm">
-                          <span className="font-bold text-neutral-800">{step.label}</span>
-                          <span className="font-black text-neutral-950">{step.value} 次</span>
+                          <span className="font-medium text-neutral-800">{step.label}</span>
+                          <span className="font-semibold text-neutral-950">{step.value} 次</span>
                         </div>
                         <div className="mt-2 h-2 overflow-hidden rounded-full bg-white">
                           <div className="h-full rounded-full bg-neutral-950" style={{ width: `${Math.min(100, step.rate)}%` }}></div>
                         </div>
-                        <p className="mt-1 text-right text-[11px] font-bold text-neutral-400">转化 {step.rate}%</p>
+                        <p className="mt-1 text-right text-[11px] font-medium text-neutral-400">转化 {step.rate}%</p>
                       </div>
                     ))}
                   </div>
                 </section>
 
-                <section className="rounded-[2rem] border border-[#E8E8E8] bg-white p-5 shadow-[0_8px_24px_rgba(15,23,42,0.035)]">
-                  <h3 className="text-lg font-black">探索与酒记质量</h3>
+                <section className="rounded-[2rem] border border-[#E8E8E8] bg-white p-5 shadow-none">
+                  <h3 className="text-lg font-semibold">探索与酒记质量</h3>
                   <div className="mt-4 grid grid-cols-2 gap-2">
                     {mvpDashboard.exploration.map((item) => (
                       <Metric key={item.label} label={item.label} value={Number(item.value)} />
@@ -557,9 +557,9 @@ export default function AdminConsoleClient() {
                   </div>
                   <div className="mt-4 grid gap-2">
                     {mvpDashboard.quality.map((item) => (
-                      <div key={item.label} className="flex items-center justify-between rounded-2xl border border-[#E8E8E8] bg-[#F7F7F5] px-3 py-2 text-sm">
+                      <div key={item.label} className="flex items-center justify-between rounded-2xl border border-[#E8E8E8] bg-[#f6f5f1] px-3 py-2 text-sm">
                         <span className="font-semibold text-neutral-500">{item.label}</span>
-                        <span className="font-black text-neutral-950">{item.value}</span>
+                        <span className="font-semibold text-neutral-950">{item.value}</span>
                       </div>
                     ))}
                   </div>
@@ -573,7 +573,7 @@ export default function AdminConsoleClient() {
               </div>
 
               <section className="rounded-[2rem] border border-[#E8E8E8] bg-white p-5 text-sm leading-6 text-neutral-500">
-                <h3 className="text-lg font-black text-neutral-950">当前验证口径</h3>
+                <h3 className="text-lg font-semibold text-neutral-950">当前验证口径</h3>
                 <p className="mt-2">
                   北极星指标使用“有效记录杯数”。Lab 漏斗来自点击事件；酒记质量来自用户保存的评分和心得。
                   本地 demo 会先写入 localStorage，部署 Supabase 后同一批事件会通过 API 写入 `analytics_events` 表。
@@ -584,10 +584,10 @@ export default function AdminConsoleClient() {
 
           {activeTab === "overview" && (
             <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-              <section className="rounded-[2rem] border border-[#E8E8E8] bg-white p-5 shadow-[0_12px_34px_rgba(15,23,42,0.05)]">
+              <section className="rounded-[2rem] border border-[#E8E8E8] bg-white p-5 shadow-none">
                 <div className="flex items-center justify-between gap-3">
                   <div>
-                    <h2 className="text-xl font-black">管理台路线</h2>
+                    <h2 className="text-xl font-semibold">管理台路线</h2>
                     <p className="mt-1 text-sm leading-6 text-neutral-500">先做事实数据维护，再接 Supabase 写入和权限。</p>
                   </div>
                   <Sparkles className="text-neutral-300" size={24} />
@@ -599,10 +599,10 @@ export default function AdminConsoleClient() {
                     ["3", "接 Prisma API", "新增、编辑、发布都通过 Next.js API Route / Server Action 写入 Supabase。"],
                     ["4", "再加权限", "Vercel 部署后给 /admin 加登录保护，只允许你自己进入。"],
                   ].map(([step, title, body]) => (
-                    <article key={step} className="flex gap-3 rounded-3xl border border-[#E8E8E8] bg-[#F7F7F5] p-4">
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-neutral-950 text-sm font-black text-white">{step}</div>
+                    <article key={step} className="flex gap-3 rounded-3xl border border-[#E8E8E8] bg-[#f6f5f1] p-4">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-neutral-950 text-sm font-semibold text-white">{step}</div>
                       <div>
-                        <h3 className="font-bold">{title}</h3>
+                        <h3 className="font-medium">{title}</h3>
                         <p className="mt-1 text-sm leading-6 text-neutral-500">{body}</p>
                       </div>
                     </article>
@@ -610,8 +610,8 @@ export default function AdminConsoleClient() {
                 </div>
               </section>
 
-              <section className="rounded-[2rem] border border-[#E8E8E8] bg-white p-5 shadow-[0_12px_34px_rgba(15,23,42,0.05)]">
-                <h2 className="text-xl font-black">快捷操作</h2>
+              <section className="rounded-[2rem] border border-[#E8E8E8] bg-white p-5 shadow-none">
+                <h2 className="text-xl font-semibold">快捷操作</h2>
                 <div className="mt-5 grid gap-3">
                   {[
                     ["新增配料", "先进入草稿，确认字段后发布到 Ingredient", "配料"],
@@ -622,10 +622,10 @@ export default function AdminConsoleClient() {
                       key={title}
                       type="button"
                       onClick={() => createDraft(kind as AdminDraftKind)}
-                      className="flex cursor-pointer items-center justify-between rounded-3xl border border-[#E8E8E8] bg-[#F7F7F5] p-4 text-left transition hover:border-neutral-300 active:scale-[0.99]"
+                      className="flex cursor-pointer items-center justify-between rounded-3xl border border-[#E8E8E8] bg-[#f6f5f1] p-4 text-left transition hover:border-neutral-300 active:scale-[0.99]"
                     >
                       <span>
-                        <span className="block font-bold">{title}</span>
+                        <span className="block font-medium">{title}</span>
                         <span className="mt-1 block text-sm leading-5 text-neutral-500">{body}</span>
                       </span>
                       <Plus size={18} />
@@ -633,8 +633,8 @@ export default function AdminConsoleClient() {
                   ))}
                 </div>
                 {draftItems.length > 0 && (
-                  <div className="mt-5 rounded-3xl border border-[#E8E8E8] bg-[#F7F7F5] p-4">
-                    <p className="text-xs font-bold text-neutral-400">本地草稿</p>
+                  <div className="mt-5 rounded-3xl border border-[#E8E8E8] bg-[#f6f5f1] p-4">
+                    <p className="text-xs font-medium text-neutral-400">本地草稿</p>
                     <div className="mt-3 space-y-2">
                       {draftItems.map((draft) => (
                         <button
@@ -679,14 +679,14 @@ export default function AdminConsoleClient() {
                     key={`${item.source}-${item.id}`}
                     type="button"
                     onClick={() => openIngredientDetail(item)}
-                    className="cursor-pointer rounded-3xl border border-[#E8E8E8] bg-white p-4 text-left shadow-[0_8px_24px_rgba(15,23,42,0.035)] transition hover:border-neutral-300 active:scale-[0.99]"
+                    className="cursor-pointer rounded-3xl border border-[#E8E8E8] bg-white p-4 text-left shadow-none transition hover:border-neutral-300 active:scale-[0.99]"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div>
-                        <h3 className="text-lg font-black">{item.nameZh}</h3>
+                        <h3 className="text-lg font-semibold">{item.nameZh}</h3>
                         <p className="text-sm font-semibold text-neutral-500">{item.nameEn}</p>
                       </div>
-                      <span className="rounded-full bg-[#F7F7F5] px-2.5 py-1 text-[11px] font-bold text-neutral-500">{item.category}</span>
+                      <span className="rounded-full bg-[#f6f5f1] px-2.5 py-1 text-[11px] font-medium text-neutral-500">{item.category}</span>
                     </div>
                     <div className="mt-4 grid grid-cols-4 gap-2 text-center text-xs">
                       <Metric label="甜" value={item.sweetness} />
@@ -696,10 +696,10 @@ export default function AdminConsoleClient() {
                     </div>
                     <div className="mt-4 flex flex-wrap gap-1.5">
                       {item.tags.slice(0, 4).map((tag) => (
-                        <span key={tag} className="rounded-full bg-[#F7F7F5] px-2 py-1 text-[11px] font-semibold text-neutral-500">{tag}</span>
+                        <span key={tag} className="rounded-full bg-[#f6f5f1] px-2 py-1 text-[11px] font-semibold text-neutral-500">{tag}</span>
                       ))}
                     </div>
-                    <div className="mt-4 flex items-center justify-between border-t border-[#F1F1F1] pt-3 text-xs font-bold text-neutral-400">
+                    <div className="mt-4 flex items-center justify-between border-t border-[#F1F1F1] pt-3 text-xs font-medium text-neutral-400">
                       查看详情
                       <Eye size={14} />
                     </div>
@@ -718,23 +718,23 @@ export default function AdminConsoleClient() {
                     key={recipe.slug}
                     type="button"
                     onClick={() => openRecipeDetail(recipe)}
-                    className="cursor-pointer rounded-3xl border border-[#E8E8E8] bg-white p-4 text-left shadow-[0_8px_24px_rgba(15,23,42,0.035)] transition hover:border-neutral-300 active:scale-[0.99]"
+                    className="cursor-pointer rounded-3xl border border-[#E8E8E8] bg-white p-4 text-left shadow-none transition hover:border-neutral-300 active:scale-[0.99]"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div>
-                        <h3 className="text-lg font-black">{recipe.nameCn}</h3>
+                        <h3 className="text-lg font-semibold">{recipe.nameCn}</h3>
                         <p className="text-sm font-semibold text-neutral-500">{recipe.nameEn}</p>
                       </div>
-                      <span className="rounded-full bg-neutral-950 px-2.5 py-1 text-[11px] font-bold text-white">{recipe.type}</span>
+                      <span className="rounded-full bg-neutral-950 px-2.5 py-1 text-[11px] font-medium text-white">{recipe.type}</span>
                     </div>
                     <p className="mt-3 line-clamp-2 text-sm leading-6 text-neutral-500">{recipe.description}</p>
-                    <div className="mt-4 rounded-2xl bg-[#F7F7F5] p-3">
-                      <p className="text-[11px] font-bold text-neutral-400">配方骨架</p>
+                    <div className="mt-4 rounded-2xl bg-[#f6f5f1] p-3">
+                      <p className="text-[11px] font-medium text-neutral-400">配方骨架</p>
                       <p className="mt-1 text-sm font-semibold text-neutral-700">
                         {recipe.ingredients.slice(0, 4).map((item) => item.nameCn).join(" / ")}
                       </p>
                     </div>
-                    <div className="mt-4 flex items-center justify-between border-t border-[#F1F1F1] pt-3 text-xs font-bold text-neutral-400">
+                    <div className="mt-4 flex items-center justify-between border-t border-[#F1F1F1] pt-3 text-xs font-medium text-neutral-400">
                       查看配方
                       <Eye size={14} />
                     </div>
@@ -753,20 +753,20 @@ export default function AdminConsoleClient() {
                     key={group.category}
                     type="button"
                     onClick={() => openProblemDetail(group)}
-                    className="cursor-pointer rounded-3xl border border-[#E8E8E8] bg-white p-5 text-left shadow-[0_8px_24px_rgba(15,23,42,0.035)] transition hover:border-neutral-300 active:scale-[0.99]"
+                    className="cursor-pointer rounded-3xl border border-[#E8E8E8] bg-white p-5 text-left shadow-none transition hover:border-neutral-300 active:scale-[0.99]"
                   >
                     <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-black">{group.category}</h3>
-                      <span className="rounded-full bg-[#F7F7F5] px-2.5 py-1 text-xs font-bold text-neutral-500">{group.count} 条</span>
+                      <h3 className="text-lg font-semibold">{group.category}</h3>
+                      <span className="rounded-full bg-[#f6f5f1] px-2.5 py-1 text-xs font-medium text-neutral-500">{group.count} 条</span>
                     </div>
                     <div className="mt-4 space-y-2">
                       {group.examples.map((example) => (
-                        <div key={example} className="rounded-2xl border border-[#E8E8E8] bg-[#F7F7F5] px-3 py-2 text-sm font-semibold text-neutral-600">
+                        <div key={example} className="rounded-2xl border border-[#E8E8E8] bg-[#f6f5f1] px-3 py-2 text-sm font-semibold text-neutral-600">
                           {example}
                         </div>
                       ))}
                     </div>
-                    <div className="mt-4 flex items-center justify-between border-t border-[#F1F1F1] pt-3 text-xs font-bold text-neutral-400">
+                    <div className="mt-4 flex items-center justify-between border-t border-[#F1F1F1] pt-3 text-xs font-medium text-neutral-400">
                       查看分类
                       <Eye size={14} />
                     </div>
@@ -781,12 +781,12 @@ export default function AdminConsoleClient() {
               <PanelTitle title="待确认数据" subtitle="本地库搜不到、来源不完整或估算字段较多时，先在这里确认后再入库。" onAdd={() => showToast("审核项会从用户未命中搜索、手动录入和待补全资料进入队列。")} />
               <div className="grid gap-3">
                 {dynamicReviewQueue.map((item) => (
-                  <article key={`${item.source}-${item.nameZh}`} className="rounded-3xl border border-[#E8E8E8] bg-white p-5 shadow-[0_8px_24px_rgba(15,23,42,0.035)]">
+                  <article key={`${item.source}-${item.nameZh}`} className="rounded-3xl border border-[#E8E8E8] bg-white p-5 shadow-none">
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                       <div>
                         <div className="flex flex-wrap items-center gap-2">
-                          <h3 className="text-lg font-black">{item.nameZh}</h3>
-                          <span className="rounded-full bg-[#F7F7F5] px-2.5 py-1 text-[11px] font-bold text-neutral-500">{item.status}</span>
+                          <h3 className="text-lg font-semibold">{item.nameZh}</h3>
+                          <span className="rounded-full bg-[#f6f5f1] px-2.5 py-1 text-[11px] font-medium text-neutral-500">{item.status}</span>
                         </div>
                         <p className="mt-1 text-sm font-semibold text-neutral-500">{item.nameEn}</p>
                         <p className="mt-3 text-sm leading-6 text-neutral-600">{item.suggestion}</p>
@@ -795,7 +795,7 @@ export default function AdminConsoleClient() {
                         <button
                           type="button"
                           onClick={() => markReviewNeedsFields(item.nameZh)}
-                          className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-2xl border border-[#E8E8E8] bg-white px-3 text-sm font-bold text-neutral-600 active:scale-[0.98]"
+                          className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-2xl border border-[#E8E8E8] bg-white px-3 text-sm font-medium text-neutral-600 active:scale-[0.98]"
                         >
                           <ListFilter size={15} />
                           补字段
@@ -803,7 +803,7 @@ export default function AdminConsoleClient() {
                         <button
                           type="button"
                           onClick={() => approveReviewItem(item.nameZh)}
-                          className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-2xl bg-neutral-950 px-3 text-sm font-bold text-white active:scale-[0.98]"
+                          className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-2xl bg-neutral-950 px-3 text-sm font-medium text-white active:scale-[0.98]"
                         >
                           <CheckCircle2 size={15} />
                           通过
@@ -815,7 +815,7 @@ export default function AdminConsoleClient() {
                 {dynamicReviewQueue.length === 0 && (
                   <div className="rounded-[2rem] border border-dashed border-[#D8D8D8] bg-white p-8 text-center">
                     <CheckCircle2 className="mx-auto text-neutral-300" size={28} />
-                    <h3 className="mt-3 text-lg font-black">审核队列已清空</h3>
+                    <h3 className="mt-3 text-lg font-semibold">审核队列已清空</h3>
                     <p className="mt-2 text-sm leading-6 text-neutral-500">之后本地库没有命中的搜索、资料不完整项和用户手动录入都会进入这里。</p>
                   </div>
                 )}
@@ -826,37 +826,37 @@ export default function AdminConsoleClient() {
       </div>
 
       {toast && (
-        <div className="fixed bottom-5 left-1/2 z-50 w-[calc(100%-32px)] max-w-md -translate-x-1/2 rounded-2xl border border-[#E8E8E8] bg-white px-4 py-3 text-sm font-semibold text-neutral-700 shadow-[0_18px_45px_rgba(15,23,42,0.14)]">
+        <div className="fixed bottom-5 left-1/2 z-50 w-[calc(100%-32px)] max-w-md -translate-x-1/2 rounded-2xl border border-[#E8E8E8] bg-white px-4 py-3 text-sm font-semibold text-neutral-700 shadow-none">
           {toast}
         </div>
       )}
 
       {detail && (
         <div className="fixed inset-0 z-40 flex items-end justify-center bg-black/20 px-3 py-4 backdrop-blur-sm sm:items-center">
-          <div className="w-full max-w-xl rounded-[2rem] border border-[#E8E8E8] bg-white p-5 shadow-[0_24px_70px_rgba(15,23,42,0.18)]">
+          <div className="w-full max-w-xl rounded-[2rem] border border-[#E8E8E8] bg-white p-5 shadow-none">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-[11px] font-black uppercase tracking-[0.18em] text-neutral-400">{detail.eyebrow}</p>
-                <h2 className="mt-2 text-2xl font-black text-neutral-950">{detail.title}</h2>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-neutral-400">{detail.eyebrow}</p>
+                <h2 className="mt-2 text-2xl font-semibold text-neutral-950">{detail.title}</h2>
                 <p className="mt-1 text-sm font-semibold text-neutral-500">{detail.subtitle}</p>
               </div>
               <button
                 type="button"
                 onClick={() => setDetail(null)}
-                className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-[#E8E8E8] bg-[#F7F7F5] text-neutral-500 transition hover:text-neutral-950 active:scale-[0.98]"
+                className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-[#E8E8E8] bg-[#f6f5f1] text-neutral-500 transition hover:text-neutral-950 active:scale-[0.98]"
               >
                 <X size={18} />
               </button>
             </div>
 
             {detail.description && (
-              <p className="mt-4 rounded-3xl bg-[#F7F7F5] p-4 text-sm leading-6 text-neutral-600">{detail.description}</p>
+              <p className="mt-4 rounded-3xl bg-[#f6f5f1] p-4 text-sm leading-6 text-neutral-600">{detail.description}</p>
             )}
 
             <div className="mt-4 grid gap-2 sm:grid-cols-2">
               {detail.rows.map((row) => (
                 <div key={row.label} className="rounded-2xl border border-[#E8E8E8] bg-white px-3 py-2">
-                  <p className="text-[11px] font-bold text-neutral-400">{row.label}</p>
+                  <p className="text-[11px] font-medium text-neutral-400">{row.label}</p>
                   <p className="mt-1 break-words text-sm font-semibold leading-5 text-neutral-800">{row.value}</p>
                 </div>
               ))}
@@ -864,7 +864,7 @@ export default function AdminConsoleClient() {
 
             <div className="mt-4 flex flex-wrap gap-1.5">
               {detail.tags.slice(0, 10).map((tag) => (
-                <span key={tag} className="rounded-full bg-[#F7F7F5] px-2.5 py-1 text-xs font-bold text-neutral-500">{tag}</span>
+                <span key={tag} className="rounded-full bg-[#f6f5f1] px-2.5 py-1 text-xs font-medium text-neutral-500">{tag}</span>
               ))}
             </div>
 
@@ -872,7 +872,7 @@ export default function AdminConsoleClient() {
               <button
                 type="button"
                 onClick={() => showToast(`${detail.title}：编辑表单会在接数据库时补上。`)}
-                className="inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-2xl border border-[#E8E8E8] bg-white text-sm font-bold text-neutral-700 active:scale-[0.98]"
+                className="inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-2xl border border-[#E8E8E8] bg-white text-sm font-medium text-neutral-700 active:scale-[0.98]"
               >
                 <Pencil size={15} />
                 编辑草稿
@@ -880,7 +880,7 @@ export default function AdminConsoleClient() {
               <button
                 type="button"
                 onClick={() => showToast(`${detail.title}：发布动作会通过 API 写入数据库。`)}
-                className="inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-2xl bg-neutral-950 text-sm font-bold text-white active:scale-[0.98]"
+                className="inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-2xl bg-neutral-950 text-sm font-medium text-white active:scale-[0.98]"
               >
                 <CheckCircle2 size={15} />
                 发布确认
@@ -895,14 +895,14 @@ export default function AdminConsoleClient() {
 
 function PanelTitle({ title, subtitle, onAdd }: { title: string; subtitle: string; onAdd: () => void }) {
   return (
-    <div className="flex flex-col gap-3 rounded-[2rem] border border-[#E8E8E8] bg-white p-5 shadow-[0_8px_24px_rgba(15,23,42,0.035)] sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col gap-3 rounded-[2rem] border border-[#E8E8E8] bg-white p-5 shadow-none sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <h2 className="text-xl font-black">{title}</h2>
+        <h2 className="text-xl font-semibold">{title}</h2>
         <p className="mt-1 text-sm leading-6 text-neutral-500">{subtitle}</p>
       </div>
       <button
         type="button"
-        className="inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-2xl bg-neutral-950 px-4 text-sm font-bold text-white active:scale-[0.98]"
+        className="inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-2xl bg-neutral-950 px-4 text-sm font-medium text-white active:scale-[0.98]"
         onClick={onAdd}
       >
         <Plus size={16} />
@@ -914,8 +914,8 @@ function PanelTitle({ title, subtitle, onAdd }: { title: string; subtitle: strin
 
 function Metric({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-2xl bg-[#F7F7F5] px-2 py-2">
-      <p className="font-bold text-neutral-950">{value}</p>
+    <div className="rounded-2xl bg-[#f6f5f1] px-2 py-2">
+      <p className="font-medium text-neutral-950">{value}</p>
       <p className="mt-0.5 text-[10px] font-semibold text-neutral-400">{label}</p>
     </div>
   );
@@ -923,19 +923,19 @@ function Metric({ label, value }: { label: string; value: number }) {
 
 function MvpList({ title, empty, rows }: { title: string; empty: string; rows: Array<{ name: string; value: string }> }) {
   return (
-    <section className="rounded-[2rem] border border-[#E8E8E8] bg-white p-5 shadow-[0_8px_24px_rgba(15,23,42,0.035)]">
-      <h3 className="text-lg font-black">{title}</h3>
+    <section className="rounded-[2rem] border border-[#E8E8E8] bg-white p-5 shadow-none">
+      <h3 className="text-lg font-semibold">{title}</h3>
       {rows.length > 0 ? (
         <div className="mt-4 space-y-2">
           {rows.map((row, index) => (
-            <div key={`${row.name}-${index}`} className="flex items-center justify-between gap-3 rounded-2xl bg-[#F7F7F5] px-3 py-2">
-              <span className="min-w-0 truncate text-sm font-bold text-neutral-800">{index + 1}. {row.name}</span>
-              <span className="shrink-0 text-xs font-black text-neutral-500">{row.value}</span>
+            <div key={`${row.name}-${index}`} className="flex items-center justify-between gap-3 rounded-2xl bg-[#f6f5f1] px-3 py-2">
+              <span className="min-w-0 truncate text-sm font-medium text-neutral-800">{index + 1}. {row.name}</span>
+              <span className="shrink-0 text-xs font-semibold text-neutral-500">{row.value}</span>
             </div>
           ))}
         </div>
       ) : (
-        <p className="mt-4 rounded-2xl border border-dashed border-[#D8D8D8] bg-[#F7F7F5] p-4 text-sm leading-6 text-neutral-500">{empty}</p>
+        <p className="mt-4 rounded-2xl border border-dashed border-[#D8D8D8] bg-[#f6f5f1] p-4 text-sm leading-6 text-neutral-500">{empty}</p>
       )}
     </section>
   );

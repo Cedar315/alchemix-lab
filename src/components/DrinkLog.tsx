@@ -1,3 +1,4 @@
+import CocktailLineArt from "./CocktailLineArt";
 import React, { useState } from "react";
 import { DrinkLog, DrinkLogRecipeSnapshot, DrinkLogTasteScores } from "../types";
 
@@ -76,13 +77,13 @@ export function DrinkLogModal({ recipe, sourcePage, existingLog, onClose, onSave
     <div className="fixed inset-0 z-[160] flex items-end justify-center px-3">
       <button type="button" className="absolute inset-0 cursor-pointer bg-black/35 backdrop-blur-[2px]" onClick={onClose} aria-label="取消记录" />
 
-      <div className="relative z-10 flex max-h-[88vh] w-full max-w-[430px] flex-col overflow-hidden rounded-t-[28px] border border-[#E8E8E8] bg-white shadow-[0_-18px_42px_rgba(15,23,42,0.2)] animate-in slide-in-from-bottom-8 fade-in duration-300">
+      <div className="relative z-10 flex max-h-[88vh] w-full max-w-[430px] flex-col overflow-hidden rounded-t-[28px] border border-[#E8E8E8] bg-white shadow-none animate-in slide-in-from-bottom-8 fade-in duration-300">
         <div className="shrink-0 border-b border-[#EFEFEC] bg-white px-4 pb-3 pt-3">
           <div className="mx-auto mb-3 h-1.5 w-12 rounded-full bg-neutral-300"></div>
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-neutral-400">实验记录卡</p>
-              <h3 className="mt-1 text-xl font-bold text-neutral-950">记录这杯实验</h3>
+              <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-neutral-400">实验记录卡</p>
+              <h3 className="mt-1 text-xl font-medium text-neutral-950">记录这杯实验</h3>
               <p className="mt-1 text-sm leading-5 text-neutral-500">喝完之后，给这杯酒留下一点真实反馈。</p>
             </div>
             <button type="button" onClick={onClose} className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full border border-[#E8E8E8] bg-white text-neutral-500 active:scale-[0.98]">
@@ -91,26 +92,22 @@ export function DrinkLogModal({ recipe, sourcePage, existingLog, onClose, onSave
           </div>
         </div>
 
-        <div className="min-h-0 flex-1 space-y-4 overflow-y-auto bg-[#F7F7F5] px-4 py-4">
-          <section className="rounded-3xl border border-[#E8E8E8] bg-white p-4 shadow-[0_1px_12px_rgba(15,23,42,0.05)]">
+        <div className="min-h-0 flex-1 space-y-4 overflow-y-auto bg-[#f6f5f1] px-4 py-4">
+          <section className="rounded-3xl border border-[#E8E8E8] bg-white p-4 shadow-none">
             <div className="flex items-center gap-3">
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-[#E8E8E8] bg-[#F7F7F5]">
-                {recipe.imageUrl ? (
-                  <img src={recipe.imageUrl} alt={recipe.nameZh} className="h-full w-full object-cover" />
-                ) : (
-                  <span className="material-symbols-outlined text-3xl text-neutral-500">local_bar</span>
-                )}
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-[#E8E8E8] bg-[#f6f5f1]">
+                <CocktailLineArt name={recipe.nameZh} className="h-full w-full" />
               </div>
               <div className="min-w-0">
-                <h4 className="truncate text-base font-bold text-neutral-950">{recipe.nameZh}</h4>
-                {recipe.nameEn && <p className="truncate text-[11px] font-bold uppercase tracking-[0.14em] text-neutral-400">{recipe.nameEn}</p>}
+                <h4 className="truncate text-base font-medium text-neutral-950">{recipe.nameZh}</h4>
+                {recipe.nameEn && <p className="truncate text-[11px] font-medium uppercase tracking-[0.14em] text-neutral-400">{recipe.nameEn}</p>}
                 {recipe.description && <p className="mt-1 line-clamp-2 text-xs leading-5 text-neutral-500">{recipe.description}</p>}
               </div>
             </div>
           </section>
 
           <section className="rounded-3xl border border-[#E8E8E8] bg-white p-4">
-            <p className="text-sm font-bold text-neutral-950">是否喝完</p>
+            <p className="text-sm font-medium text-neutral-950">是否喝完</p>
             <div className="mt-3 grid grid-cols-2 gap-2">
               {[
                 { value: true, label: "喝完了" },
@@ -120,7 +117,7 @@ export function DrinkLogModal({ recipe, sourcePage, existingLog, onClose, onSave
                   type="button"
                   key={item.label}
                   onClick={() => setIsFinished(item.value)}
-                  className={`h-10 cursor-pointer rounded-2xl border text-sm font-bold active:scale-[0.98] ${isFinished === item.value ? "border-neutral-950 bg-neutral-950 text-white" : "border-[#E8E8E8] bg-white text-neutral-600"}`}
+                  className={`h-10 cursor-pointer rounded-2xl border text-sm font-medium active:scale-[0.98] ${isFinished === item.value ? "border-neutral-950 bg-neutral-950 text-white" : "border-[#E8E8E8] bg-white text-neutral-600"}`}
                 >
                   {item.label}
                 </button>
@@ -130,8 +127,8 @@ export function DrinkLogModal({ recipe, sourcePage, existingLog, onClose, onSave
 
           <section className="rounded-3xl border border-[#E8E8E8] bg-white p-4">
             <div className="flex items-center justify-between">
-              <p className="text-sm font-bold text-neutral-950">总体评分</p>
-              <p className="text-sm font-bold text-neutral-700">{rating.toFixed(1)}</p>
+              <p className="text-sm font-medium text-neutral-950">总体评分</p>
+              <p className="text-sm font-medium text-neutral-700">{rating.toFixed(1)}</p>
             </div>
             <div className="mt-3 flex items-center gap-1">
               {[1, 2, 3, 4, 5].map((score) => (
@@ -151,7 +148,7 @@ export function DrinkLogModal({ recipe, sourcePage, existingLog, onClose, onSave
           </section>
 
           <section className="rounded-3xl border border-[#E8E8E8] bg-white p-4">
-            <p className="text-sm font-bold text-neutral-950">口味打分</p>
+            <p className="text-sm font-medium text-neutral-950">口味打分</p>
             <div className="mt-3 space-y-3">
               {tasteScoreFields.map((field) => (
                 <div key={field.key} className="flex items-center justify-between gap-3">
@@ -165,7 +162,7 @@ export function DrinkLogModal({ recipe, sourcePage, existingLog, onClose, onSave
                         className={`flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border transition-all active:scale-90 ${
                           score <= (tasteScores[field.key] ?? 0)
                             ? "border-neutral-950 bg-neutral-950"
-                            : "border-neutral-200 bg-[#F7F7F5] hover:border-neutral-300"
+                            : "border-neutral-200 bg-[#f6f5f1] hover:border-neutral-300"
                         }`}
                         aria-label={`${field.label} ${score}分`}
                       >
@@ -183,14 +180,14 @@ export function DrinkLogModal({ recipe, sourcePage, existingLog, onClose, onSave
               <button
                 type="button"
                 onClick={() => setIsFavorite((value) => !value)}
-                className={`h-11 cursor-pointer rounded-2xl border text-sm font-bold active:scale-[0.98] ${isFavorite ? "border-neutral-950 bg-neutral-950 text-white" : "border-[#E8E8E8] bg-white text-neutral-700"}`}
+                className={`h-11 cursor-pointer rounded-2xl border text-sm font-medium active:scale-[0.98] ${isFavorite ? "border-neutral-950 bg-neutral-950 text-white" : "border-[#E8E8E8] bg-white text-neutral-700"}`}
               >
                 {isFavorite ? "已收藏" : "收藏这杯"}
               </button>
               <button
                 type="button"
                 onClick={() => setIsStarred((value) => !value)}
-                className={`h-11 cursor-pointer rounded-2xl border text-sm font-bold active:scale-[0.98] ${isStarred ? "border-[#FDE68A] bg-[#FFF8D8] text-yellow-700" : "border-[#E8E8E8] bg-white text-neutral-700"}`}
+                className={`h-11 cursor-pointer rounded-2xl border text-sm font-medium active:scale-[0.98] ${isStarred ? "border-[#FDE68A] bg-[#FFF8D8] text-yellow-700" : "border-[#E8E8E8] bg-white text-neutral-700"}`}
               >
                 设为本日最佳
               </button>
@@ -200,7 +197,7 @@ export function DrinkLogModal({ recipe, sourcePage, existingLog, onClose, onSave
           <section className="rounded-3xl border border-[#E8E8E8] bg-white p-4">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <label htmlFor="drink-log-note" className="text-sm font-bold text-neutral-950">喝后心得</label>
+                <label htmlFor="drink-log-note" className="text-sm font-medium text-neutral-950">喝后心得</label>
                 <p className="mt-1 text-[11px] leading-5 text-neutral-400">可以写入口感、酒感、下次想怎么调整。</p>
               </div>
               <span className="material-symbols-outlined text-[20px] text-neutral-300">edit_note</span>
@@ -215,14 +212,14 @@ export function DrinkLogModal({ recipe, sourcePage, existingLog, onClose, onSave
           </section>
 
           <section className="rounded-3xl border border-[#E8E8E8] bg-white p-4">
-            <p className="text-sm font-bold text-neutral-950">心情标签</p>
+            <p className="text-sm font-medium text-neutral-950">心情标签</p>
             <div className="mt-3 flex flex-wrap gap-2">
               {moodTags.map((tag) => (
                 <button
                   type="button"
                   key={tag}
                   onClick={() => toggleMood(tag)}
-                  className={`cursor-pointer rounded-full border px-3 py-1.5 text-xs font-bold active:scale-[0.98] ${selectedMoodTags.includes(tag) ? "border-neutral-950 bg-neutral-950 text-white" : "border-[#E8E8E8] bg-white text-neutral-600"}`}
+                  className={`cursor-pointer rounded-full border px-3 py-1.5 text-xs font-medium active:scale-[0.98] ${selectedMoodTags.includes(tag) ? "border-neutral-950 bg-neutral-950 text-white" : "border-[#E8E8E8] bg-white text-neutral-600"}`}
                 >
                   {tag}
                 </button>
@@ -232,10 +229,10 @@ export function DrinkLogModal({ recipe, sourcePage, existingLog, onClose, onSave
         </div>
 
         <div className="shrink-0 border-t border-[#EFEFEC] bg-white p-4">
-          <button type="button" onClick={save} className="h-[52px] w-full cursor-pointer rounded-2xl bg-neutral-950 text-sm font-bold text-white shadow-[0_10px_24px_rgba(15,23,42,0.14)] active:scale-[0.98]">
+          <button type="button" onClick={save} className="h-[52px] w-full cursor-pointer rounded-2xl bg-neutral-950 text-sm font-medium text-white shadow-none active:scale-[0.98]">
             保存到酒记
           </button>
-          <button type="button" onClick={onClose} className="mt-2 h-10 w-full cursor-pointer rounded-2xl text-sm font-bold text-neutral-500 active:scale-[0.98]">
+          <button type="button" onClick={onClose} className="mt-2 h-10 w-full cursor-pointer rounded-2xl text-sm font-medium text-neutral-500 active:scale-[0.98]">
             取消
           </button>
         </div>
@@ -272,10 +269,10 @@ export function DrinkLogButton({ recipe, sourcePage, drinkLogs, onSaveDrinkLog, 
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className={`${variant === "icon" ? "h-9 w-9 rounded-full px-0" : variant === "compact" ? "h-9 rounded-full px-3 text-[11px]" : "h-10 rounded-2xl px-4 text-xs"} inline-flex cursor-pointer items-center justify-center gap-1.5 border font-bold active:scale-[0.98] transition-all ${
+        className={`${variant === "icon" ? "h-9 w-9 rounded-full px-0" : variant === "compact" ? "h-9 rounded-full px-3 text-[11px]" : "h-10 rounded-2xl px-4 text-xs"} inline-flex cursor-pointer items-center justify-center gap-1.5 border font-medium active:scale-[0.98] transition-all ${
           justSaved
             ? "border-neutral-950 bg-neutral-950 text-white"
-            : "border-[#E8E8E8] bg-white text-neutral-700 hover:border-neutral-300 hover:bg-[#F7F7F5]"
+            : "border-[#E8E8E8] bg-white text-neutral-700 hover:border-neutral-300 hover:bg-[#f6f5f1]"
         } ${className}`}
       >
         <span className="material-symbols-outlined text-[16px]">{icon}</span>

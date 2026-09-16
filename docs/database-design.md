@@ -1,495 +1,58 @@
-# AlcheMix Lab 数据库设计文档
+# 数据库与数据契约
 
-## 这个文档是做什么的？
+更新：2026-09-14。实际字段以 [Prisma schema](../prisma/schema.prisma) 和 [迁移目录](../prisma/migrations) 为准；模型存在不等于所有页面已接入云端存储。
 
-这份文档用来说明 **AlcheMix Lab 的数据应该怎么存**。  
-它回答的是数据库和后端层面的问题：
+## 1. 当前数据模块
 
-- 需要哪些表？
-- 每张表存什么？
-- 配料、酒类、配方、用户记录之间是什么关系？
-- 哪些数据是事实数据，哪些数据是用户行为数据？
-- 后续 Supabase + Prisma 应该怎么扩展？
+| 模块 | Prisma 模型示例 | 职责 |
+| --- | --- | --- |
+| 账号与偏好 | User、UserPreference | 应用身份与偏好 |
+| 材料与商品 | Ingredient、Product、ProductIngredient、DataSource、FlavorProfile | 材料、品牌商品、来源和风味信息 |
+| 配方体系 | Cocktail、CocktailIngredient、CustomizedRecipe、CustomizedRecipeItem | 母版及定制内容 |
+| 经典变体 | ClassicCocktail、ClassicCocktailVariant、VariantIngredient、RemixTag | 经典配方及变体 |
+| 通用配方 | Recipe、RecipeIngredient、Tag、RecipeTag、ClassicRecipeVariant | 另一组配方身份与关联 |
+| 规则与输出 | SafetyRule、LabPairingRule、CocktailTemplate、RecipeOutput | 现有工作流规则与结果 |
+| 用户行为 | DrinkLog、UserSavedRecipe、AnalyticsEvent、UserFeedbackFlavorAdjustment | 酒记、收藏、事件、反馈 |
+| 知识索引 | RagChunk | 来源条目、版本、向量 |
 
-如果你要改数据库、写 Prisma schema、设计 API、做 Supabase 表结构，就看这份文档。
+数据库同时存在多组配方模型和本地数据源。不能把不同表中的同名字符串当成唯一身份，也不能假设全部页面使用同一张 Recipe 表。当前仍有本地状态及历史种子数据，接入助手前逐项审计材料、比例、分类与链接；生成式种子不能自动标记为权威配方。
 
----
+### 数据服务的用户场景
 
-## 1. 数据库设计原则
+| 用户场景 | 数据依据 | 使用策略 | 展示要求 | 异常与验收 |
+| --- | --- | --- | --- | --- |
+| 查找可做的酒 | 现有材料、配方及匹配结果 | 复用业务规则并保留来源身份 | 真实酒名、匹配理由、缺料事实 | 无法确认身份不造卡；A05–A07 |
+| 打开具体酒单 | 配方来源、ID、路由映射 | 校验目标存在 | 与推荐一致的详情 | 名称相同不代表身份相同；A07 |
+| 将材料带入实验室 | 用户选择或明确输入 | 不把缺失用量自动补齐 | 展示所带材料，覆盖前确认 | 编辑值不等于实际操作；A03、A04 |
+| 当前酒缺料或故障 | 配方要求与用户确认事实 | 两类事实分开，检索对应条件 | 保留当前酒，解释适用范围 | 不继承另一杯的缺料；A08、A14、A20 |
+| 查看回答依据 | 知识条目、来源、版本 | 引用与生成结果关联 | 可核对的来源 | 版本不匹配按技术错误处理；A15、A16 |
+| 使用助手后记录一杯 | 用户主动进入原记录功能 | 仍由原业务处理写入 | 不把聊天内容自动存为酒记 | A18 |
 
-AlcheMix Lab 的数据库分成四类数据：
+页面助手使用共享目录和临时会话；2026-09-15 知识闭环新增 knowledge_candidates 与 knowledge_reviews，迁移和发布规则见[知识收集与发布](knowledge-learning.md)。
+## 2. 配方读取：当前适配与后续统一契约
 
-1. **事实数据**
-   - 配料
-   - 酒类
-   - 饮料
-   - 果汁
-   - ABV
-   - 糖分
-   - pH
-   - 风味标签
+当前已抽取 explore-catalog.ts 并复用首页 matchDrinks；来源与详情由代码映射解析。下面是后续完整数据治理契约，尚未逐字段实现：source、sourceId、canonicalKey、category、displayName、ingredients、detailTarget、version、reviewStatus。字段名称可在实现中固定，但以下约束不变：
 
-2. **配方数据**
-   - 经典鸡尾酒
-   - 便利店特调
-   - 系统推荐配方
-   - 后续 AI 候选草稿
-   - 用户定制配方
-
-3. **用户数据**
-   - 用户账号
-   - 用户偏好
-   - 收藏
-   - 已喝记录
-   - 调酒日历
-
-4. **反馈和推荐数据**
-   - 口味评分
-   - 搜索行为
-   - 点击行为
-   - 实验材料记录
-   - 口味画像
-
----
-
-## 2. 核心数据模块
-
-### 2.1 用户模块
-
-#### `users`
-
-存用户基础信息。
-
-字段建议：
-
-- `id`
-- `email`
-- `nickname`
-- `avatar_url`
-- `created_at`
-- `updated_at`
-
-用途：
-
-- 登录注册
-- 区分不同用户的酒记
-- 绑定收藏和口味画像
-
-#### `user_preferences`
-
-存用户主动设置的偏好。
+- 来源与 ID 联合唯一；显示名称仅用于展示与别名检索。
+- 材料数量、单位、必需／可选项来自配方数据，不让模型补齐。
+- 匹配和排序复用已有业务逻辑，不能另建 Agent 专用六杯列表。
+- 详情目标由应用路由映射生成；缺有效详情、材料不完整或未通过必要审核的条目不得承诺“可直接制作”。
+- 替换配方需注明差异，不能覆盖原始经典记录。
 
-字段建议：
+当前“页面 → 数据源 → 匹配函数 → 配方 ID → 详情路由”映射见 [实现说明](companion-implementation.md)；生产上线前仍需配方内容审核。具体统一到哪组表不在本轮擅自决定。
 
-- `user_id`
-- `sweetness_preference`
-- `bitterness_tolerance`
-- `alcohol_tolerance`
-- `acidity_preference`
-- `disliked_ingredients`
-- `favorite_ingredients`
-- `preferred_flavor_tags`
-
-用途：
-
-- 用户明确说“不喝奶”“不想要咖啡因”“不喜欢苦”，就存在这里
-- 推荐时优先避开用户不喜欢的东西
-
----
-
-### 2.2 配料数据库
-
-#### `ingredients`
-
-存抽象配料，例如：
-
-- 金酒
-- 伏特加
-- 苏打水
-- 橙汁
-- 养乐多
-- 乌龙茶
-- 椰奶饮料
-
-字段建议：
-
-- `id`
-- `slug`
-- `name_zh`
-- `name_en`
-- `aliases`
-- `type`
-- `category`
-- `sub_category`
-- `abv`
-- `sweetness`
-- `acidity`
-- `bitterness`
-- `carbonation`
-- `viscosity`
-- `sugar_g_per_100ml`
-- `ph_range`
-- `ingredients`
-- `flavor_tags`
-- `suitable_with`
-- `avoid_with`
-- `recommended_volume_ml`
-- `confidence`
-- `source_note`
-
-用途：
-
-- Lab 添加材料
-- 搜索材料
-- 推荐配方
-- 风味分析
-- 规则计算上下文
-- 后续 AI 辅助时的受控上下文
+## 3. 知识与配额表
 
-#### `products`
-
-存具体品牌商品，例如：
-
-- 三得利乌龙茶
-- 元气森林白桃气泡水
-- 养乐多
-- 水溶 C100
-- 椰树牌椰汁
-
-字段建议：
-
-- `brand`
-- `name`
-- `barcode`
-- `image_url`
-- `abv`
-- `sugar_content_per_100ml`
-- `caffeine_content_per_100ml`
-- `ingredient_list_text`
-- `common_store_type`
-
-用途：
-
-- 便利店真实饮料库
-- 未来扫码 / OCR / 品牌搜索
-- 让用户搜“椰树牌椰汁”时能匹配到“椰奶饮料 / Coconut Milk Drink”
+RagChunk 使用 PostgreSQL pgvector 的 1024 维向量，并保存 dataset_version、embedding_profile。通过原生 SQL 完成向量查询；当前为精确余弦检索，没有 ANN 索引。索引必须与当前知识文件和嵌入配置匹配，详见 [RAG](rag-setup.md)。
 
-#### `flavor_profiles`
+`public.ai_request_leases` 由 [独立迁移](../prisma/migrations/20260912010000_add_ai_request_limits/migration.sql) 创建，不是 Prisma 模型。字段为 request_id、user_id、started_at、lease_until、finished_at；user_id 外键级联删除。事务锁保证同一用户申请配额的原子性。
 
-存风味维度。
+这两类后台表不应作为浏览器直连接口。租约表启用 RLS 并撤销 anon/authenticated 权限；服务端连接需要适当权限。当前租约清理在该用户再次申请时删除其两天前记录，不是全库定时清理任务。
 
-字段建议：
-
-- `sweetness`
-- `sourness`
-- `bitterness`
-- `alcohol_strength`
-- `freshness`
-- `fruitiness`
-- `tea_level`
-- `dairy_level`
-- `herbal_level`
-- `body`
-- `aroma_tags`
-- `flavor_tags`
-
-用途：
-
-- 计算两种材料是否适合
-- 计算口味画像
-- 推荐相似配方
-
----
-
-### 2.3 配方模块
-
-#### `cocktails`
-
-存经典鸡尾酒母版，例如：
-
-- Negroni
-- Margarita
-- Mojito
-- Gin Tonic
-- Singapore Sling
-
-用途：
+## 4. 用户事实与存储边界
 
-- 经典鸡尾酒知识库
-- 经典酒改良器
-- Inspiration 经典鸡尾酒列表
-
-#### `cocktail_ingredients`
-
-存经典鸡尾酒的材料和比例。
-
-字段建议：
-
-- `cocktail_id`
-- `ingredient_id`
-- `amount_ml`
-- `unit`
-- `role`
-- `note`
-- `order`
+配方值、实验室编辑值、实际制作值必须分开。酒记应保留当时的配方快照，避免后续配方变化改写历史。查看、搜索、收藏和实际喝过分别建模，不能把点击直接当成口味喜好。
 
-用途：
+悬浮助手的任务状态仅保存在当前页面内存中，尚无 Agent 长期记忆或库存表。不得自动把对话写成 DrinkLog、扣减库存或更新偏好。未来如需持久化，应先确定用户授权、保留时间、删除机制和最少字段，再增加迁移。
 
-- 展示原始配方
-- 改良时知道哪一项是基酒、甜味、苦味、酸味
-
-#### `customized_recipes`
-
-存用户生成或定制过的配方。
-
-字段建议：
-
-- `base_cocktail_id`
-- `user_id`
-- `name_zh`
-- `name_en`
-- `selected_goals`
-- `description`
-- `bitterness_before`
-- `bitterness_after`
-- `sweetness_before`
-- `sweetness_after`
-- `alcohol_before`
-- `alcohol_after`
-
-用途：
-
-- 存经典改良结果
-- 存系统推荐或用户定制结果
-- 后续可存通过审核的 AI 候选结果
-- 方便后续复用和收藏
-
----
-
-### 2.4 已喝记录 / 调酒日记
-
-#### `drink_logs`
-
-这是用户真实反馈最重要的表。
-
-字段建议：
-
-- `id`
-- `user_id`
-- `recipe_id`
-- `recipe_name`
-- `recipe_snapshot`
-- `drink_date`
-- `drink_time`
-- `rating`
-- `taste_scores`
-- `note`
-- `is_finished`
-- `is_favorite`
-- `is_starred`
-- `mood_tags`
-- `image_url`
-- `source_page`
-- `created_at`
-- `updated_at`
-
-用途：
-
-- 调酒日历
-- 最近喝过
-- 我的收藏
-- 高分酒
-- 口味画像
-- 推荐算法训练数据
-
-`recipe_snapshot` 很重要，因为配方未来可能改名或调整比例，但用户当时喝到的版本必须保留下来。
-
----
-
-### 2.5 搜索和行为记录
-
-#### `search_logs`
-
-建议后续新增，用于记录用户搜索。
-
-字段建议：
-
-- `user_id`
-- `query`
-- `matched_type`
-- `matched_id`
-- `source_page`
-- `created_at`
-
-用途：
-
-- 判断用户最近对什么感兴趣
-- 更新口味画像的弱信号
-
-注意：
-
-- 搜索只代表兴趣，不代表喜欢
-- 搜索信号权重要低于已喝记录
-- 搜索记录需要时间衰减，最近搜索更重要
-
-#### `lab_experiment_logs`
-
-建议后续新增，用于记录用户在 Lab 中做过的实验。
-
-字段建议：
-
-- `user_id`
-- `ingredients_snapshot`
-- `mix_method`
-- `estimated_profile`
-- `created_at`
-
-用途：
-
-- 分析用户常用材料
-- 计算口味画像
-- 推荐更贴合用户手边材料的配方
-
-#### `user_interaction_logs`
-
-建议后续新增，用于记录点击、查看、打开详情等行为。
-
-字段建议：
-
-- `user_id`
-- `target_type`
-- `target_id`
-- `action`
-- `source_page`
-- `created_at`
-
-`action` 示例：
-
-- `view_recipe`
-- `click_card`
-- `open_detail`
-- `open_drink_log`
-- `save_recipe`
-
-用途：
-
-- 分析用户对哪些酒卡感兴趣
-- 给推荐算法提供点击信号
-- 区分“看过”与“真正喝过”
-
-#### `user_taste_profiles`
-
-建议后续新增，用于缓存用户口味画像。
-
-字段建议：
-
-- `user_id`
-- `scores`
-- `favorite_ingredients`
-- `favorite_base_spirits`
-- `avoid_tags`
-- `source_summary`
-- `updated_at`
-
-`scores` 示例：
-
-```json
-{
-  "sweetness": 62,
-  "acidity": 70,
-  "alcoholIntensity": 35,
-  "bitterness": 18,
-  "freshness": 86,
-  "fruitiness": 78,
-  "creaminess": 20,
-  "carbonation": 74,
-  "herbal": 44,
-  "smoothness": 80
-}
-```
-
-用途：
-
-- My 页面展示口味画像
-- Assistant 推荐酒卡排序
-- Inspiration 酒卡个性化排序
-- 解释“为什么推荐这杯”
-
-口味画像可以由后端定时计算，也可以在用户保存 drink_log 后即时更新。
-
----
-
-## 2.6 当前代码状态和后续数据库目标
-
-当前代码中已经有：
-
-- 本地 `drinkLogs`
-- `DrinkLogButton`
-- `DrinkLogModal`
-- My 页面调酒日历
-- 最近喝过
-- 我的收藏
-- Prisma `DrinkLog` 扩展字段
-- `/api/drink-logs` 相关 Route
-
-但当前前端仍以 localStorage 为主，Supabase 写入还没有正式启用。
-
-后续数据库目标：
-
-1. Supabase Auth 真登录
-2. `drink_logs` 真实写入 PostgreSQL
-3. 新增 `search_logs`
-4. 新增 `lab_experiment_logs`
-5. 新增 `user_interaction_logs`
-6. 新增 `user_taste_profiles`
-7. 用这些数据驱动推荐算法
-
----
-
-## 3. 推荐索引
-
-为了让查询更快，建议加这些索引：
-
-- `ingredients.slug`
-- `ingredients.name_zh`
-- `ingredients.name_en`
-- `ingredients.category`
-- `products.barcode`
-- `products.name`
-- `drink_logs.user_id`
-- `drink_logs.drink_date`
-- `drink_logs.recipe_id`
-- `customized_recipes.user_id`
-
----
-
-## 4. 数据库、规则算法和后续 AI 的边界
-
-数据库负责事实：
-
-- 材料
-- ABV
-- 糖分
-- pH
-- 配料表
-- 风味标签
-- 用户记录
-
-当前 MVP 主要由本地数据库和规则算法负责：
-
-- 材料搜索
-- 配方匹配
-- 风味分析
-- Shake / Stir 和材料冲突提醒
-- 口味画像计算
-- 推荐排序
-
-后续 AI 只负责辅助：
-
-- 生成候选配方草稿
-- 辅助风味解释
-- 辅助命名
-- 本地没有材料时生成候选补全建议
-
-AI 不应该直接写数据库。  
-所有写入都应该通过 Next.js API Route 或 Server Action 完成；AI 候选资料进入管理台审核后，才允许成为正式事实数据。
+旧文档建议的 search_logs、lab_experiment_logs、user_interaction_logs、user_taste_profiles 并非全部已实现表；现阶段优先评估现有 AnalyticsEvent 是否够用，避免重复建设。

@@ -1,7 +1,7 @@
 {
-  "version": 1,
+  "version": 2,
   "language": "zh-CN",
-  "status": "initial_seed_not_wired_to_chat",
+  "status": "admin_rag_knowledge_v2",
   "entries": [
     {
       "id": "carbonated-shaking",
@@ -269,6 +269,804 @@
         {
           "title": "Difford’s Guide — How to layer cocktails",
           "url": "https://www.diffordsguide.com/g/1150/how-to-make-cocktails/how-to-layer"
+        }
+      ]
+    },
+    {
+      "id": "classic-daiquiri",
+      "title": "戴奇里为什么有没化开的糖？",
+      "aliases": [
+        "戴奇里",
+        "黛绮莉",
+        "Daiquiri",
+        "糖粒"
+      ],
+      "category": "经典配方",
+      "answer": "IBA 戴奇里使用白朗姆、鲜青柠汁和细砂糖；先搅拌让糖溶解，再加冰摇和并滤入冷杯。",
+      "scope": "这里讨论使用细砂糖的 IBA 版本；不能直接把两吧匙糖换成相同体积糖浆。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "IBA — Daiquiri",
+          "url": "https://iba-world.com/iba-cocktail/daiquiri/"
+        }
+      ]
+    },
+    {
+      "id": "classic-margarita",
+      "title": "玛格丽特一定要做盐口吗？",
+      "aliases": [
+        "玛格丽特",
+        "Margarita",
+        "盐口"
+      ],
+      "category": "经典配方",
+      "answer": "IBA 玛格丽特使用龙舌兰、Triple Sec 和鲜青柠汁，加冰摇和过滤。半圈盐口是可选项，不做盐口也符合该版本。",
+      "scope": "适用于 IBA 玛格丽特；不是所有变体都使用相同比例。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "IBA — Margarita",
+          "url": "https://iba-world.com/iba-cocktail/margarita/"
+        }
+      ]
+    },
+    {
+      "id": "classic-old-fashioned",
+      "title": "古典老式需要加柠檬汁吗？",
+      "aliases": [
+        "古典老式",
+        "Old Fashioned",
+        "老式鸡尾酒"
+      ],
+      "category": "经典配方",
+      "answer": "IBA Old Fashioned 的主体是波本或黑麦威士忌、方糖、芳香苦精和少量水，不含柠檬汁。先用苦精和水化糖，再加冰与威士忌轻搅。",
+      "scope": "按 IBA 版本核对；含柠檬汁的改编不能直接当成此标准配方。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "IBA — Old Fashioned",
+          "url": "https://iba-world.com/iba-cocktail/old-fashioned/"
+        }
+      ]
+    },
+    {
+      "id": "classic-dry-martini",
+      "title": "干马丁尼要摇还是搅？",
+      "aliases": [
+        "干马丁尼",
+        "Dry Martini",
+        "马丁尼做法"
+      ],
+      "category": "经典配方",
+      "answer": "IBA 干马丁尼使用金酒和干味美思，加冰搅拌后滤入预冷杯。柠檬皮油或绿橄榄用于收尾。",
+      "scope": "此处指 Dry Martini，不适用于所有名字含 Martini 的饮品。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "IBA — Dry Martini",
+          "url": "https://iba-world.com/iba-cocktail/dry-martini/"
+        }
+      ]
+    },
+    {
+      "id": "classic-manhattan",
+      "title": "曼哈顿用干味美思还是甜味美思？",
+      "aliases": [
+        "曼哈顿",
+        "Manhattan"
+      ],
+      "category": "经典配方",
+      "answer": "IBA 曼哈顿使用黑麦威士忌、甜红味美思和芳香苦精，加冰搅拌后过滤。",
+      "scope": "此处是标准 Manhattan；干型等变体需另查对应配方。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "IBA — Manhattan",
+          "url": "https://iba-world.com/iba-cocktail/manhattan/"
+        }
+      ]
+    },
+    {
+      "id": "classic-whiskey-sour",
+      "title": "威士忌酸不放蛋白可以吗？",
+      "aliases": [
+        "威士忌酸",
+        "Whiskey Sour",
+        "不放蛋白"
+      ],
+      "category": "经典配方",
+      "answer": "IBA 威士忌酸由波本、鲜柠檬汁和糖浆组成，蛋白是可选项；不加蛋白可以制作该版本。",
+      "scope": "讨论配方选择，不是生蛋安全说明；使用蛋类时另遵循巴氏杀菌蛋制品要求。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "IBA — Whiskey Sour",
+          "url": "https://iba-world.com/iba-cocktail/whiskey-sour/"
+        }
+      ]
+    },
+    {
+      "id": "classic-negroni",
+      "title": "内格罗尼需要柠檬汁和糖浆吗？",
+      "aliases": [
+        "内格罗尼",
+        "Negroni",
+        "尼格罗尼"
+      ],
+      "category": "经典配方",
+      "answer": "IBA 内格罗尼由等量金酒、金巴利和甜红味美思组成，每项30 ml，在加冰的冷杯中轻搅；该版本不加入柠檬汁或糖浆。",
+      "scope": "限定 IBA 版本；不能把所有金酒酸甜饮品称为经典内格罗尼。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "IBA — Negroni",
+          "url": "https://iba-world.com/iba-cocktail/negroni/"
+        }
+      ]
+    },
+    {
+      "id": "classic-americano",
+      "title": "美式鸡尾酒里有咖啡吗？",
+      "aliases": [
+        "Americano鸡尾酒",
+        "美式鸡尾酒"
+      ],
+      "category": "经典配方",
+      "answer": "IBA Americano 鸡尾酒使用金巴利、甜红味美思和少量苏打水，在冰杯中轻搅，不含咖啡。",
+      "scope": "区分鸡尾酒 Americano 与美式咖啡；这里不讨论咖啡制作。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "IBA — Americano",
+          "url": "https://iba-world.com/iba-cocktail/americano/"
+        }
+      ]
+    },
+    {
+      "id": "classic-moscow-mule",
+      "title": "莫斯科骡子可以直接用苏打水替代姜汁啤酒吗？",
+      "aliases": [
+        "莫斯科骡子",
+        "Moscow Mule",
+        "姜汁啤酒替换"
+      ],
+      "category": "经典配方",
+      "answer": "IBA 莫斯科骡子使用伏特加、姜汁啤酒和鲜青柠汁，轻搅混合。苏打水不是该配方指定的姜汁啤酒，替换后属于改编。",
+      "scope": "不提供苏打水等价替代比例，也不据名称推断姜汁啤酒的酒精含量，应查看产品标签。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "IBA — Moscow Mule",
+          "url": "https://iba-world.com/iba-cocktail/moscow-mule/"
+        }
+      ]
+    },
+    {
+      "id": "classic-dark-n-stormy",
+      "title": "黑暗风暴的朗姆和姜汁啤酒先倒哪个？",
+      "aliases": [
+        "黑暗风暴",
+        "Dark N Stormy"
+      ],
+      "category": "经典配方",
+      "answer": "IBA Dark N Stormy 在装冰的高杯中先倒姜汁啤酒，再让朗姆浮于上层。该版本指定 Goslings 朗姆。",
+      "scope": "限定该版本的材料和顺序，不保证任意品牌都能呈现相同分层。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "IBA — Dark N Stormy",
+          "url": "https://iba-world.com/iba-cocktail/dark-n-stormy/"
+        }
+      ]
+    },
+    {
+      "id": "classic-pina-colada",
+      "title": "椰林飘香用椰子水还是椰奶油？",
+      "aliases": [
+        "椰林飘香",
+        "Pina Colada",
+        "椰子水替代"
+      ],
+      "category": "经典配方",
+      "answer": "IBA 椰林飘香使用白朗姆、椰奶油（Coconut Cream）和鲜菠萝汁，与冰一起用搅拌机打匀。该版本没有使用椰子水。",
+      "scope": "椰制品名称和含糖量因品牌而异，先核对标签；不提供椰子水的等价替代量。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "IBA — Pina Colada",
+          "url": "https://iba-world.com/iba-cocktail/pina-colada/"
+        }
+      ]
+    },
+    {
+      "id": "classic-cosmopolitan",
+      "title": "大都会只有伏特加和蔓越莓汁够吗？",
+      "aliases": [
+        "大都会",
+        "Cosmopolitan"
+      ],
+      "category": "经典配方",
+      "answer": "IBA 大都会还包含君度和鲜青柠汁，指定柠檬风味伏特加；所有材料加冰摇和后过滤。",
+      "scope": "两种材料的简化长饮不是这一 IBA 版本。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "IBA — Cosmopolitan",
+          "url": "https://iba-world.com/iba-cocktail/cosmopolitan/"
+        }
+      ]
+    },
+    {
+      "id": "classic-espresso-martini",
+      "title": "浓缩咖啡马丁尼需要金酒吗？",
+      "aliases": [
+        "浓缩咖啡马丁尼",
+        "Espresso Martini",
+        "咖啡马丁尼"
+      ],
+      "category": "经典配方",
+      "answer": "IBA Espresso Martini 使用伏特加、Kahlúa 咖啡利口酒、糖浆和浓缩咖啡，加冰充分摇和后过滤；不使用金酒或味美思。",
+      "scope": "不要因为名称含 Martini 就套用干马丁尼配方。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "IBA — Espresso Martini",
+          "url": "https://iba-world.com/iba-cocktail/espresso-martini/"
+        }
+      ]
+    },
+    {
+      "id": "classic-french-75",
+      "title": "法式75的香槟要一起摇吗？",
+      "aliases": [
+        "法式75",
+        "French 75",
+        "香槟摇和"
+      ],
+      "category": "经典配方",
+      "answer": "IBA 法式75先摇和金酒、柠檬汁和糖浆并过滤入杯，再补入香槟轻搅。香槟不放入摇壶一起摇。",
+      "scope": "限定该含气泡酒版本的加料顺序。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "IBA — French 75",
+          "url": "https://iba-world.com/iba-cocktail/french-75/"
+        }
+      ]
+    },
+    {
+      "id": "classic-sidecar",
+      "title": "边车用白兰地还是威士忌？",
+      "aliases": [
+        "边车",
+        "Sidecar"
+      ],
+      "category": "经典配方",
+      "answer": "IBA 边车使用干邑、Triple Sec 和鲜柠檬汁，加冰摇和后滤入冷杯。",
+      "scope": "此处是干邑版本，不把威士忌替代自动视为同一标准配方。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "IBA — Sidecar",
+          "url": "https://iba-world.com/iba-cocktail/sidecar/"
+        }
+      ]
+    },
+    {
+      "id": "classic-white-lady",
+      "title": "白色佳人名字里有白色就需要奶油吗？",
+      "aliases": [
+        "白色佳人",
+        "White Lady"
+      ],
+      "category": "经典配方",
+      "answer": "IBA White Lady 使用金酒、Triple Sec 和鲜柠檬汁，加冰摇和过滤；材料表不含奶油。",
+      "scope": "仅说明这一 IBA 版本，不排除其他版本添加蛋白。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "IBA — White Lady",
+          "url": "https://iba-world.com/iba-cocktail/white-lady/"
+        }
+      ]
+    },
+    {
+      "id": "classic-gin-fizz",
+      "title": "金菲士出杯时一定带冰吗？",
+      "aliases": [
+        "金菲士",
+        "Gin Fizz"
+      ],
+      "category": "经典配方",
+      "answer": "IBA Gin Fizz 先把金酒、柠檬汁与糖浆加冰摇和，再加少量苏打水，出杯不带冰。",
+      "scope": "这是该 IBA 版本的出杯方式，不意味着制作时不需要冰。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "IBA — Gin Fizz",
+          "url": "https://iba-world.com/iba-cocktail/gin-fizz/"
+        }
+      ]
+    },
+    {
+      "id": "classic-john-collins",
+      "title": "约翰柯林斯和汤姆柯林斯怎么区分？",
+      "aliases": [
+        "约翰柯林斯",
+        "汤姆柯林斯",
+        "John Collins",
+        "Tom Collins"
+      ],
+      "category": "经典配方",
+      "answer": "IBA John Collins 使用金酒、柠檬汁、糖浆和苏打水，在高杯中加冰轻搅；该页面注明使用 Old Tom 金酒时称 Tom Collins。",
+      "scope": "仅按该 IBA 页面的命名约定，不覆盖所有历史版本。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "IBA — John Collins",
+          "url": "https://iba-world.com/iba-cocktail/john-collins/"
+        }
+      ]
+    },
+    {
+      "id": "classic-mint-julep",
+      "title": "薄荷朱利普用什么酒和冰？",
+      "aliases": [
+        "薄荷朱利普",
+        "Mint Julep"
+      ],
+      "category": "经典配方",
+      "answer": "IBA Mint Julep 使用波本、薄荷、糖和水，薄荷轻捣后加入碎裂冰与波本，搅拌至杯壁起霜。",
+      "scope": "糖浆版需按对应配方计量，不能把糖的茶匙数直接当成糖浆毫升数。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "IBA — Mint Julep",
+          "url": "https://iba-world.com/iba-cocktail/mint-julep/"
+        }
+      ]
+    },
+    {
+      "id": "classic-caipirinha",
+      "title": "凯匹林纳把卡莎萨换成伏特加还叫原名吗？",
+      "aliases": [
+        "凯匹林纳",
+        "Caipirinha",
+        "Caipiroska",
+        "卡莎萨替换"
+      ],
+      "category": "经典配方",
+      "answer": "IBA Caipirinha 用卡莎萨、青柠块和白蔗糖；青柠与糖轻捣后加冰和酒。该页面将伏特加变体称为 Caipiroska，朗姆变体称为 Caipirissima。",
+      "scope": "这是配方命名区别，不代表不同基酒味道等价。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "IBA — Caipirinha",
+          "url": "https://iba-world.com/iba-cocktail/caipirinha/"
+        }
+      ]
+    },
+    {
+      "id": "classic-tequila-sunrise",
+      "title": "龙舌兰日出为什么搅完没有渐层了？",
+      "aliases": [
+        "龙舌兰日出",
+        "Tequila Sunrise",
+        "日出渐层"
+      ],
+      "category": "经典配方",
+      "answer": "IBA 龙舌兰日出先在冰杯中加入龙舌兰和橙汁，最后加红石榴糖浆形成日出色彩效果，并明确不再搅拌。",
+      "scope": "只讨论该配方的色彩效果，不把一般乳制品分层归于同一机制。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "IBA — Tequila Sunrise",
+          "url": "https://iba-world.com/iba-cocktail/tequila-sunrise/"
+        }
+      ]
+    },
+    {
+      "id": "classic-singapore-sling",
+      "title": "新加坡司令只要金酒和菠萝汁吗？",
+      "aliases": [
+        "新加坡司令",
+        "Singapore Sling"
+      ],
+      "category": "经典配方",
+      "answer": "IBA 新加坡司令还包括樱桃利口酒、君度、廊酒、鲜青柠汁、红石榴糖浆和芳香苦精；加冰摇和后过滤。",
+      "scope": "这里核对材料是否齐全，不给出缺料时的等价替换保证。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "IBA — Singapore Sling",
+          "url": "https://iba-world.com/iba-cocktail/singapore-sling/"
+        }
+      ]
+    },
+    {
+      "id": "classic-bellini",
+      "title": "贝利尼要用桃汁还是桃泥？",
+      "aliases": [
+        "贝利尼",
+        "Bellini",
+        "桃泥"
+      ],
+      "category": "经典配方",
+      "answer": "IBA Bellini 使用白桃泥和 Prosecco，轻柔混合后倒入冷笛形杯。该版本使用的是桃泥，不是普通桃味饮料。",
+      "scope": "此处不提供不同桃汁产品替换桃泥的比例。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "IBA — Bellini",
+          "url": "https://iba-world.com/iba-cocktail/bellini/"
+        }
+      ]
+    },
+    {
+      "id": "classic-mimosa",
+      "title": "含羞草鸡尾酒的橙汁和气泡酒怎么加？",
+      "aliases": [
+        "含羞草鸡尾酒",
+        "Mimosa"
+      ],
+      "category": "经典配方",
+      "answer": "IBA Mimosa 使用等量鲜橙汁与 Prosecco，各75 ml；先入橙汁，再轻倒气泡酒并轻搅。",
+      "scope": "限定该版本，不适用于所有餐厅的自由配比。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "IBA — Mimosa",
+          "url": "https://iba-world.com/iba-cocktail/mimosa/"
+        }
+      ]
+    },
+    {
+      "id": "milk-curdling",
+      "title": "加牛奶后结絮或分层可能是什么原因？",
+      "aliases": [
+        "牛奶分层",
+        "牛奶结块",
+        "奶茶分层",
+        "奶制品凝结"
+      ],
+      "category": "奶制品",
+      "answer": "酸性材料和茶等含多酚材料都可能使牛奶中的酪蛋白聚集，出现絮状物。先确认加入了哪些果汁、茶或其他材料及其用量。",
+      "scope": "这是可能机制，不能仅凭分层确定原因、断言变质或保证可饮用；不把植物奶全部视为牛奶。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "Campari Academy — Milk Punch Guide and Recipes",
+          "url": "https://www.campariacademy.com/en-us/training/tools-techniques/milk-punch-guide-and-recipes/"
+        }
+      ]
+    },
+    {
+      "id": "milk-clarification",
+      "title": "澄清奶洗为什么过滤后还是浑浊？",
+      "aliases": [
+        "奶洗浑浊",
+        "奶洗过滤",
+        "澄清奶洗"
+      ],
+      "category": "奶制品",
+      "answer": "奶洗过滤初期可能仍浑浊，可将初滤液重新过滤；轻倒液体，避免破坏形成的凝乳滤层。",
+      "scope": "仅适用于有意进行的奶洗澄清；过滤不是消毒，也不用于挽救变质饮料。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "Campari Academy — Milk Punch Guide and Recipes",
+          "url": "https://www.campariacademy.com/en-us/training/tools-techniques/milk-punch-guide-and-recipes/"
+        }
+      ]
+    },
+    {
+      "id": "dry-shake",
+      "title": "干摇是什么意思，为什么不先加冰？",
+      "aliases": [
+        "干摇",
+        "dry shake",
+        "蛋白泡沫"
+      ],
+      "category": "技法",
+      "answer": "干摇是先不加冰摇和，再加冰摇和冷却，常用于含蛋或奶油的配方，以促进乳化和泡沫形成。",
+      "scope": "它是质地处理方法，不是杀菌步骤；按具体配方和食品标签使用材料。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "Difford’s Guide — How to Dry Shake",
+          "url": "https://www.diffordsguide.com/g/1150/how-to-make-cocktails/how-to-dry-shake"
+        }
+      ]
+    },
+    {
+      "id": "reverse-dry-shake",
+      "title": "反向干摇的步骤是什么？",
+      "aliases": [
+        "反向干摇",
+        "reverse dry shake"
+      ],
+      "category": "技法",
+      "answer": "先加冰摇和，把酒液过滤回摇壶并去掉冰，再不加冰摇和，最后细滤入杯。",
+      "scope": "适用于需要泡沫的配方；不是要求所有鸡尾酒都二次摇和。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "Difford’s Guide — How to Dry Shake",
+          "url": "https://www.diffordsguide.com/g/1150/how-to-make-cocktails/how-to-dry-shake"
+        }
+      ]
+    },
+    {
+      "id": "prechill-glass",
+      "title": "为什么要提前冰杯？",
+      "aliases": [
+        "提前冰杯",
+        "预冷杯",
+        "冷杯"
+      ],
+      "category": "技法",
+      "answer": "预冷调酒杯和出杯容器能减少温暖杯体对饮品温度的影响。可先用冰和水冷却，倒掉冰水后再按配方制作。",
+      "scope": "这里是温度管理建议，不提供固定保冷时长。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "Difford’s Guide — How to stir a cocktail",
+          "url": "https://www.diffordsguide.com/g/1150/how-to-make-cocktails/how-to-stir-a-cocktail"
+        }
+      ]
+    },
+    {
+      "id": "mixing-vessel",
+      "title": "没有专用调酒杯能搅拌吗？",
+      "aliases": [
+        "没有调酒杯",
+        "搅拌杯替代"
+      ],
+      "category": "工具",
+      "answer": "可以使用合适的摇壶底杯作为搅拌容器，配合能伸到杯底的长柄勺；搅拌后按配方过滤出杯。",
+      "scope": "选择稳定、适合食品且能安全操作的容器；不是任意装饰玻璃都适用。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "Difford’s Guide — How to stir a cocktail",
+          "url": "https://www.diffordsguide.com/g/1150/how-to-make-cocktails/how-to-stir-a-cocktail"
+        }
+      ]
+    },
+    {
+      "id": "honey-mixing",
+      "title": "蜂蜜不好混匀怎么办？",
+      "aliases": [
+        "蜂蜜混不开",
+        "蜂蜜沉底",
+        "蜂蜜糖浆"
+      ],
+      "category": "甜度",
+      "answer": "按配方先把蜂蜜与水混合成蜂蜜糖浆，会更容易倒取、计量并与其他材料混合。",
+      "scope": "蜂蜜糖浆浓度不统一；不能默认与普通糖浆等体积等甜度。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "Difford’s Guide — Honey syrup",
+          "url": "https://www.diffordsguide.com/g/1109/honey-and-honey-syrup/honey-syrup"
+        }
+      ]
+    },
+    {
+      "id": "ice-water-flavor",
+      "title": "冰块让酒有自来水味怎么办？",
+      "aliases": [
+        "冰块异味",
+        "冰有氯味",
+        "制冰用水"
+      ],
+      "category": "冰与稀释",
+      "answer": "制冰用水会影响风味；若自来水氯味明显，可使用适合饮用的过滤水或瓶装水制冰。",
+      "scope": "仅讨论水带来的风味；不据此判断所有异味的原因。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "Difford’s Guide — Ice",
+          "url": "https://www.diffordsguide.com/g/1150/how-to-make-cocktails/ice"
+        }
+      ]
+    },
+    {
+      "id": "crushed-ice",
+      "title": "配方写冰块可以随意换成碎冰吗？",
+      "aliases": [
+        "碎冰替代",
+        "冰块和碎冰"
+      ],
+      "category": "冰与稀释",
+      "answer": "先遵循配方指定的冰型。Difford’s Guide 在未特别注明时指方冰，需要碎冰时会明确标注；不要把两种写法当作同义。",
+      "scope": "不同冰型下需要重新核对制作结果，不保证直接替换效果相同。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "Difford’s Guide — Ice",
+          "url": "https://www.diffordsguide.com/g/1150/how-to-make-cocktails/ice"
+        }
+      ]
+    },
+    {
+      "id": "mint-muddling",
+      "title": "薄荷捣碎后为什么发苦？",
+      "aliases": [
+        "薄荷发苦",
+        "薄荷捣碎",
+        "薄荷怎么捣"
+      ],
+      "category": "技法",
+      "answer": "薄荷宜轻捣以释放香气，避免碾碎叶片带出苦味；过度捣碎是值得检查的原因。",
+      "scope": "不能把一杯酒的所有苦味都归因于薄荷，还需核对其他材料。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "Malts — Mint Julep bartender tip",
+          "url": "https://www.malts.com/en-au/recipes/mint-julep"
+        }
+      ]
+    },
+    {
+      "id": "double-strain",
+      "title": "双重过滤怎么做？",
+      "aliases": [
+        "双重过滤",
+        "细滤",
+        "double strain"
+      ],
+      "category": "工具",
+      "answer": "把常规滤冰器放在摇壶上，细网筛放在出杯容器上方，让酒液依次通过两者，以拦下更细的草本、果肉和碎冰。",
+      "scope": "是口感处理，不具备消毒或排除过敏原的保证。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "A Bar Above — How to Strain a Cocktail",
+          "url": "https://abarabove.com/how-to-strain-a-cocktail/"
+        }
+      ]
+    },
+    {
+      "id": "strainer-choice",
+      "title": "霍桑滤冰器和朱利普滤冰器有什么区别？",
+      "aliases": [
+        "霍桑滤冰器",
+        "朱利普滤冰器",
+        "Hawthorne strainer",
+        "Julep strainer"
+      ],
+      "category": "工具",
+      "answer": "带弹簧的霍桑滤冰器常用于摇和后拦住较大冰块和果肉；朱利普滤冰器常配合搅拌杯使用。",
+      "scope": "先确认滤冰器与容器尺寸匹配，细小杂质可能仍需细网筛。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "A Bar Above — How to Strain a Cocktail",
+          "url": "https://abarabove.com/how-to-strain-a-cocktail/"
+        }
+      ]
+    },
+    {
+      "id": "citrus-recipe-choice",
+      "title": "青柠汁和黄柠檬汁可以直接当成同一种吗？",
+      "aliases": [
+        "青柠黄柠檬",
+        "柠檬汁替换",
+        "lime lemon"
+      ],
+      "category": "材料替换",
+      "answer": "先核对具体配方：IBA 玛格丽特指定鲜青柠汁，边车指定鲜柠檬汁。照标准版本制作时应分别使用对应材料。",
+      "scope": "这里只说明配方指定材料不同，来源不提供两者通用的酸度或等价替换比例。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "IBA — Margarita",
+          "url": "https://iba-world.com/iba-cocktail/margarita/"
+        },
+        {
+          "title": "IBA — Sidecar",
+          "url": "https://iba-world.com/iba-cocktail/sidecar/"
+        }
+      ]
+    },
+    {
+      "id": "vermouth-recipe-choice",
+      "title": "甜红味美思和干味美思能随便互换吗？",
+      "aliases": [
+        "甜红味美思",
+        "干味美思",
+        "味美思替换"
+      ],
+      "category": "材料替换",
+      "answer": "先看配方要求：IBA 干马丁尼使用干味美思，曼哈顿使用甜红味美思。按标准版本制作时不要忽略这一区别。",
+      "scope": "来源支持材料选择差异，不支持任意品牌间固定换算或等味替代。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-12",
+      "sources": [
+        {
+          "title": "IBA — Dry Martini",
+          "url": "https://iba-world.com/iba-cocktail/dry-martini/"
+        },
+        {
+          "title": "IBA — Manhattan",
+          "url": "https://iba-world.com/iba-cocktail/manhattan/"
         }
       ]
     }

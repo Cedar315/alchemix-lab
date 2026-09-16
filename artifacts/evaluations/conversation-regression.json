@@ -1,0 +1,249 @@
+{
+  "at": "2026-09-12T10:50:09.521Z",
+  "rows": [
+    {
+      "question": "我现在没有冰块可以做什么酒",
+      "supplies": {
+        "inventory": [],
+        "excluded": [],
+        "ice": false,
+        "iceEnough": null,
+        "toolAvailability": {
+          "杯子": null,
+          "量杯": null,
+          "搅拌勺": null
+        },
+        "tools": null
+      },
+      "result": {
+        "status": "no_candidates",
+        "message": "你目前没有冰，而现有配方都需要冰，暂时没有符合条件的推荐。你方便准备一些冰块吗？",
+        "clarification": "",
+        "recipes": [],
+        "knowledge": null,
+        "trace": [],
+        "model": "",
+        "usage": []
+      }
+    },
+    {
+      "question": "经典的酒",
+      "supplies": {
+        "inventory": [
+          {
+            "name": "金酒",
+            "amount": null,
+            "unit": "ml"
+          }
+        ],
+        "excluded": [],
+        "ice": false,
+        "iceEnough": null,
+        "toolAvailability": {
+          "杯子": null,
+          "量杯": null,
+          "搅拌勺": null
+        },
+        "tools": null
+      },
+      "result": {
+        "status": "no_candidates",
+        "message": "你目前没有冰，而现有配方都需要冰，暂时没有符合条件的推荐。你方便准备一些冰块吗？",
+        "clarification": "",
+        "recipes": [],
+        "knowledge": null,
+        "trace": [],
+        "model": "",
+        "usage": []
+      }
+    },
+    {
+      "question": "金酒",
+      "supplies": {
+        "inventory": [
+          {
+            "name": "金酒",
+            "amount": null,
+            "unit": "ml"
+          }
+        ],
+        "excluded": [],
+        "ice": false,
+        "iceEnough": null,
+        "toolAvailability": {
+          "杯子": null,
+          "量杯": null,
+          "搅拌勺": null
+        },
+        "tools": null
+      },
+      "result": {
+        "status": "no_candidates",
+        "message": "你目前没有冰，而现有配方都需要冰，暂时没有符合条件的推荐。你方便准备一些冰块吗？",
+        "clarification": "",
+        "recipes": [],
+        "knowledge": null,
+        "trace": [],
+        "model": "",
+        "usage": []
+      }
+    },
+    {
+      "question": "现在有冰了，我有伏特加100毫升、苏打水300毫升，有杯子、量杯、搅拌勺。冰已确认够装满杯子。只推荐一杯伏特加苏打。",
+      "supplies": {
+        "inventory": [
+          {
+            "name": "金酒",
+            "amount": null,
+            "unit": "ml"
+          },
+          {
+            "name": "伏特加",
+            "amount": 100,
+            "unit": "ml"
+          },
+          {
+            "name": "苏打水",
+            "amount": 300,
+            "unit": "ml"
+          }
+        ],
+        "excluded": [],
+        "ice": true,
+        "iceEnough": true,
+        "toolAvailability": {
+          "杯子": true,
+          "量杯": true,
+          "搅拌勺": true
+        },
+        "tools": null
+      },
+      "result": {
+        "status": "ready",
+        "message": "以下为任选一杯的配方，已通过本次材料、用量和器具检查。",
+        "clarification": "你在做哪杯酒，用什么杯子？也可以发一下配方和杯子容量。",
+        "recipes": [
+          {
+            "id": "house-vodka-soda",
+            "name": "伏特加苏打",
+            "ingredients": [
+              {
+                "name": "伏特加",
+                "amount": 30,
+                "unit": "ml"
+              },
+              {
+                "name": "苏打水",
+                "amount": 120,
+                "unit": "ml"
+              }
+            ],
+            "steps": [
+              "杯中加满冰块。",
+              "量取 30 ml 伏特加倒入杯中。",
+              "加入 120 ml 苏打水，用搅拌勺轻轻搅匀。"
+            ],
+            "tools": [
+              "杯子",
+              "量杯",
+              "搅拌勺"
+            ],
+            "ice": true,
+            "tags": [
+              "清爽",
+              "不甜"
+            ],
+            "source": "AlcheMix 家庭调饮配方（非经典标准配方）"
+          }
+        ],
+        "knowledge": {
+          "status": "insufficient_evidence",
+          "claims": [],
+          "citations": [],
+          "model": "MiniMax-M2.5",
+          "usage": {
+            "total_tokens": 1003,
+            "total_characters": 0,
+            "prompt_tokens": 626,
+            "completion_tokens": 377,
+            "prompt_tokens_details": {
+              "cached_tokens": 443
+            }
+          }
+        },
+        "trace": [
+          {
+            "tool": "search_knowledge",
+            "status": "insufficient_evidence",
+            "elapsedMs": 8656
+          },
+          {
+            "tool": "find_recipes",
+            "status": "ok",
+            "elapsedMs": 1
+          },
+          {
+            "tool": "check_recipe",
+            "recipeId": "house-vodka-soda",
+            "status": "pass",
+            "elapsedMs": 1
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": [
+          {
+            "total_tokens": 1108,
+            "total_characters": 0,
+            "prompt_tokens": 905,
+            "completion_tokens": 203
+          },
+          {
+            "total_tokens": 1759,
+            "total_characters": 0,
+            "prompt_tokens": 1504,
+            "completion_tokens": 255,
+            "prompt_tokens_details": {
+              "cached_tokens": 443
+            }
+          },
+          {
+            "total_tokens": 1794,
+            "total_characters": 0,
+            "prompt_tokens": 1530,
+            "completion_tokens": 264,
+            "prompt_tokens_details": {
+              "cached_tokens": 1339
+            }
+          },
+          {
+            "total_tokens": 1819,
+            "total_characters": 0,
+            "prompt_tokens": 1556,
+            "completion_tokens": 263,
+            "prompt_tokens_details": {
+              "cached_tokens": 1339
+            }
+          },
+          {
+            "total_tokens": 1897,
+            "total_characters": 0,
+            "prompt_tokens": 1582,
+            "completion_tokens": 315,
+            "prompt_tokens_details": {
+              "cached_tokens": 1339
+            }
+          },
+          {
+            "total_tokens": 1851,
+            "total_characters": 0,
+            "prompt_tokens": 1610,
+            "completion_tokens": 241,
+            "prompt_tokens_details": {
+              "cached_tokens": 1339
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -15,12 +15,12 @@ const config: Config = {
       },
       colors: {
         surface: {
-          DEFAULT: '#f9f9f9',
+          DEFAULT: '#f6f5f1',
           dim: '#dadada',
-          bright: '#f9f9f9',
+          bright: '#f6f5f1',
           container: {
-            lowest: '#ffffff',
-            low: '#f3f3f4',
+            lowest: '#faf9f6',
+            low: '#f0efeb',
             DEFAULT: '#eeeeee',
             high: '#e8e8e8',
             highest: '#e2e2e2',
@@ -31,7 +31,7 @@ const config: Config = {
           variant: '#444748',
         },
         primary: '#000000',
-        'on-primary': '#ffffff',
+        'on-primary': '#faf9f6',
         outline: {
           DEFAULT: '#747878',
           variant: '#c4c7c7',

@@ -1,0 +1,91 @@
+{
+  "at": "2026-09-12T10:29:30.067Z",
+  "model": "MiniMax-M2.5",
+  "rows": [
+    {
+      "question": "我不知道该加多少冰",
+      "result": {
+        "status": "insufficient_evidence",
+        "message": "已查阅调酒资料。",
+        "clarification": "你在做哪杯酒，用什么杯子？也可以补充配方和杯子容量。",
+        "recipes": [],
+        "knowledge": {
+          "status": "insufficient_evidence",
+          "claims": [],
+          "citations": [],
+          "model": "MiniMax-M2.5",
+          "usage": {
+            "total_tokens": 691,
+            "total_characters": 0,
+            "prompt_tokens": 473,
+            "completion_tokens": 218,
+            "prompt_tokens_details": {
+              "cached_tokens": 443
+            }
+          }
+        },
+        "trace": [
+          {
+            "tool": "search_knowledge",
+            "status": "insufficient_evidence",
+            "elapsedMs": 7704
+          }
+        ],
+        "model": "",
+        "usage": []
+      }
+    },
+    {
+      "question": "苏打水能放进摇酒壶摇吗？",
+      "result": {
+        "status": "answered",
+        "message": "已查阅调酒资料。",
+        "clarification": "",
+        "recipes": [],
+        "knowledge": {
+          "status": "answered",
+          "claims": [
+            {
+              "text": "苏打水不应放进摇酒壶摇。应按配方先处理非气泡部分，倒入杯中后再加入苏打水。",
+              "evidenceIds": [
+                "carbonated-shaking"
+              ]
+            }
+          ],
+          "citations": [
+            {
+              "id": "carbonated-shaking",
+              "title": "气泡饮料能放进摇酒壶摇吗？",
+              "sources": [
+                {
+                  "title": "Cocktail preparation instructions, City of York licensing attachment",
+                  "url": "https://democracy.york.gov.uk/documents/s11684/Annex%203.pdf"
+                },
+                {
+                  "title": "Difford’s Guide — Fizz recipe",
+                  "url": "https://www.diffordsguide.com/cocktails/recipe/754/fizz-generic-name"
+                }
+              ]
+            }
+          ],
+          "model": "MiniMax-M2.5",
+          "usage": {
+            "total_tokens": 711,
+            "total_characters": 0,
+            "prompt_tokens": 483,
+            "completion_tokens": 228
+          }
+        },
+        "trace": [
+          {
+            "tool": "search_knowledge",
+            "status": "answered",
+            "elapsedMs": 5258
+          }
+        ],
+        "model": "",
+        "usage": []
+      }
+    }
+  ]
+}

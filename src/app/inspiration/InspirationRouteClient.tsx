@@ -58,12 +58,12 @@ export default function InspirationRouteClient({ initialView = "menu", initialCo
   };
 
   return (
-    <main className="min-h-screen bg-[#dfe3e6] px-0 text-on-surface md:px-4 md:py-6">
-      <div className="relative mx-auto flex h-[100dvh] w-full max-w-[430px] flex-col overflow-hidden bg-[#F7F7F5] shadow-2xl md:h-[calc(100dvh-48px)] md:rounded-[2rem] md:border md:border-white/70">
-        <div className="flex h-[72px] shrink-0 items-center justify-between border-b border-[#e9e9e6] bg-[#F7F7F5] px-5">
+    <main className="min-h-screen bg-[#e7e5e0] px-0 text-on-surface md:px-4 md:py-6">
+      <div data-app-shell className="relative mx-auto flex h-[100dvh] w-full max-w-[430px] flex-col overflow-hidden bg-[#f6f5f1] shadow-none md:h-[calc(100dvh-48px)] md:rounded-[2rem] md:border md:border-[#d5d3cd]">
+        <div className="flex h-[72px] shrink-0 items-center justify-between border-b border-[#e9e9e6] bg-[#f6f5f1] px-5">
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-[26px] text-neutral-950">science</span>
-            <h1 className="font-serif text-[26px] font-bold tracking-tight text-neutral-950">AlcheMix Lab</h1>
+            <h1 className="font-mono text-[12px] font-normal tracking-[0.16em] text-neutral-950">AlcheMix Lab</h1>
           </div>
           <button className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-neutral-500 hover:bg-white">
             <span className="material-symbols-outlined text-[22px]">help_outline</span>
@@ -84,10 +84,10 @@ export default function InspirationRouteClient({ initialView = "menu", initialCo
           <nav className="shrink-0 border-t border-[#e5e5e2] bg-white px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2">
             <div className="grid grid-cols-4">
               {[
-                ["search", "ASSISTANT", "Finder", "text-neutral-300"],
-                ["science", "LAB", "LAB", "text-neutral-300"],
-                ["menu_book", "INSPIRATION", "探索", "text-neutral-950"],
-                ["person", "MY", "MY", "text-neutral-300"],
+                ["search", "ASSISTANT", "首页", "text-neutral-300"],
+                ["science", "LAB", "自由调配", "text-neutral-300"],
+                ["menu_book", "INSPIRATION", "找酒谱", "text-neutral-950"],
+                ["person", "MY", "我的", "text-neutral-300"],
               ].map(([icon, label, text, color]) => (
                 <button
                   key={label}
@@ -96,7 +96,7 @@ export default function InspirationRouteClient({ initialView = "menu", initialCo
                   className={`flex cursor-pointer flex-col items-center justify-center gap-0.5 py-1 active:scale-[0.98] ${color}`}
                 >
                   <span className="material-symbols-outlined text-[23px]">{icon}</span>
-                  <span className="text-[10px] font-bold tracking-tight">{text}</span>
+                  <span className="text-[10px] font-medium tracking-tight">{text}</span>
                 </button>
               ))}
             </div>
@@ -104,11 +104,11 @@ export default function InspirationRouteClient({ initialView = "menu", initialCo
         )}
         {drinkLogSuccess && (
           <div className="absolute inset-0 z-[180] flex items-center justify-center bg-black/30 px-5 backdrop-blur-[2px]">
-            <div className="w-full max-w-[360px] rounded-[28px] border border-[#E8E8E8] bg-white p-5 text-center shadow-[0_22px_60px_rgba(15,23,42,0.22)]">
+            <div className="w-full max-w-[360px] rounded-[28px] border border-[#E8E8E8] bg-white p-5 text-center shadow-none">
               <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-neutral-950 text-white">
                 <span className="material-symbols-outlined text-[24px]">check</span>
               </div>
-              <h3 className="mt-4 text-xl font-bold text-neutral-950">成功添加了一杯酒</h3>
+              <h3 className="mt-4 text-xl font-medium text-neutral-950">成功添加了一杯酒</h3>
               <p className="mt-2 text-sm leading-6 text-neutral-500">
                 {drinkLogSuccess.recipeName} 已存入酒记。今天已经喝了 {drinkLogSuccess.todayCount} 杯。
               </p>
@@ -116,7 +116,7 @@ export default function InspirationRouteClient({ initialView = "menu", initialCo
                 <button
                   type="button"
                   onClick={() => setDrinkLogSuccess(null)}
-                  className="h-11 cursor-pointer rounded-2xl border border-[#E8E8E8] bg-white text-sm font-bold text-neutral-600 active:scale-[0.98]"
+                  className="h-11 cursor-pointer rounded-2xl border border-[#E8E8E8] bg-white text-sm font-medium text-neutral-600 active:scale-[0.98]"
                 >
                   继续看看
                 </button>
@@ -127,7 +127,7 @@ export default function InspirationRouteClient({ initialView = "menu", initialCo
                     localStorage.setItem("alchemix_open_tab", "MY");
                     window.location.href = "/";
                   }}
-                  className="h-11 cursor-pointer rounded-2xl bg-neutral-950 text-sm font-bold text-white active:scale-[0.98]"
+                  className="h-11 cursor-pointer rounded-2xl bg-neutral-950 text-sm font-medium text-white active:scale-[0.98]"
                 >
                   查看酒记
                 </button>

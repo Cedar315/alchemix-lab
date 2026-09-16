@@ -1,0 +1,13 @@
+{
+  "at": "2026-09-16T02:53:07.123Z",
+  "checks": [
+    "collection-and-exact-deduplication",
+    "pending-is-not-indexed",
+    "real-embedding-and-atomic-publication",
+    "stale-revision-rejected",
+    "withdrawal-removes-vector",
+    "review-audit-recorded",
+    "test-data-rolled-back"
+  ],
+  "note": "Real database and embedding provider. All test rows rolled back; no test knowledge published to users."
+}

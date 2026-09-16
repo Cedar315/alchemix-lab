@@ -1,0 +1,170 @@
+{
+  "at": "2026-09-13T14:58:40.516Z",
+  "model": "MiniMax-M2.5",
+  "note": "Small live smoke; semantic correctness requires review. Not a held-out benchmark.",
+  "rows": [
+    {
+      "input": {
+        "question": "不是糖浆，是蜂蜜。我已经加进去了，现在混不开。",
+        "context": "正在做一杯家庭金酒饮品，原配方写糖浆。",
+        "intent": "troubleshoot",
+        "act": "correction"
+      },
+      "result": {
+        "status": "answered",
+        "message": "已核对本次制作信息。",
+        "clarification": "",
+        "knowledge": {
+          "status": "answered",
+          "claims": [
+            {
+              "text": "蜂蜜在冷饮中不易直接溶解，建议将蜂蜜与少量温水先混合成蜂蜜糖浆后再使用",
+              "evidenceIds": [
+                "honey-mixing"
+              ]
+            }
+          ],
+          "citations": [
+            {
+              "id": "honey-mixing",
+              "title": "蜂蜜不好混匀怎么办？",
+              "sources": [
+                {
+                  "title": "Difford’s Guide — Honey syrup",
+                  "url": "https://www.diffordsguide.com/g/1109/honey-and-honey-syrup/honey-syrup"
+                }
+              ]
+            }
+          ],
+          "model": "MiniMax-M2.5",
+          "usage": {
+            "total_tokens": 887,
+            "total_characters": 0,
+            "prompt_tokens": 528,
+            "completion_tokens": 359
+          }
+        },
+        "calculations": [],
+        "handoff": null,
+        "trace": [
+          {
+            "tool": "search_knowledge",
+            "status": "answered",
+            "elapsedMs": 7231
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": [
+          {
+            "total_tokens": 787,
+            "total_characters": 0,
+            "prompt_tokens": 440,
+            "completion_tokens": 347
+          },
+          {
+            "total_tokens": 782,
+            "total_characters": 0,
+            "prompt_tokens": 455,
+            "completion_tokens": 327
+          },
+          {
+            "total_tokens": 801,
+            "total_characters": 0,
+            "prompt_tokens": 619,
+            "completion_tokens": 182
+          }
+        ],
+        "intent": {
+          "intent": "troubleshoot",
+          "dialogueAct": "correction",
+          "taskRelation": "continue",
+          "question": "",
+          "knowledgeQuestion": "",
+          "destination": ""
+        },
+        "recipes": []
+      },
+      "pass": true,
+      "elapsedMs": 23158
+    },
+    {
+      "input": {
+        "question": "300",
+        "intent": "unclear"
+      },
+      "result": {
+        "status": "handoff",
+        "message": "选酒继续使用首页的材料和口味筛选；选好后可以带配方来问制作问题。",
+        "clarification": "",
+        "knowledge": null,
+        "calculations": [],
+        "handoff": {
+          "label": "去首页选酒",
+          "href": "/?tab=ASSISTANT"
+        },
+        "trace": [],
+        "model": "MiniMax-M2.5",
+        "usage": [
+          {
+            "total_tokens": 606,
+            "total_characters": 0,
+            "prompt_tokens": 415,
+            "completion_tokens": 191
+          },
+          {
+            "total_tokens": 911,
+            "total_characters": 0,
+            "prompt_tokens": 477,
+            "completion_tokens": 434
+          }
+        ],
+        "intent": {
+          "intent": "recommend",
+          "dialogueAct": "new_task",
+          "taskRelation": "new",
+          "question": "",
+          "knowledgeQuestion": "",
+          "destination": ""
+        },
+        "recipes": []
+      },
+      "pass": false,
+      "elapsedMs": 9844
+    },
+    {
+      "input": {
+        "question": "算了，不做了",
+        "cancel": true
+      },
+      "result": {
+        "status": "cancelled",
+        "message": "已结束这次制作问题。",
+        "clarification": "",
+        "knowledge": null,
+        "calculations": [],
+        "handoff": null,
+        "trace": [],
+        "model": "MiniMax-M2.5",
+        "usage": [
+          {
+            "total_tokens": 1113,
+            "total_characters": 0,
+            "prompt_tokens": 417,
+            "completion_tokens": 696
+          }
+        ],
+        "intent": {
+          "intent": "unclear",
+          "dialogueAct": "cancel",
+          "taskRelation": "continue",
+          "question": "",
+          "knowledgeQuestion": "",
+          "destination": ""
+        },
+        "recipes": []
+      },
+      "pass": true,
+      "elapsedMs": 11041
+    }
+  ]
+}

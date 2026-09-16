@@ -1,3 +1,6 @@
+import { z } from "zod";
+import { AssistantSurface } from "./assistant/AssistantProvider";
+import { LAB_DRAFT_KEY, LAB_TRANSFER_KEY, readTransfer } from "../lib/agent/companion-session";
 import React, { useState, useEffect } from "react";
 import { Cocktail, DrinkLog, DrinkLogRecipeSnapshot, SavedCocktail, Ingredient } from "../types";
 import { CONVENIENCE_DRINK_INGREDIENTS, ConvenienceDrinkSeed } from "../lib/data/convenience-drink-ingredients";
@@ -146,7 +149,7 @@ function MixingActionAnimation({ method }: { method: "Stir" | "Shake" }) {
             border: 2px solid rgba(38, 38, 38, 0.7);
             border-bottom: 0;
             border-radius: 12px 12px 5px 5px;
-            background: linear-gradient(180deg, #ffffff, #d9f0ff);
+            background: linear-gradient(180deg, #faf9f6, #d9f0ff);
           }
           .shaker-body {
             position: relative;
@@ -155,7 +158,7 @@ function MixingActionAnimation({ method }: { method: "Stir" | "Shake" }) {
             border: 2px solid rgba(38, 38, 38, 0.72);
             border-radius: 14px 14px 18px 18px;
             overflow: hidden;
-            background: linear-gradient(115deg, #f8fbff 0%, #dff4ff 48%, #ffffff 100%);
+            background: linear-gradient(115deg, #f8fbff 0%, #dff4ff 48%, #faf9f6 100%);
             box-shadow: inset -8px 0 12px rgba(14, 165, 233, 0.12);
           }
           .shaker-liquid {
@@ -1352,6 +1355,33 @@ export default function LabScreen({
   const [addedIngredients, setAddedIngredients] = useState<LabIngredient[]>([]);
   const [mixMethod, setMixMethod] = useState<"Stir" | "Shake">("Stir");
 
+  const [draftReady, setDraftReady] = useState(false);
+  const [pendingMaterials, setPendingMaterials] = useState<{name:string;amount?:number}[]>([]);
+  const [pendingName, setPendingName] = useState<string | null>(null);
+  const [transferConflict, setTransferConflict] = useState<ReturnType<typeof readTransfer>>(null);
+  useEffect(() => {
+    try {
+      const parsed = z.object({ingredients:z.array(z.object({id:z.string(),name:z.string(),amount:z.number().positive().max(350),category:z.string(),color:z.string()}).passthrough()).max(30),method:z.enum(['Stir','Shake']),pending:z.array(z.object({name:z.string(),amount:z.number().positive().optional()})).max(30).default([])}).safeParse(JSON.parse(sessionStorage.getItem(LAB_DRAFT_KEY)||'null'));
+      if(parsed.success){setAddedIngredients(parsed.data.ingredients as LabIngredient[]);setMixMethod(parsed.data.method);setPendingMaterials(parsed.data.pending);}
+    } catch { /* A damaged draft must not break the laboratory. */ }
+    setDraftReady(true);
+  }, []);
+  useEffect(() => {
+    if(!draftReady)return;
+    try{sessionStorage.setItem(LAB_DRAFT_KEY,JSON.stringify({ingredients:addedIngredients,method:mixMethod,pending:pendingMaterials}));}catch{}
+  },[draftReady,addedIngredients,mixMethod,pendingMaterials]);
+  useEffect(() => {
+    if(!draftReady)return;
+    const receive = () => {
+      const transfer=readTransfer();if(!transfer)return;
+      sessionStorage.removeItem(LAB_TRANSFER_KEY);
+      if((addedIngredients.length||pendingMaterials.length)&&!transfer.replace){setTransferConflict(transfer);return;}
+      setAddedIngredients([]);setPendingMaterials(transfer.materials);setShowResults(false);setLabResult(null);
+    };
+    receive();window.addEventListener('alchemix-lab-transfer',receive);
+    return()=>window.removeEventListener('alchemix-lab-transfer',receive);
+  },[draftReady,addedIngredients.length,pendingMaterials.length]);
+
   // Load preset cocktail ingredients from other screens (e.g., Inspiration)
   useEffect(() => {
     if (initialIngredients && initialIngredients.length > 0) {
@@ -1673,7 +1703,7 @@ export default function LabScreen({
 
   // 7. Inject to Beaker and save to personal library
   const handleConfirmAdd = () => {
-    if (!activeStagedIngredient) return;
+    if (!activeStagedIngredient || !Number.isFinite(amountToInject) || amountToInject <= 0) return;
 
     const totalCurrent = addedIngredients.reduce((sum, item) => sum + item.amount, 0);
     if (totalCurrent + amountToInject > MAX_BEAKER_VOLUME) {
@@ -1729,6 +1759,8 @@ export default function LabScreen({
       riskyWith: libraryDetails.pairingRisky ?? activeStagedIngredient.riskyWith ?? [],
     };
 
+    if(pendingName){setPendingMaterials(items=>items.filter(i=>i.name!==pendingName));setPendingName(null);}
+
     // Save to user's custom personal library if requested
     if (autoSaveToLibrary) {
       const alreadyExists = customIngredients.some(x => x.name === activeStagedIngredient.name);
@@ -1755,7 +1787,7 @@ export default function LabScreen({
       },
     });
     setActiveStagedIngredient(null);
-    setShowAddModal(false);
+    setShowAddModal(false);setPendingName(null);
   };
 
   const handleRemoveIngredient = (id: string) => {
@@ -1770,7 +1802,7 @@ export default function LabScreen({
 
   // --- REACTION SEQUENCE ---
   const handleInitiateReaction = async () => {
-    if (addedIngredients.length < 2) return;
+    if (addedIngredients.length < 2 || pendingMaterials.length > 0) return;
     onTrackEvent?.({
       eventName: "lab_mix_start",
       page: "lab",
@@ -1958,15 +1990,19 @@ export default function LabScreen({
 
   return (
     <div className="space-y-4 pb-6">
+      <AssistantSurface context={{kind:'lab',name:showResults && labResult ? (labResult.chineseName || labResult.name || '酒精实验室') : '酒精实验室',ingredients:addedIngredients.map(i=>({name:i.name,amount:i.amount})),note:pendingMaterials.length?'待确认用量的材料：'+pendingMaterials.map(i=>i.name).join('、'):undefined}} />
+      {transferConflict && <section className="rounded-2xl border border-[#d5d3cd] bg-white p-4 text-sm" role="group" aria-label="确认替换实验室内容"><p>实验室已有编辑，要保留还是替换？</p><div className="mt-3 flex gap-3"><button onClick={()=>setTransferConflict(null)}>保留当前内容</button><button onClick={()=>{setAddedIngredients([]);setPendingMaterials(transferConflict.materials);setShowResults(false);setLabResult(null);setTransferConflict(null);}}>替换内容</button></div></section>}
+      {!!pendingMaterials.length && <section className="rounded-2xl border border-[#d5d3cd] bg-white p-4 text-sm" aria-label="待确认的材料"><h3 className="font-medium">材料已带入，请确认用量</h3><p className="mt-2 text-xs text-neutral-500">逐项选择材料并填写用量，再继续实验。</p>{pendingMaterials.map(item=><div className="mt-3 flex items-center justify-between gap-2" key={item.name}><span>{item.name}</span><button className="rounded-xl border px-3 py-2" onClick={()=>{const matches=findLocalIngredientMatches(item.name,[...fullIngredientLibrary,...customIngredients]);setShowAddModal(true);setModalTab('search');setSearchQuery(item.name);setPendingName(item.name);setAutoSaveToLibrary(false);if(matches[0]&&fuzzyIngredientScore(matches[0],item.name)>=108){stageLibraryIngredient(matches[0]);setAmountToInject(item.amount??0);}else{setActiveStagedIngredient(null);setFuzzyMatches(matches.slice(0,8));setSearchError('请选择与这项材料对应的真实商品。');}}}>选择用量</button><button aria-label={'移除待确认材料'+item.name} onClick={()=>setPendingMaterials(items=>items.filter(i=>i.name!==item.name))}>移除</button></div>)}</section>}
+
       {/* Top Header */}
       <div className="flex justify-between items-start">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="rounded-full bg-white px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-neutral-500 border border-[#E8E8E8]">
+            <span className="rounded-full bg-white px-3 py-1 text-[11px] font-medium uppercase tracking-wider text-neutral-500 border border-[#E8E8E8]">
               Molecular Dispenser
             </span>
           </div>
-          <h2 className="text-[28px] font-bold leading-tight text-neutral-950">酒精实验室</h2>
+          <h2 className="text-[28px] font-medium leading-tight text-neutral-950">酒精实验室</h2>
           <p className="text-[13px] leading-5 text-neutral-500">
             把喜欢的酒和饮料加进来，调一杯属于你的便利店特调。
           </p>
@@ -1987,7 +2023,7 @@ export default function LabScreen({
           {/* TOP ACTION: Ingredient selection trigger */}
           <section className="space-y-2">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold text-neutral-950">添加材料</h3>
+              <h3 className="text-sm font-medium text-neutral-950">添加材料</h3>
               <span className="text-[11px] font-medium text-neutral-400">Ingredient Dispenser</span>
             </div>
 
@@ -1996,25 +2032,25 @@ export default function LabScreen({
                 setActiveStagedIngredient(null);
                 setShowAddModal(true);
               }}
-              className="w-full py-3.5 border border-[#E8E8E8] bg-white hover:border-neutral-300 hover:bg-neutral-50 rounded-2xl flex items-center justify-center gap-3 transition-all group shadow-[0_1px_8px_rgba(15,23,42,0.04)] active:scale-[0.99]"
+              className="w-full py-3.5 border border-[#E8E8E8] bg-white hover:border-neutral-300 hover:bg-neutral-50 rounded-2xl flex items-center justify-center gap-3 transition-all group shadow-none active:scale-[0.99]"
             >
-              <div className="w-8 h-8 rounded-full bg-[#F7F7F5] border border-[#E8E8E8] flex items-center justify-center group-hover:bg-neutral-950 group-hover:text-white group-hover:border-neutral-950 transition-all">
+              <div className="w-8 h-8 rounded-full bg-[#f6f5f1] border border-[#E8E8E8] flex items-center justify-center group-hover:bg-neutral-950 group-hover:text-white group-hover:border-neutral-950 transition-all">
                 <Plus size={16} />
               </div>
               <div className="text-left">
-                <span className="block text-sm font-bold text-neutral-900">添加实验材料</span>
+                <span className="block text-sm font-medium text-neutral-900">添加实验材料</span>
                 <p className="text-[11px] leading-4 text-neutral-400">从酒类、饮料和配料库中选择</p>
               </div>
             </button>
           </section>
 
           {/* MIDDLE AREA: Compact beaker and recipe list */}
-          <section className="grid grid-cols-[0.9fr_1.1fr] gap-3 items-stretch bg-white p-3 rounded-2xl border border-[#E8E8E8] shadow-[0_1px_10px_rgba(15,23,42,0.04)] relative overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_10%,rgba(251,191,36,0.10),transparent_26%),radial-gradient(circle_at_75%_20%,rgba(56,189,248,0.10),transparent_24%)] pointer-events-none"></div>
+          <section className="grid grid-cols-[0.9fr_1.1fr] gap-3 items-stretch bg-white p-3 rounded-2xl border border-[#E8E8E8] shadow-none relative overflow-hidden">
+            <div className="absolute inset-0 bg-transparent pointer-events-none"></div>
 
             {/* A. Dynamic Beaker Visual Container */}
             <div className="flex flex-col items-center justify-center p-2 relative z-10">
-              <div className="relative w-32 h-40 border-x-[3px] border-b-[3px] border-neutral-300/80 rounded-b-[2rem] overflow-hidden flex flex-col justify-end bg-white/60 shadow-inner">
+              <div className="relative w-32 h-40 border-x border-b border-neutral-300/80 rounded-b-[2rem] overflow-hidden flex flex-col justify-end bg-white/60 shadow-inner">
                 {/* Lip details */}
                 <div className="absolute -top-0.5 left-1/2 h-2 w-[78%] -translate-x-1/2 rounded-full border border-neutral-300 bg-white"></div>
                 <div className="absolute left-3 right-3 top-3 z-20 flex justify-between pointer-events-none">
@@ -2026,7 +2062,7 @@ export default function LabScreen({
                 <div className="absolute left-0 top-0 bottom-0 w-full flex flex-col justify-between py-5 pl-2 z-20 pointer-events-none select-none">
                   <div className="flex items-center gap-1.5">
                     <div className="w-4 h-[1.5px] bg-neutral-300"></div>
-                    <span className="text-[8px] font-bold text-neutral-400">{MAX_BEAKER_VOLUME}ml</span>
+                    <span className="text-[8px] font-medium text-neutral-400">{MAX_BEAKER_VOLUME}ml</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <div className="w-3 h-[1px] bg-neutral-200"></div>
@@ -2042,7 +2078,7 @@ export default function LabScreen({
                   </div>
                   <div className="flex items-center gap-1.5">
                     <div className="w-4 h-[1.5px] bg-neutral-300"></div>
-                    <span className="text-[8px] font-bold text-neutral-400">50</span>
+                    <span className="text-[8px] font-medium text-neutral-400">50</span>
                   </div>
                 </div>
 
@@ -2059,7 +2095,7 @@ export default function LabScreen({
                         className="w-full relative transition-all duration-300 border-t border-white/30 flex items-center justify-center overflow-hidden"
                         style={{ 
                           height: `${itemHeightPercent}%`,
-                          backgroundColor: item.color,
+                          backgroundColor: `hsl(45 8% ${88 - (idx % 4) * 8}%)`,
                         }}
                       >
                         {/* If carbonated/bubbly, render floaters */}
@@ -2070,7 +2106,7 @@ export default function LabScreen({
                             <span className="absolute w-0.5 h-0.5 bg-white/30 rounded-full left-1/2 bottom-2 animate-ping"></span>
                           </div>
                         )}
-                        <span className="text-[9px] font-bold text-neutral-900/40 truncate px-2 relative z-10">
+                        <span className="text-[9px] font-medium text-neutral-900/40 truncate px-2 relative z-10">
                           {item.name.split(" ")[0]}
                         </span>
                       </div>
@@ -2088,8 +2124,8 @@ export default function LabScreen({
 
               {/* Total volume feedback */}
               <div className="mt-2 text-center space-y-0.5">
-                <p className="text-[9px] uppercase font-bold text-neutral-400 tracking-widest">CURRENT TOTAL</p>
-                <p className="text-2xl text-neutral-950 font-bold">{totalVolume} <span className="text-xs font-medium text-neutral-400">ml</span></p>
+                <p className="text-[9px] uppercase font-medium text-neutral-400 tracking-widest">CURRENT TOTAL</p>
+                <p className="text-2xl text-neutral-950 font-medium">{totalVolume} <span className="text-xs font-medium text-neutral-400">ml</span></p>
               </div>
             </div>
 
@@ -2097,11 +2133,11 @@ export default function LabScreen({
             <div className="flex flex-col h-full justify-between space-y-2 py-1 relative z-10 min-w-0">
               <div className="space-y-3">
                 <div className="flex justify-between items-center border-b border-[#E8E8E8] pb-1.5">
-                  <h3 className="text-xs font-bold text-neutral-900">当前材料</h3>
+                  <h3 className="text-xs font-medium text-neutral-900">当前材料</h3>
                   {addedIngredients.length > 0 && (
                     <button 
                       onClick={handleClearBeaker}
-                      className="text-[10px] text-red-500 font-bold hover:opacity-80 flex items-center gap-1"
+                      className="text-[10px] text-red-500 font-medium hover:opacity-80 flex items-center gap-1"
                     >
                       <RotateCcw size={10} />
                       清空烧杯
@@ -2110,7 +2146,7 @@ export default function LabScreen({
                 </div>
 
                 {addedIngredients.length === 0 ? (
-                  <div className="py-5 px-3 text-center text-neutral-400 space-y-2 border border-dashed border-[#E8E8E8] rounded-2xl bg-[#F7F7F5]/70">
+                  <div className="py-5 px-3 text-center text-neutral-400 space-y-2 border border-dashed border-[#E8E8E8] rounded-2xl bg-[#f6f5f1]/70">
                     <Beaker className="mx-auto text-neutral-300 stroke-[1.5]" size={26} />
                     <p className="text-[11px] leading-relaxed">先点击上方添加材料，再确认注入烧杯。</p>
                   </div>
@@ -2119,7 +2155,7 @@ export default function LabScreen({
                     {addedIngredients.map((item) => (
                       <div 
                         key={item.id} 
-                        className="flex items-center justify-between p-2 rounded-xl border border-[#E8E8E8] bg-[#F7F7F5]/70 hover:border-neutral-300 transition-colors"
+                        className="flex items-center justify-between p-2 rounded-xl border border-[#E8E8E8] bg-[#f6f5f1]/70 hover:border-neutral-300 transition-colors"
                       >
                         <div className="flex items-center gap-2">
                           <div className="w-3.5 h-3.5 rounded-full border border-black/10" style={{ backgroundColor: item.color }}></div>
@@ -2130,7 +2166,7 @@ export default function LabScreen({
                         </div>
 
                         <div className="flex items-center gap-3">
-                          <span className="text-xs font-bold text-neutral-700">{item.amount}ml</span>
+                          <span className="text-xs font-medium text-neutral-700">{item.amount}ml</span>
                           <button
                             onClick={() => handleRemoveIngredient(item.id)}
                             className="text-neutral-300 hover:text-red-500 transition-colors"
@@ -2146,14 +2182,14 @@ export default function LabScreen({
               </div>
 
               {/* Status checklist metrics */}
-              <div className="bg-[#F7F7F5] p-2 rounded-2xl border border-[#E8E8E8] text-[10px] text-neutral-500 space-y-1">
+              <div className="bg-[#f6f5f1] p-2 rounded-2xl border border-[#E8E8E8] text-[10px] text-neutral-500 space-y-1">
                 <div className="flex justify-between">
                   <span>材料数量:</span>
-                  <span className="font-bold text-neutral-800">{addedIngredients.length} / 6 种</span>
+                  <span className="font-medium text-neutral-800">{addedIngredients.length} / 6 种</span>
                 </div>
                 <div className="flex justify-between">
                   <span>当前状态:</span>
-                  <span className="font-bold text-neutral-800">
+                  <span className="font-medium text-neutral-800">
                     {addedIngredients.length === 0 ? "空杯" : addedIngredients.length === 1 ? "单一材料" : "已混合"}
                   </span>
                 </div>
@@ -2163,7 +2199,7 @@ export default function LabScreen({
 
           {mixMethodRecommendation && (
             <section
-              className={`rounded-2xl border p-2.5 shadow-[0_4px_14px_rgba(15,23,42,0.025)] animate-in fade-in slide-in-from-bottom-2 duration-300 ${
+              className={`rounded-2xl border p-2.5 shadow-none animate-in fade-in slide-in-from-bottom-2 duration-300 ${
                 mixMethodRecommendation.tone === "warning"
                   ? "border-amber-200 bg-amber-50/85"
                   : mixMethodRecommendation.method === "Shake"
@@ -2185,14 +2221,14 @@ export default function LabScreen({
                 </div>
                 <div className="min-w-0 flex-1 space-y-1.5">
                   <div className="space-y-0.5">
-                    <p className="text-[11px] font-bold text-neutral-950">{mixMethodRecommendation.title}</p>
+                    <p className="text-[11px] font-medium text-neutral-950">{mixMethodRecommendation.title}</p>
                     <p className="text-[10px] leading-4 text-neutral-600">{mixMethodRecommendation.message}</p>
                   </div>
 
                   {mixMethod !== mixMethodRecommendation.method && (
                     <button
                       onClick={() => setMixMethod(mixMethodRecommendation.method)}
-                      className="inline-flex h-7 items-center gap-1.5 rounded-full border border-neutral-900 bg-neutral-950 px-2.5 text-[10px] font-bold text-white transition-all active:scale-[0.98] cursor-pointer"
+                      className="inline-flex h-7 items-center gap-1.5 rounded-full border border-neutral-900 bg-neutral-950 px-2.5 text-[10px] font-medium text-white transition-all active:scale-[0.98] cursor-pointer"
                     >
                       使用 {mixMethodRecommendation.method === "Shake" ? "Shake 摇合" : "Stir 轻搅"}
                     </button>
@@ -2206,7 +2242,7 @@ export default function LabScreen({
           {addedIngredients.length >= 2 && (
             <section className="space-y-3 animate-in fade-in slide-in-from-bottom-4 duration-300">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-bold text-neutral-950">混合方式</h3>
+                <h3 className="text-sm font-medium text-neutral-950">混合方式</h3>
                 <span className="text-[11px] font-medium text-neutral-400">Mixing Method</span>
               </div>
 
@@ -2216,7 +2252,7 @@ export default function LabScreen({
                   onClick={() => setMixMethod("Stir")}
                   className={`relative overflow-hidden p-3 rounded-[1.25rem] border text-left transition-all active:scale-[0.98] cursor-pointer ${
                     mixMethod === "Stir"
-                      ? "border-neutral-950 bg-white shadow-[0_8px_22px_rgba(15,23,42,0.08)]"
+                      ? "border-neutral-950 bg-white shadow-none"
                       : "border-[#E8E8E8] bg-white/80 hover:bg-white hover:border-neutral-300"
                   }`}
                 >
@@ -2225,13 +2261,13 @@ export default function LabScreen({
                     <div className={`w-8 h-8 shrink-0 rounded-2xl flex items-center justify-center border ${
                       mixMethod === "Stir"
                         ? "bg-[#FFF7D6] border-[#FDE68A] text-neutral-950"
-                        : "bg-[#F7F7F5] border-[#E8E8E8] text-neutral-500"
+                        : "bg-[#f6f5f1] border-[#E8E8E8] text-neutral-500"
                     }`}>
                       <Activity size={15} />
                     </div>
                     <div className="min-w-0 flex items-center gap-1.5">
                       <div className="flex items-center gap-1">
-                        <h4 className="text-xs font-bold text-neutral-950">Stir</h4>
+                        <h4 className="text-xs font-medium text-neutral-950">Stir</h4>
                         {mixMethod === "Stir" && (
                           <span className="h-1.5 w-1.5 rounded-full bg-neutral-950"></span>
                         )}
@@ -2249,7 +2285,7 @@ export default function LabScreen({
                   onClick={() => setMixMethod("Shake")}
                   className={`relative overflow-hidden p-3 rounded-[1.25rem] border text-left transition-all active:scale-[0.98] cursor-pointer ${
                     mixMethod === "Shake"
-                      ? "border-neutral-950 bg-white shadow-[0_8px_22px_rgba(15,23,42,0.08)]"
+                      ? "border-neutral-950 bg-white shadow-none"
                       : "border-[#E8E8E8] bg-white/80 hover:bg-white hover:border-neutral-300"
                   }`}
                 >
@@ -2258,13 +2294,13 @@ export default function LabScreen({
                     <div className={`w-8 h-8 shrink-0 rounded-2xl flex items-center justify-center border ${
                       mixMethod === "Shake"
                         ? "bg-[#E0F2FE] border-[#BAE6FD] text-neutral-950"
-                        : "bg-[#F7F7F5] border-[#E8E8E8] text-neutral-500"
+                        : "bg-[#f6f5f1] border-[#E8E8E8] text-neutral-500"
                     }`}>
                       <Sparkles size={15} />
                     </div>
                     <div className="min-w-0 flex items-center gap-1.5">
                       <div className="flex items-center gap-1">
-                        <h4 className="text-xs font-bold text-neutral-950">Shake</h4>
+                        <h4 className="text-xs font-medium text-neutral-950">Shake</h4>
                         {mixMethod === "Shake" && (
                           <span className="h-1.5 w-1.5 rounded-full bg-neutral-950"></span>
                         )}
@@ -2278,13 +2314,13 @@ export default function LabScreen({
                 </button>
               </div>
 
-              <div className="rounded-[1.25rem] border border-[#E8E8E8] bg-white/90 p-3 shadow-[0_6px_18px_rgba(15,23,42,0.03)]">
+              <div className="rounded-[1.25rem] border border-[#E8E8E8] bg-white/90 p-3 shadow-none">
                 <div className="flex items-start gap-2">
-                  <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#E8E8E8] bg-[#F7F7F5] text-neutral-700">
+                  <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#E8E8E8] bg-[#f6f5f1] text-neutral-700">
                     <Info size={14} />
                   </div>
                   <div className="space-y-1">
-                    <p className="text-xs font-bold text-neutral-950">调法小常识</p>
+                    <p className="text-xs font-medium text-neutral-950">调法小常识</p>
                     <p className="text-[11px] leading-relaxed text-neutral-500">
                       气泡饮料和啤酒最后加，不进摇壶；奶类、乳酸饮料通常 Shake 更顺滑；果汁、柠檬和糖浆摇合后更均匀；纯酒型更适合 Stir。
                     </p>
@@ -2314,7 +2350,7 @@ export default function LabScreen({
                           <HelpCircle size={14} />
                         </div>
                         <div className="space-y-1">
-                          <p className="text-xs font-bold">{advice.title}</p>
+                          <p className="text-xs font-medium">{advice.title}</p>
                           <p className="text-[11px] leading-relaxed opacity-80">{advice.message}</p>
                         </div>
                       </div>
@@ -2328,13 +2364,14 @@ export default function LabScreen({
           {/* BOTTOM MAIN BUTTON */}
           <section className="pt-4">
             <button
+              id="assistant-lab"
               onClick={handleInitiateReaction}
-              disabled={addedIngredients.length < 2 || isReacting}
-              className={`w-full py-4 px-6 rounded-2xl text-base font-bold transition-all flex flex-col items-center justify-center gap-1 ${
+              disabled={addedIngredients.length < 2 || isReacting || pendingMaterials.length > 0}
+              className={`w-full py-4 px-6 rounded-2xl text-base font-medium transition-all flex flex-col items-center justify-center gap-1 ${
                 addedIngredients.length >= 2 
                   ? isReacting
                     ? "bg-neutral-800 text-neutral-200 cursor-not-allowed"
-                    : "bg-neutral-950 text-white shadow-[0_10px_24px_rgba(15,23,42,0.18)] hover:bg-black active:scale-[0.99]"
+                    : "bg-neutral-950 text-white shadow-none hover:bg-black active:scale-[0.99]"
                   : "bg-[#F2F2F2] text-neutral-400 cursor-not-allowed border border-[#E8E8E8]"
               }`}
             >
@@ -2357,7 +2394,7 @@ export default function LabScreen({
         </>
       ) : (
         /* RESULTS SCREEN (实验结果页) */
-        <div className="bg-white border border-slate-200/80 rounded-2xl p-6 md:p-8 shadow-sm space-y-8 animate-in fade-in zoom-in-95 duration-300 relative">
+        <div className="bg-white border border-slate-200/80 rounded-2xl p-6 md:p-8 shadow-none space-y-8 animate-in fade-in zoom-in-95 duration-300 relative">
           <div className="absolute inset-0 notebook-grid opacity-[0.03] pointer-events-none"></div>
 
           {/* 1. Header & Creative Cocktail Visual Display */}
@@ -2375,10 +2412,10 @@ export default function LabScreen({
             </div>
 
             <div className="space-y-1">
-              <span className="text-[10px] font-mono text-primary font-bold bg-primary/5 px-3 py-1 rounded-full uppercase tracking-widest">
+              <span className="text-[10px] font-mono text-primary font-medium bg-primary/5 px-3 py-1 rounded-full uppercase tracking-widest">
                 MIX RESULT
               </span>
-              <h3 className="text-2xl font-serif font-bold text-slate-900 mt-2">
+              <h3 className="text-2xl font-serif font-medium text-slate-900 mt-2">
                 {labResult?.chineseName}
               </h3>
               <p className="text-xs font-mono text-slate-400 uppercase tracking-widest">{labResult?.name}</p>
@@ -2412,11 +2449,11 @@ export default function LabScreen({
                 </div>
                 <div className="min-w-0 flex-1 space-y-0.5">
                   <div className="flex items-center justify-between gap-2">
-                    <h4 className="text-sm font-bold text-neutral-950">建议</h4>
+                    <h4 className="text-sm font-medium text-neutral-950">建议</h4>
                     <button
                       type="button"
                       onClick={() => setShowDecisionGuide(true)}
-                      className="shrink-0 rounded-full border border-white/70 bg-white/80 px-2 py-1 text-[10px] font-bold text-neutral-600 active:scale-[0.98]"
+                      className="shrink-0 rounded-full border border-white/70 bg-white/80 px-2 py-1 text-[10px] font-medium text-neutral-600 active:scale-[0.98]"
                     >
                       说明
                     </button>
@@ -2429,24 +2466,24 @@ export default function LabScreen({
 
           {/* 2. Recipe Recap Section */}
           <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2.5">
-            <h4 className="text-[11px] font-bold text-slate-400 tracking-wider uppercase flex items-center gap-1.5">
+            <h4 className="text-[11px] font-medium text-slate-400 tracking-wider uppercase flex items-center gap-1.5">
               <Info size={11} />
               配方回顾
             </h4>
             <div className="grid grid-cols-2 gap-y-1.5 gap-x-4 text-xs font-mono">
               <div className="text-slate-500">混合方式:</div>
-              <div className="text-slate-800 text-right font-bold">{labResult?.mixMethod === "Shake" ? "Shake 摇合" : "Stir 轻搅"}</div>
+              <div className="text-slate-800 text-right font-medium">{labResult?.mixMethod === "Shake" ? "Shake 摇合" : "Stir 轻搅"}</div>
               
               <div className="text-slate-500">成品总体积:</div>
-              <div className="text-slate-800 text-right font-bold">{labResult?.size}</div>
+              <div className="text-slate-800 text-right font-medium">{labResult?.size}</div>
             </div>
 
             <div className="pt-2 border-t border-slate-200/60 mt-2 space-y-1">
-              <p className="text-[10px] text-slate-400 font-bold uppercase">加注成分细目:</p>
+              <p className="text-[10px] text-slate-400 font-medium uppercase">加注成分细目:</p>
               <div className="flex flex-wrap gap-1.5">
                 {labResult?.ingredients?.map((ing: any) => (
                   <span key={ing.id} className="text-[10px] bg-white border border-slate-200 text-slate-700 px-2 py-0.5 rounded-md font-mono">
-                    {ing.name} <span className="font-bold text-slate-900">{ing.amount}ml</span>
+                    {ing.name} <span className="font-medium text-slate-900">{ing.amount}ml</span>
                   </span>
                 ))}
               </div>
@@ -2456,7 +2493,7 @@ export default function LabScreen({
           {/* 3. FLAVOR CHART - 8-Dimensions (风味表) */}
           <div className="space-y-4">
             <div className="flex justify-between items-baseline border-b border-slate-200 pb-1.5">
-              <h4 className="text-xs font-bold text-slate-700 tracking-wider uppercase">参考风味指标</h4>
+              <h4 className="text-xs font-medium text-slate-700 tracking-wider uppercase">参考风味指标</h4>
               <span className="text-[9px] font-mono text-slate-400 uppercase">0-5 Reference</span>
             </div>
 
@@ -2567,13 +2604,13 @@ export default function LabScreen({
             </div>
           </div>
 
-          <div className="rounded-xl border border-[#E8E8E8] bg-[#F7F7F5] p-3 text-[11px] leading-5 text-neutral-500">
+          <div className="rounded-xl border border-[#E8E8E8] bg-[#f6f5f1] p-3 text-[11px] leading-5 text-neutral-500">
             风味数值为基于公开资料、常见营养数据和调酒规则的参考估算，不代表实验室检测结果。实际口感会受品牌、冰量、温度和倒入比例影响。
           </div>
 
           {/* 4. Lab notebook comments */}
           <div className="bg-slate-50 p-4 border border-slate-200/60 rounded-xl space-y-3">
-            <h4 className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1">
+            <h4 className="text-[10px] font-mono font-medium text-slate-400 uppercase tracking-widest flex items-center gap-1">
               <Beaker size={12} />
               新手调酒建议
             </h4>
@@ -2581,11 +2618,11 @@ export default function LabScreen({
               {labAdviceSections.map((section, index) => (
                 <article key={`${section.title}-${index}`} className="rounded-2xl border border-slate-200 bg-white px-3 py-2.5">
                   <div className="flex items-start gap-2">
-                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-neutral-950 text-[10px] font-bold text-white">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-neutral-950 text-[10px] font-medium text-white">
                       {index + 1}
                     </span>
                     <div className="min-w-0">
-                      <h5 className="text-xs font-bold text-slate-900">{section.title}</h5>
+                      <h5 className="text-xs font-medium text-slate-900">{section.title}</h5>
                       <p className="mt-1 text-[12px] leading-5 text-slate-600">{section.body}</p>
                     </div>
                   </div>
@@ -2609,7 +2646,7 @@ export default function LabScreen({
                   setAddedIngredients([]);
                   setShowResults(false);
                 }}
-                className="h-12 rounded-2xl border border-[#E5E7EB] bg-white text-[13px] font-bold text-neutral-700 hover:bg-[#F7F7F5] hover:border-neutral-300 active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-[0_1px_6px_rgba(15,23,42,0.03)]"
+                className="h-12 rounded-2xl border border-[#E5E7EB] bg-white text-[13px] font-medium text-neutral-700 hover:bg-[#f6f5f1] hover:border-neutral-300 active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-none"
               >
                 <RotateCcw size={15} strokeWidth={2.2} />
                 再调一杯
@@ -2619,7 +2656,7 @@ export default function LabScreen({
                 onClick={() => {
                   setShowResults(false);
                 }}
-                className="h-12 rounded-2xl border border-[#E5E7EB] bg-white text-[13px] font-bold text-neutral-700 hover:bg-[#F7F7F5] hover:border-neutral-300 active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-[0_1px_6px_rgba(15,23,42,0.03)]"
+                className="h-12 rounded-2xl border border-[#E5E7EB] bg-white text-[13px] font-medium text-neutral-700 hover:bg-[#f6f5f1] hover:border-neutral-300 active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-none"
               >
                 <Beaker size={15} strokeWidth={2.2} />
                 调整配方
@@ -2629,7 +2666,7 @@ export default function LabScreen({
             <button
               type="button"
               onClick={() => setShowDecisionGuide(true)}
-              className="h-11 w-full rounded-2xl border border-[#E5E7EB] bg-white text-[12px] font-bold text-neutral-700 hover:bg-[#F7F7F5] hover:border-neutral-300 active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-[0_1px_6px_rgba(15,23,42,0.03)]"
+              className="h-11 w-full rounded-2xl border border-[#E5E7EB] bg-white text-[12px] font-medium text-neutral-700 hover:bg-[#f6f5f1] hover:border-neutral-300 active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-none"
             >
               <Info size={14} strokeWidth={2.2} />
               查看建议说明
@@ -2663,10 +2700,10 @@ export default function LabScreen({
             <button
               onClick={handleSaveToNotebook}
               disabled={hasSavedResult}
-              className={`h-[52px] w-full rounded-2xl text-[14px] font-bold active:scale-[0.98] transition-all flex items-center justify-center gap-2 ${
+              className={`h-[52px] w-full rounded-2xl text-[14px] font-medium active:scale-[0.98] transition-all flex items-center justify-center gap-2 ${
                 hasSavedResult 
                   ? "bg-neutral-200 text-neutral-500 cursor-default" 
-                  : "bg-neutral-950 text-white hover:bg-neutral-800 shadow-[0_10px_24px_rgba(15,23,42,0.14)]"
+                  : "bg-neutral-950 text-white hover:bg-neutral-800 shadow-none"
               }`}
             >
               {hasSavedResult ? <Check size={16} strokeWidth={2.3} /> : <Bookmark size={16} strokeWidth={2.3} />}
@@ -2685,16 +2722,16 @@ export default function LabScreen({
             aria-label="关闭判断说明"
           ></button>
 
-          <div className="relative z-10 w-full max-w-[390px] rounded-[28px] border border-[#E8E8E8] bg-white p-4 shadow-[0_24px_70px_rgba(15,23,42,0.22)] animate-in fade-in slide-in-from-bottom-4 duration-200">
+          <div className="relative z-10 w-full max-w-[390px] rounded-[28px] border border-[#E8E8E8] bg-white p-4 shadow-none animate-in fade-in slide-in-from-bottom-4 duration-200">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-neutral-400">Mix Guide</p>
-                <h3 className="mt-1 text-xl font-bold text-neutral-950">为什么这样建议</h3>
+                <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-neutral-400">Mix Guide</p>
+                <h3 className="mt-1 text-xl font-medium text-neutral-950">为什么这样建议</h3>
               </div>
               <button
                 type="button"
                 onClick={() => setShowDecisionGuide(false)}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#E8E8E8] bg-[#F7F7F5] text-neutral-500 active:scale-[0.98]"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#E8E8E8] bg-[#f6f5f1] text-neutral-500 active:scale-[0.98]"
               >
                 <X size={16} />
               </button>
@@ -2719,7 +2756,7 @@ export default function LabScreen({
                 },
               ].map((item) => (
                 <article key={item.title} className={`rounded-2xl border p-3 ${item.tone}`}>
-                  <h4 className="text-sm font-bold text-neutral-950">{item.title}</h4>
+                  <h4 className="text-sm font-medium text-neutral-950">{item.title}</h4>
                   <p className="mt-1 text-xs leading-5 text-neutral-600">{item.body}</p>
                 </article>
               ))}
@@ -2736,11 +2773,11 @@ export default function LabScreen({
             onClick={() => setShowAddModal(false)}
           ></div>
           
-          <div className="relative bg-white w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl border border-slate-200 flex flex-col max-h-[85vh] animate-in fade-in zoom-in-95 duration-200">
+          <div className="relative bg-white w-full max-w-lg rounded-2xl overflow-hidden shadow-none border border-slate-200 flex flex-col max-h-[85vh] animate-in fade-in zoom-in-95 duration-200">
             {/* Header */}
             <div className="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
               <div>
-                <h3 className="text-base font-serif font-bold text-slate-900">选择并配置加注材料</h3>
+                <h3 className="text-base font-serif font-medium text-slate-900">选择并配置加注材料</h3>
                 <p className="text-[10px] text-slate-400">从本地原型配料数据库选择酒类、饮料或调味配料</p>
               </div>
               <button onClick={() => setShowAddModal(false)} className="text-slate-400 hover:text-slate-600">
@@ -2751,15 +2788,15 @@ export default function LabScreen({
             {/* If there is an active staged ingredient, show the clinical pouring/configuration view */}
             {activeStagedIngredient ? (
               <div className="p-5 overflow-y-auto space-y-5 flex-grow">
-                <div className="bg-gradient-to-br from-slate-900 to-slate-950 text-white rounded-xl p-5 border border-slate-800 shadow-xl space-y-4 relative overflow-hidden">
+                <div className="bg-gradient-to-br from-slate-900 to-slate-950 text-white rounded-xl p-5 border border-slate-800 shadow-none space-y-4 relative overflow-hidden">
                   <div className="absolute inset-0 notebook-grid opacity-[0.03] pointer-events-none"></div>
                   
                   <div className="flex justify-between items-start">
                     <div>
-                      <span className="text-[9px] font-mono tracking-widest text-slate-300 font-bold bg-white/10 px-2 py-0.5 rounded border border-white/10">
+                      <span className="text-[9px] font-mono tracking-widest text-slate-300 font-medium bg-white/10 px-2 py-0.5 rounded border border-white/10">
                         DATABASE ITEM
                       </span>
-                      <h4 className="text-lg font-serif font-bold text-white mt-1">
+                      <h4 className="text-lg font-serif font-medium text-white mt-1">
                         {activeStagedIngredient.name}
                       </h4>
                       <p className="text-[10px] font-mono text-slate-400 mt-0.5">
@@ -2767,7 +2804,7 @@ export default function LabScreen({
                       </p>
                     </div>
                     <div className="text-right">
-                      <span className="text-xs font-mono font-bold bg-slate-800 px-2.5 py-1 rounded-md text-slate-300">
+                      <span className="text-xs font-mono font-medium bg-slate-800 px-2.5 py-1 rounded-md text-slate-300">
                         ABV {activeStagedIngredient.abv || 0}%
                       </span>
                     </div>
@@ -2776,28 +2813,28 @@ export default function LabScreen({
                   <div className="grid grid-cols-3 gap-2 pt-2.5 border-t border-slate-800">
                     <div className="rounded-lg bg-slate-800/70 border border-slate-700/60 p-2">
                       <p className="text-[8px] font-mono text-slate-500 uppercase">类型</p>
-                      <p className="text-[11px] font-bold text-slate-200 mt-0.5">{activeLibraryDetails?.type || activeStagedIngredient.category}</p>
+                      <p className="text-[11px] font-medium text-slate-200 mt-0.5">{activeLibraryDetails?.type || activeStagedIngredient.category}</p>
                     </div>
                     <div className="rounded-lg bg-slate-800/70 border border-slate-700/60 p-2">
                       <p className="text-[8px] font-mono text-slate-500 uppercase">推荐量</p>
-                      <p className="text-[11px] font-bold text-slate-200 mt-0.5">{activeLibraryDetails?.recommendedAmount || amountToInject}ml</p>
+                      <p className="text-[11px] font-medium text-slate-200 mt-0.5">{activeLibraryDetails?.recommendedAmount || amountToInject}ml</p>
                     </div>
                     <div className="rounded-lg bg-slate-800/70 border border-slate-700/60 p-2">
                       <p className="text-[8px] font-mono text-slate-500 uppercase">可获得性</p>
-                      <p className="text-[11px] font-bold text-slate-200 mt-0.5 line-clamp-2">{activeLibraryDetails?.availability || "本地保存"}</p>
+                      <p className="text-[11px] font-medium text-slate-200 mt-0.5 line-clamp-2">{activeLibraryDetails?.availability || "本地保存"}</p>
                     </div>
                   </div>
 
                   <div className="bg-white text-slate-900 rounded-xl border border-slate-700 overflow-hidden">
                     <div className="px-3 py-2 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
-                      <p className="text-[10px] font-mono font-bold uppercase tracking-widest">配料表 / Ingredient Table</p>
+                      <p className="text-[10px] font-mono font-medium uppercase tracking-widest">配料表 / Ingredient Table</p>
                       <Database size={13} className="text-slate-400" />
                     </div>
                     <div className="divide-y divide-slate-100 text-xs">
                       {activeLibraryDetails?.juiceData && (
                         <>
                           <div className="grid grid-cols-[88px_1fr] gap-2 px-3 py-2.5">
-                            <span className="text-[10px] font-bold text-slate-400">常见配料</span>
+                            <span className="text-[10px] font-medium text-slate-400">常见配料</span>
                             <div className="flex flex-wrap gap-1">
                               {activeLibraryDetails.juiceData.ingredients.map((value) => (
                                 <span key={value} className="px-2 py-0.5 rounded-md bg-slate-100 border border-slate-200 text-[10px] font-medium text-slate-700">
@@ -2807,14 +2844,14 @@ export default function LabScreen({
                             </div>
                           </div>
                           <div className="grid grid-cols-[88px_1fr] gap-2 px-3 py-2.5">
-                            <span className="text-[10px] font-bold text-slate-400">糖分参考</span>
-                            <span className="text-[10px] font-mono font-bold text-slate-700">
+                            <span className="text-[10px] font-medium text-slate-400">糖分参考</span>
+                            <span className="text-[10px] font-mono font-medium text-slate-700">
                               {activeLibraryDetails.juiceData.sugarGPer100ml === null ? "暂无精确值" : `${activeLibraryDetails.juiceData.sugarGPer100ml}g / 100ml`}
                             </span>
                           </div>
                           <div className="grid grid-cols-[88px_1fr] gap-2 px-3 py-2.5">
-                            <span className="text-[10px] font-bold text-slate-400">pH / 酸度参考</span>
-                            <span className="text-[10px] font-mono font-bold text-slate-700">
+                            <span className="text-[10px] font-medium text-slate-400">pH / 酸度参考</span>
+                            <span className="text-[10px] font-mono font-medium text-slate-700">
                               pH {activeLibraryDetails.juiceData.pHRange ?? "暂无"} · 酸度 {activeLibraryDetails.juiceData.acidity}/5
                             </span>
                           </div>
@@ -2827,7 +2864,7 @@ export default function LabScreen({
                         ["不适合搭配", activeLibraryDetails?.pairingRisky || activeStagedIngredient.riskyWith || []],
                       ].map(([label, values]) => (
                         <div key={label as string} className="grid grid-cols-[88px_1fr] gap-2 px-3 py-2.5">
-                          <span className="text-[10px] font-bold text-slate-400">{label as string}</span>
+                          <span className="text-[10px] font-medium text-slate-400">{label as string}</span>
                           <div className="flex flex-wrap gap-1">
                             {(values as string[]).length > 0 ? (
                               (values as string[]).map((value) => (
@@ -2842,25 +2879,25 @@ export default function LabScreen({
                         </div>
                       ))}
                       <div className="grid grid-cols-[88px_1fr] gap-2 px-3 py-2.5">
-                        <span className="text-[10px] font-bold text-slate-400">推荐注入量</span>
-                        <span className="text-[10px] font-mono font-bold text-slate-700">{activeLibraryDetails?.recommendedAmount || amountToInject}ml</span>
+                        <span className="text-[10px] font-medium text-slate-400">推荐注入量</span>
+                        <span className="text-[10px] font-mono font-medium text-slate-700">{activeLibraryDetails?.recommendedAmount || amountToInject}ml</span>
                       </div>
                       <div className="grid grid-cols-[88px_1fr] gap-2 px-3 py-2.5">
-                        <span className="text-[10px] font-bold text-slate-400">ABV</span>
-                        <span className="text-[10px] font-mono font-bold text-slate-700">{activeStagedIngredient.abv || 0}%</span>
+                        <span className="text-[10px] font-medium text-slate-400">ABV</span>
+                        <span className="text-[10px] font-mono font-medium text-slate-700">{activeStagedIngredient.abv || 0}%</span>
                       </div>
                       <div className="grid grid-cols-[88px_1fr] gap-2 px-3 py-2.5">
-                        <span className="text-[10px] font-bold text-slate-400">便利店可获得性</span>
+                        <span className="text-[10px] font-medium text-slate-400">便利店可获得性</span>
                         <span className="text-[10px] font-medium text-slate-700">{activeLibraryDetails?.availability || "本地自定义条目"}</span>
                       </div>
                       <div className="grid grid-cols-[88px_1fr] gap-2 px-3 py-2.5">
-                        <span className="text-[10px] font-bold text-slate-400">数据可信度</span>
+                        <span className="text-[10px] font-medium text-slate-400">数据可信度</span>
                         <span className="text-[10px] font-medium text-slate-700">
                           {Math.round((activeStagedIngredient.confidence ?? 0.72) * 100)}% · {activeStagedIngredient.dataSource === "ai_estimate" ? "估算参考" : "本地库"}
                         </span>
                       </div>
                       <div className="grid grid-cols-[88px_1fr] gap-2 px-3 py-2.5">
-                        <span className="text-[10px] font-bold text-slate-400">来源说明</span>
+                        <span className="text-[10px] font-medium text-slate-400">来源说明</span>
                         <span className="text-[10px] leading-4 text-slate-600 line-clamp-3">
                           {activeStagedIngredient.notes || activeStagedIngredient.nutritionText || "本地 seed 数据；实际请以包装标签为准。"}
                         </span>
@@ -2873,8 +2910,8 @@ export default function LabScreen({
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <div className="flex justify-between items-baseline">
-                      <label className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest block">注入剂量 (VOLUME LEVEL)</label>
-                      <span className="text-xs font-mono font-bold text-primary">{amountToInject}ml</span>
+                      <label className="text-[10px] font-mono font-medium text-slate-400 uppercase tracking-widest block">注入剂量 (VOLUME LEVEL)</label>
+                      <span className="text-xs font-mono font-medium text-primary">{amountToInject}ml</span>
                     </div>
                     <div className="grid grid-cols-3 gap-1.5">
                       {amountOptions.map((amt) => (
@@ -2882,7 +2919,7 @@ export default function LabScreen({
                           key={amt}
                           type="button"
                           onClick={() => setAmountToInject(amt)}
-                          className={`py-2 text-xs font-mono font-bold rounded-lg border transition-all ${
+                          className={`py-2 text-xs font-mono font-medium rounded-lg border transition-all ${
                             amountToInject === amt
                               ? "bg-primary text-white border-primary"
                               : "bg-white text-slate-600 border-slate-200 hover:border-slate-300"
@@ -2893,7 +2930,7 @@ export default function LabScreen({
                       ))}
                     </div>
                     <p className="text-[9px] text-slate-400 pt-1 leading-relaxed">
-                      * 滴定提示: <span className="font-bold text-slate-600">5ml/15ml</span> 适合作料，<span className="font-bold text-slate-600">30ml/45ml</span> 适合烈酒骨架，<span className="font-bold text-slate-600">50ml/100ml</span> 适合长饮饮料释析。
+                      * 滴定提示: <span className="font-medium text-slate-600">5ml/15ml</span> 适合作料，<span className="font-medium text-slate-600">30ml/45ml</span> 适合烈酒骨架，<span className="font-medium text-slate-600">50ml/100ml</span> 适合长饮饮料释析。
                     </p>
                   </div>
 
@@ -2915,13 +2952,14 @@ export default function LabScreen({
                   <div className="flex gap-3 pt-2">
                     <button
                       onClick={() => setActiveStagedIngredient(null)}
-                      className="flex-1 py-3.5 border border-slate-200 rounded-xl text-xs font-bold uppercase tracking-wider text-slate-700 hover:bg-slate-50 transition-colors"
+                      className="flex-1 py-3.5 border border-slate-200 rounded-xl text-xs font-medium uppercase tracking-wider text-slate-700 hover:bg-slate-50 transition-colors"
                     >
                       重新选择
                     </button>
                     <button
+                      disabled={amountToInject <= 0}
                       onClick={handleConfirmAdd}
-                      className="flex-1 py-3.5 bg-primary text-white hover:bg-black/90 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-1.5 shadow"
+                      className="flex-1 py-3.5 bg-primary text-white hover:bg-black/90 rounded-xl text-xs font-medium uppercase tracking-widest flex items-center justify-center gap-1.5 shadow"
                     >
                       确认注入烧杯
                     </button>
@@ -2933,7 +2971,7 @@ export default function LabScreen({
                 <div className="px-5 py-3 border-b border-slate-200 bg-slate-50/60 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Database size={14} className="text-slate-500" />
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-slate-500">
+                    <span className="text-[10px] font-mono font-medium uppercase tracking-widest text-slate-500">
                       Local ingredient database
                     </span>
                   </div>
@@ -2964,7 +3002,7 @@ export default function LabScreen({
                           : "border-slate-200 bg-slate-50 text-slate-500"
                       }`}
                     >
-                      <span className="block text-[11px] font-bold">{label}</span>
+                      <span className="block text-[11px] font-medium">{label}</span>
                       <span className={`mt-0.5 block text-[9px] ${modalTab === tab ? "text-slate-300" : "text-slate-400"}`}>{hint}</span>
                     </button>
                   ))}
@@ -2991,7 +3029,7 @@ export default function LabScreen({
                         <button
                           type="submit"
                           disabled={isSearching}
-                          className="px-4 bg-primary text-white rounded-xl text-xs font-bold uppercase tracking-wider hover:opacity-90 active:scale-95 transition-all flex items-center gap-1 shadow-sm"
+                          className="px-4 bg-primary text-white rounded-xl text-xs font-medium uppercase tracking-wider hover:opacity-90 active:scale-95 transition-all flex items-center gap-1 shadow-none"
                         >
                           {isSearching ? (
                             <span className="material-symbols-outlined animate-spin text-sm">autorenew</span>
@@ -3003,7 +3041,7 @@ export default function LabScreen({
 
                       {searchSuggestions.length > 0 && (
                         <div className="space-y-2">
-                          <p className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest">Search matches</p>
+                          <p className="text-[10px] font-mono font-medium text-slate-400 uppercase tracking-widest">Search matches</p>
                           <div className="space-y-2">
                             {searchSuggestions.map((item) => {
                               const displayZh = item.convenienceData?.nameZh || item.juiceData?.nameZh || item.name;
@@ -3019,7 +3057,7 @@ export default function LabScreen({
                                     <div className="flex items-start gap-2.5">
                                       <div className="w-3 h-3 rounded-full border border-black/10 mt-1" style={{ backgroundColor: item.color }}></div>
                                       <div>
-                                        <p className="text-xs font-bold text-slate-900">{displayZh}</p>
+                                        <p className="text-xs font-medium text-slate-900">{displayZh}</p>
                                         <p className="text-[10px] font-mono font-medium text-slate-400">{displayEn}</p>
                                         <p className="text-[10px] text-slate-500 mt-0.5">{item.type} · ABV {item.abv || 0}% · 推荐 {item.recommendedAmount}ml</p>
                                         {(item.juiceData || item.convenienceData) && (
@@ -3048,7 +3086,7 @@ export default function LabScreen({
 
                           {fuzzyMatches.length > 0 && (
                             <div className="space-y-2">
-                              <p className="text-[10px] font-bold text-amber-800">你是不是在找这些？先确认本地相似项，避免重复补全。</p>
+                              <p className="text-[10px] font-medium text-amber-800">你是不是在找这些？先确认本地相似项，避免重复补全。</p>
                               <div className="space-y-1.5">
                                 {fuzzyMatches.slice(0, 4).map((item) => {
                                   const libraryItem = item as Partial<LibraryIngredient>;
@@ -3068,10 +3106,10 @@ export default function LabScreen({
                                       className="flex w-full cursor-pointer items-center justify-between gap-3 rounded-xl border border-amber-200 bg-white/80 px-3 py-2 text-left transition active:scale-[0.99]"
                                     >
                                       <span className="min-w-0">
-                                        <span className="block truncate text-xs font-bold text-slate-900">{displayZh}</span>
+                                        <span className="block truncate text-xs font-medium text-slate-900">{displayZh}</span>
                                         <span className="block truncate text-[10px] font-medium text-slate-500">{displayEn}</span>
                                       </span>
-                                      <span className="text-[10px] font-bold text-amber-700">选择</span>
+                                      <span className="text-[10px] font-medium text-amber-700">选择</span>
                                     </button>
                                   );
                                 })}
@@ -3080,7 +3118,7 @@ export default function LabScreen({
                           )}
 
                           <div className="rounded-xl border border-amber-200 bg-white/65 p-3">
-                            <p className="text-[10px] font-bold text-amber-800">
+                            <p className="text-[10px] font-medium text-amber-800">
                               {fuzzyMatches.length > 0 ? "都不是？继续补全" : "本地没有确认结果，可以这样补全"}
                             </p>
                             <div className="mt-2 grid grid-cols-2 gap-2">
@@ -3090,7 +3128,7 @@ export default function LabScreen({
                                   setManualName(pendingUnmatchedQuery || searchQuery);
                                   setModalTab("manual");
                                 }}
-                                className="rounded-xl bg-neutral-950 px-3 py-2 text-[11px] font-bold text-white active:scale-[0.98]"
+                                className="rounded-xl bg-neutral-950 px-3 py-2 text-[11px] font-medium text-white active:scale-[0.98]"
                               >
                                 手动输入配料表
                               </button>
@@ -3099,7 +3137,7 @@ export default function LabScreen({
                                 onClick={() => {
                                   alert("联网补全会在后续接入：只有本地无匹配、你确认不是相似项，并且当天未超调用额度时才会触发。当前 MVP 先使用手动配料表和本地审核。");
                                 }}
-                                className="rounded-xl border border-amber-200 bg-white px-3 py-2 text-[11px] font-bold text-amber-800 active:scale-[0.98]"
+                                className="rounded-xl border border-amber-200 bg-white px-3 py-2 text-[11px] font-medium text-amber-800 active:scale-[0.98]"
                               >
                                 联网补全资料
                               </button>
@@ -3111,7 +3149,7 @@ export default function LabScreen({
                       {/* Structured local database */}
                       <div className="space-y-3">
                         <div className="flex justify-between items-baseline border-b border-slate-100 pb-1">
-                          <p className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest">本地配料数据库 (INGREDIENT DATABASE)</p>
+                          <p className="text-[10px] font-mono font-medium text-slate-400 uppercase tracking-widest">本地配料数据库 (INGREDIENT DATABASE)</p>
                           <span className="text-[9px] text-slate-400 font-mono">No default brand</span>
                         </div>
 
@@ -3124,11 +3162,11 @@ export default function LabScreen({
                             }}
                             className={`p-4 rounded-2xl border text-left transition-all ${
                               selectedLibraryMode === "alcohol"
-                                ? "border-primary bg-slate-950 text-white shadow-md"
+                                ? "border-primary bg-slate-950 text-white shadow-none"
                                 : "border-slate-200 bg-white text-slate-800 hover:border-slate-300"
                             }`}
                           >
-                            <p className="text-sm font-serif font-bold">基酒 / 酒类</p>
+                            <p className="text-sm font-serif font-medium">基酒 / 酒类</p>
                             <p className={`text-[10px] mt-1 ${selectedLibraryMode === "alcohol" ? "text-slate-300" : "text-slate-400"}`}>
                               Beer, Wine, Spirits
                             </p>
@@ -3141,11 +3179,11 @@ export default function LabScreen({
                             }}
                             className={`p-4 rounded-2xl border text-left transition-all ${
                               selectedLibraryMode === "nonAlcohol"
-                                ? "border-primary bg-slate-950 text-white shadow-md"
+                                ? "border-primary bg-slate-950 text-white shadow-none"
                                 : "border-slate-200 bg-white text-slate-800 hover:border-slate-300"
                             }`}
                           >
-                            <p className="text-sm font-serif font-bold">饮料 / 非酒精配料</p>
+                            <p className="text-sm font-serif font-medium">饮料 / 非酒精配料</p>
                             <p className={`text-[10px] mt-1 ${selectedLibraryMode === "nonAlcohol" ? "text-slate-300" : "text-slate-400"}`}>
                               Mixers, acids, bitters
                             </p>
@@ -3160,7 +3198,7 @@ export default function LabScreen({
                                   key={range}
                                   type="button"
                                   onClick={() => setSelectedAbvRange(range)}
-                                  className={`px-3 py-1.5 text-[10px] font-bold rounded-full border transition-all whitespace-nowrap ${
+                                  className={`px-3 py-1.5 text-[10px] font-medium rounded-full border transition-all whitespace-nowrap ${
                                     selectedAbvRange === range
                                       ? "bg-primary text-white border-primary"
                                       : "bg-white text-slate-500 border-slate-200 hover:border-slate-300"
@@ -3180,7 +3218,7 @@ export default function LabScreen({
                                 key={cat}
                                 type="button"
                                 onClick={() => setSelectedDrinkCategory(cat)}
-                                className={`px-3 py-1.5 text-[10px] font-bold rounded-full border transition-all whitespace-nowrap ${
+                                className={`px-3 py-1.5 text-[10px] font-medium rounded-full border transition-all whitespace-nowrap ${
                                   selectedDrinkCategory === cat
                                     ? "bg-primary text-white border-primary"
                                     : "bg-white text-slate-500 border-slate-200 hover:border-slate-300"
@@ -3206,17 +3244,17 @@ export default function LabScreen({
                                     <div className="w-3.5 h-3.5 rounded-full border border-black/10 mt-1 flex-shrink-0" style={{ backgroundColor: item.color }}></div>
                                     <div className="min-w-0">
                                       <div className="flex items-baseline gap-1.5 flex-wrap">
-                                        <p className="text-sm font-bold text-slate-900">{item.name}</p>
+                                        <p className="text-sm font-medium text-slate-900">{item.name}</p>
                                         <p className="text-[10px] font-mono text-slate-400">{item.englishName}</p>
                                       </div>
                                       <div className="flex flex-wrap gap-1 mt-1">
-                                        <span className="px-1.5 py-0.5 rounded bg-slate-100 text-[9px] font-bold text-slate-600">ABV {item.abv || 0}%</span>
-                                        <span className="px-1.5 py-0.5 rounded bg-slate-100 text-[9px] font-bold text-slate-600">{item.type}</span>
-                                        <span className="px-1.5 py-0.5 rounded bg-slate-100 text-[9px] font-bold text-slate-600">推荐 {item.recommendedAmount}ml</span>
+                                        <span className="px-1.5 py-0.5 rounded bg-slate-100 text-[9px] font-medium text-slate-600">ABV {item.abv || 0}%</span>
+                                        <span className="px-1.5 py-0.5 rounded bg-slate-100 text-[9px] font-medium text-slate-600">{item.type}</span>
+                                        <span className="px-1.5 py-0.5 rounded bg-slate-100 text-[9px] font-medium text-slate-600">推荐 {item.recommendedAmount}ml</span>
                                         {item.juiceData && (
                                           <>
-                                            <span className="px-1.5 py-0.5 rounded bg-amber-50 text-[9px] font-bold text-amber-700 border border-amber-100">甜度 {item.juiceData.sweetness}/5</span>
-                                            <span className="px-1.5 py-0.5 rounded bg-lime-50 text-[9px] font-bold text-lime-700 border border-lime-100">酸度 {item.juiceData.acidity}/5</span>
+                                            <span className="px-1.5 py-0.5 rounded bg-amber-50 text-[9px] font-medium text-amber-700 border border-amber-100">甜度 {item.juiceData.sweetness}/5</span>
+                                            <span className="px-1.5 py-0.5 rounded bg-lime-50 text-[9px] font-medium text-lime-700 border border-lime-100">酸度 {item.juiceData.acidity}/5</span>
                                           </>
                                         )}
                                       </div>
@@ -3252,7 +3290,7 @@ export default function LabScreen({
                       {customIngredients.length > 0 && (
                         <div className="space-y-2 pt-2 border-t border-slate-100">
                           <div className="flex justify-between items-baseline">
-                            <p className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest">我的人人配谱库 (MY LIBRARY)</p>
+                            <p className="text-[10px] font-mono font-medium text-slate-400 uppercase tracking-widest">我的人人配谱库 (MY LIBRARY)</p>
                             <span className="text-[9px] text-slate-400 font-mono">{customIngredients.length} items</span>
                           </div>
                           <div className="grid grid-cols-2 gap-2">
@@ -3281,12 +3319,12 @@ export default function LabScreen({
                     <div className="space-y-4">
                       <div className="relative aspect-video rounded-xl bg-slate-950 overflow-hidden flex flex-col items-center justify-center text-white border border-slate-800">
                         {isOcrScanning && (
-                          <div className="absolute inset-x-0 h-1 bg-red-500/80 shadow-md shadow-red-500 animate-bounce top-1/2 pointer-events-none"></div>
+                          <div className="absolute inset-x-0 h-1 bg-red-500/80 shadow-none shadow-red-500 animate-bounce top-1/2 pointer-events-none"></div>
                         )}
                         
                         <div className="text-center p-4 space-y-2 relative z-10">
                           <Camera className={`mx-auto text-primary stroke-[1.2] ${isOcrScanning ? "animate-pulse" : ""}`} size={32} />
-                          <p className="text-xs font-bold tracking-wider">配料表文本整理</p>
+                          <p className="text-xs font-medium tracking-wider">配料表文本整理</p>
                           <p className="text-[9px] text-slate-400 font-light max-w-xs mx-auto">
                             {isOcrScanning ? "正在整理配料表..." : "1.0 先不做拍照识别。请选择测试模板，或在下方粘贴瓶身配料表。"}
                           </p>
@@ -3296,7 +3334,7 @@ export default function LabScreen({
 
                       {/* Mock template scanners */}
                       <div className="space-y-2">
-                        <p className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest block">快捷瓶身配料测试 (TEST TEMPLATES)</p>
+                        <p className="text-[10px] font-mono font-medium text-slate-400 uppercase tracking-widest block">快捷瓶身配料测试 (TEST TEMPLATES)</p>
                         <div className="grid grid-cols-2 gap-2">
                           {bottleTemplates.map((item) => (
                             <button
@@ -3305,9 +3343,9 @@ export default function LabScreen({
                               onClick={() => handleScanTemplateOCR(item)}
                               className="p-2.5 rounded-xl border border-slate-200 hover:border-primary/40 text-left bg-white transition-all hover:bg-slate-50 flex flex-col justify-between h-20"
                             >
-                              <div className="font-bold text-xs text-slate-800 truncate w-full">{item.name}</div>
+                              <div className="font-medium text-xs text-slate-800 truncate w-full">{item.name}</div>
                               <div className="text-[9px] text-slate-400 truncate w-full mt-0.5">{item.text}</div>
-                              <span className="text-[8px] mt-1 font-mono text-primary font-bold bg-primary/5 px-1.5 py-0.5 rounded self-start">一键整理</span>
+                              <span className="text-[8px] mt-1 font-mono text-primary font-medium bg-primary/5 px-1.5 py-0.5 rounded self-start">一键整理</span>
                             </button>
                           ))}
                         </div>
@@ -3315,7 +3353,7 @@ export default function LabScreen({
 
                       {/* Paste area for customized scanning */}
                       <form onSubmit={handleCustomOcrSubmit} className="space-y-2.5 pt-2 border-t border-slate-100">
-                        <p className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest block">自定义配料表文本</p>
+                        <p className="text-[10px] font-mono font-medium text-slate-400 uppercase tracking-widest block">自定义配料表文本</p>
                         
                         <div className="grid grid-cols-2 gap-2">
                           <input
@@ -3328,7 +3366,7 @@ export default function LabScreen({
                           <button
                             type="submit"
                             disabled={isOcrScanning || !customOcrText.trim()}
-                            className="w-full py-2 bg-primary text-white rounded-lg text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1 disabled:opacity-50"
+                            className="w-full py-2 bg-primary text-white rounded-lg text-xs font-medium uppercase tracking-wider flex items-center justify-center gap-1 disabled:opacity-50"
                           >
                             生成临时材料
                           </button>
@@ -3349,7 +3387,7 @@ export default function LabScreen({
                     <form onSubmit={handleManualGenerateSubmit} className="space-y-4">
                       <div className="space-y-3">
                         <div className="space-y-1">
-                          <label className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest block">原料名称 (MATERIAL NAME)</label>
+                          <label className="text-[10px] font-mono font-medium text-slate-400 uppercase tracking-widest block">原料名称 (MATERIAL NAME)</label>
                           <input
                             type="text"
                             placeholder="如：水溶C100 柠檬味、椰树牌椰汁、茉莉花茶..."
@@ -3360,7 +3398,7 @@ export default function LabScreen({
                         </div>
 
                         <div className="space-y-1">
-                          <label className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest block">成分分类 (CATEGORY)</label>
+                          <label className="text-[10px] font-mono font-medium text-slate-400 uppercase tracking-widest block">成分分类 (CATEGORY)</label>
                           <select
                             className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-xs bg-slate-50/50 outline-none focus:border-primary"
                             value={manualCategory}
@@ -3376,7 +3414,7 @@ export default function LabScreen({
                         </div>
 
                         <div className="space-y-1">
-                          <label className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest block">瓶身配料表 (INGREDIENT LIST)</label>
+                          <label className="text-[10px] font-mono font-medium text-slate-400 uppercase tracking-widest block">瓶身配料表 (INGREDIENT LIST)</label>
                           <textarea
                             placeholder="直接抄瓶身配料表，例如：水、白砂糖、浓缩柠檬汁、柠檬酸、维生素C..."
                             className="w-full h-20 p-2.5 rounded-xl border border-slate-200 text-[10px] outline-none focus:border-primary transition-all bg-slate-50/50 resize-none font-sans"
@@ -3386,7 +3424,7 @@ export default function LabScreen({
                         </div>
 
                         <div className="space-y-1">
-                          <label className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest block">补充信息 (OPTIONAL NOTES)</label>
+                          <label className="text-[10px] font-mono font-medium text-slate-400 uppercase tracking-widest block">补充信息 (OPTIONAL NOTES)</label>
                           <textarea
                             placeholder="可选：是否有气泡、是否含奶、是否含咖啡因、甜酸感如何。例：有气泡，橙味，比较甜。"
                             className="w-full h-16 p-2.5 rounded-xl border border-slate-200 text-[10px] outline-none focus:border-primary transition-all bg-slate-50/50 resize-none font-sans"
@@ -3399,7 +3437,7 @@ export default function LabScreen({
                       <button
                         type="submit"
                         disabled={isManualGenerating || !manualName.trim()}
-                        className="w-full py-3.5 bg-primary text-white hover:bg-black/90 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-1.5 transition-all disabled:opacity-50"
+                        className="w-full py-3.5 bg-primary text-white hover:bg-black/90 rounded-xl text-xs font-medium uppercase tracking-widest flex items-center justify-center gap-1.5 transition-all disabled:opacity-50"
                       >
                         {isManualGenerating ? (
                           <>
@@ -3429,30 +3467,30 @@ export default function LabScreen({
       {showRulesModal && (
         <div className="fixed inset-0 z-[120] flex items-center justify-center px-6">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowRulesModal(false)}></div>
-          <div className="relative bg-white w-full max-w-sm rounded-xl overflow-hidden shadow-2xl p-6 border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
-            <h3 className="text-base font-serif font-bold text-slate-900 mb-2">酒精实验室科学守则</h3>
+          <div className="relative bg-white w-full max-w-sm rounded-xl overflow-hidden shadow-none p-6 border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
+            <h3 className="text-base font-serif font-medium text-slate-900 mb-2">酒精实验室科学守则</h3>
             <div className="text-xs text-slate-600 space-y-3.5 leading-relaxed font-light">
               <p>欢迎来到分子微醺共振实验室！本模拟系统遵循以下精确物理混合守则：</p>
               
               <ul className="list-decimal pl-4 space-y-1.5 font-sans">
                 <li>
-                  <strong className="font-bold text-slate-800">最大加注：</strong>杯身额定容量为 <strong className="font-semibold text-slate-800">350ml</strong>，最多容纳 <strong className="font-semibold text-slate-800">6 种</strong> 不同的物理成分。
+                  <strong className="font-medium text-slate-800">最大加注：</strong>杯身额定容量为 <strong className="font-semibold text-slate-800">350ml</strong>，最多容纳 <strong className="font-semibold text-slate-800">6 种</strong> 不同的物理成分。
                 </li>
                 <li>
-                  <strong className="font-bold text-slate-800">动力剪切：</strong>至少加注 <strong className="font-semibold text-slate-800">2 种</strong> 液体后，可以选择 <strong className="font-semibold text-slate-800">Stir（慢搅拌）</strong> 或 <strong className="font-semibold text-slate-800">Shake（高频激荡）</strong>，这会改变酒精分子胶体细腻度。
+                  <strong className="font-medium text-slate-800">动力剪切：</strong>至少加注 <strong className="font-semibold text-slate-800">2 种</strong> 液体后，可以选择 <strong className="font-semibold text-slate-800">Stir（慢搅拌）</strong> 或 <strong className="font-semibold text-slate-800">Shake（高频激荡）</strong>，这会改变酒精分子胶体细腻度。
                 </li>
                 <li>
-                  <strong className="font-bold text-slate-800">8维风味：</strong>实验会精密诊断出 甜、酸、酒感、奶香、草本、气泡、清爽、黏度 8 大维度色谱。
+                  <strong className="font-medium text-slate-800">8维风味：</strong>实验会精密诊断出 甜、酸、酒感、奶香、草本、气泡、清爽、黏度 8 大维度色谱。
                 </li>
                 <li>
-                  <strong className="font-bold text-slate-800">科学包容：</strong>化学公式是千变万化的，系统预测分子客观表现，不保证好喝，请以探索精神对待！
+                  <strong className="font-medium text-slate-800">科学包容：</strong>化学公式是千变万化的，系统预测分子客观表现，不保证好喝，请以探索精神对待！
                 </li>
               </ul>
             </div>
             
             <button
               onClick={() => setShowRulesModal(false)}
-              className="w-full mt-6 py-3.5 bg-primary text-white rounded-xl text-xs font-bold uppercase tracking-wider text-center"
+              className="w-full mt-6 py-3.5 bg-primary text-white rounded-xl text-xs font-medium uppercase tracking-wider text-center"
             >
               遵守守则，开始实验
             </button>

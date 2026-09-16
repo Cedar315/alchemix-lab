@@ -6,7 +6,7 @@ const doc = documents.find(d => d.id === 'syrup-concentration')!;
 const hits = rankHits('糖浆比例', [{ document: doc, semanticScore: 0.8 }], 3, 0.5);
 
 test('knowledge keeps sources and scope together and has unique IDs', () => {
-  assert.equal(documents.length,12);
+  assert.equal(documents.length,50);
   assert.equal(new Set(documents.map(d=>d.id)).size,documents.length);
   assert.ok(embeddingText(doc).includes(doc.scope));
 });

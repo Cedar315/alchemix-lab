@@ -1,5 +1,6 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { DrinkLog, SavedCocktail, MixTip } from "./types";
 import LabScreen from "./components/LabScreen";
@@ -10,7 +11,10 @@ import MyProfileScreen from "./components/MyProfileScreen";
 import { trackAnalyticsEvent } from "./lib/analytics";
 
 export default function App() {
+  const searchParams = useSearchParams();
+  useEffect(() => { const tab=searchParams.get("tab"); if(tab && ["ASSISTANT","LAB","INSPIRATION","MY"].includes(tab))setActiveTab(tab); }, [searchParams]);
   // Navigation State: "ASSISTANT" | "LAB" | "INSPIRATION" | "MY"
+  const [homeVisit, setHomeVisit] = useState(0);
   const [guideTab, setGuideTab] = useState<"classic" | "convenience" | undefined>();
   const [activeTab, setActiveTab] = useState<string>("ASSISTANT");
 
@@ -20,6 +24,9 @@ export default function App() {
   }, []);
 
   // Saved cocktails state (persisted in localStorage)
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("from") === "materials") setActiveTab("MATERIALS");
+  }, []);
   const [savedCocktails, setSavedCocktails] = useState<SavedCocktail[]>([]);
   const [drinkLogs, setDrinkLogs] = useState<DrinkLog[]>([]);
   const [drinkLogSuccess, setDrinkLogSuccess] = useState<{ recipeName: string; todayCount: number } | null>(null);
@@ -80,7 +87,7 @@ export default function App() {
 
   // 1. Initial State Loading & Synchronization with localStorage
   useEffect(() => {
-    const requestedTab = localStorage.getItem("alchemix_open_tab");
+    const requestedTab = new URLSearchParams(window.location.search).get("tab") || localStorage.getItem("alchemix_open_tab");
     if (requestedTab && ["ASSISTANT", "LAB", "INSPIRATION", "MY"].includes(requestedTab)) {
       setActiveTab(requestedTab);
       localStorage.removeItem("alchemix_open_tab");
@@ -202,7 +209,7 @@ export default function App() {
   const renderScreen = () => {
     switch (activeTab) {
       case "ASSISTANT":
-        return <BeginnerHome onMaterials={() => setActiveTab("MATERIALS")} onExplore={(tab) => { sessionStorage.removeItem("alchemix_guide_return"); setGuideTab(tab); setActiveTab("INSPIRATION"); }} />;
+        return <BeginnerHome key={homeVisit} onMaterials={() => setActiveTab("MATERIALS")} onExplore={(tab) => { sessionStorage.removeItem("alchemix_guide_return"); setGuideTab(tab); setActiveTab("INSPIRATION"); }} />;
       case "MATERIALS":
         return (
           <AssistantScreen
@@ -263,13 +270,13 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#dfe3e6] text-on-surface flex justify-center font-sans select-none selection:bg-black/10 md:px-6 md:py-6">
-      <div className="relative flex h-[100dvh] w-full max-w-[430px] flex-col overflow-hidden bg-surface shadow-2xl md:h-[calc(100dvh-48px)] md:rounded-[2rem] md:border md:border-white/70">
+    <div className="min-h-screen bg-[#e7e5e0] text-on-surface flex justify-center font-sans select-none selection:bg-black/10 md:px-6 md:py-6">
+      <div data-app-shell className="relative flex h-[100dvh] w-full max-w-[430px] flex-col overflow-hidden bg-surface shadow-none md:h-[calc(100dvh-48px)] md:rounded-[2rem] md:border md:border-[#d5d3cd]">
       {/* Top Clinical Navigation Bar */}
       <header className="bg-surface/90 backdrop-blur-md border-b border-outline-variant/10 z-40 flex shrink-0 justify-between items-center px-5 py-4">
         <div className="flex items-center gap-2">
           <span className="material-symbols-outlined text-primary text-2xl">science</span>
-          <h1 className="text-xl font-bold font-serif text-primary tracking-tight">AlcheMix Lab</h1>
+          <h1 className="text-[12px] font-mono font-normal text-primary tracking-[0.16em]">AlcheMix Lab</h1>
         </div>
         
         {/* Dynamic Context Header action buttons */}
@@ -316,7 +323,7 @@ export default function App() {
         {activeTab === "INSPIRATION" && (
           <button 
             onClick={() => {
-              alert("📖 [灵感手记说明] 包含基础酒类科普、经典便利店微醺配方比例、翻车急救方法。遇到调酒疑问时，可以先在本地问题库里搜索对应建议。");
+              alert("📖 [灵感手记说明] 包含基础酒类科普、经典便利店微醺配方比例、翻车急救方法。遇到调酒疑问时，点击助手气泡进行问答。");
             }}
             className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container transition-colors active:scale-95 duration-150 text-on-surface-variant"
             title="帮助说明"
@@ -327,16 +334,17 @@ export default function App() {
       </header>
 
       {/* Main Canvas Segment */}
-      <main className={`flex-grow overflow-y-auto px-5 py-6 ${activeTab === "ASSISTANT" ? "bg-[#F7F7F5]" : ""}`}>
+      <main className={`flex-grow overflow-y-auto px-5 py-6 ${activeTab === "ASSISTANT" ? "bg-[#f6f5f1]" : ""}`}>
         {renderScreen()}
       </main>
 
       {/* Fixed Bottom Navigation Bar (Mobile & Desktop fluid footer) */}
-      <nav className="z-40 bg-white/95 backdrop-blur-md border-t border-outline-variant/15 flex shrink-0 justify-around items-center px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-10px_30px_rgba(15,23,42,0.08)]">
+      <nav className="z-40 bg-surface/95 backdrop-blur-md border-t border-outline-variant/15 flex shrink-0 justify-around items-center px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 shadow-none">
         {/* Finder */}
         <button
           onClick={() => {
             trackAnalyticsEvent({ eventName: "tab_click", page: "finder", action: "click", target: "Finder" });
+            setHomeVisit(v => v + 1);
             setActiveTab("ASSISTANT");
           }}
           className={`flex flex-col items-center justify-center p-1.5 transition-all w-16 duration-200 ${
@@ -349,7 +357,7 @@ export default function App() {
           >
             home
           </span>
-          <span className="text-[10px] font-bold uppercase tracking-tighter mt-1">首页</span>
+          <span className="text-[10px] font-medium uppercase tracking-tighter mt-1">首页</span>
         </button>
 
         {/* Lab */}
@@ -368,7 +376,7 @@ export default function App() {
           >
             science
           </span>
-          <span className="text-[10px] font-bold uppercase tracking-tighter mt-1">自由调配</span>
+          <span className="text-[10px] font-medium uppercase tracking-tighter mt-1">自由调配</span>
         </button>
 
         {/* Inspiration */}
@@ -389,7 +397,7 @@ export default function App() {
           >
             menu_book
           </span>
-          <span className="text-[10px] font-bold uppercase tracking-tighter mt-1">找酒谱</span>
+          <span className="text-[10px] font-medium uppercase tracking-tighter mt-1">找酒谱</span>
         </button>
 
         {/* My */}
@@ -408,7 +416,7 @@ export default function App() {
           >
             person
           </span>
-          <span className="text-[10px] font-bold uppercase tracking-tighter mt-1">我的</span>
+          <span className="text-[10px] font-medium uppercase tracking-tighter mt-1">我的</span>
         </button>
       </nav>
 
@@ -421,26 +429,26 @@ export default function App() {
             aria-label="关闭保存成功提示"
           ></button>
 
-          <div className="relative z-10 w-full max-w-[360px] overflow-hidden rounded-[28px] border border-[#E8E8E8] bg-white p-5 text-center shadow-[0_24px_60px_rgba(15,23,42,0.22)] animate-in fade-in zoom-in-95 duration-200">
+          <div className="relative z-10 w-full max-w-[360px] overflow-hidden rounded-[28px] border border-[#E8E8E8] bg-white p-5 text-center shadow-none animate-in fade-in zoom-in-95 duration-200">
             <div className="absolute inset-0 notebook-grid opacity-[0.025] pointer-events-none"></div>
             <div className="relative z-10">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-[#E8E8E8] bg-[#F7F7F5] text-neutral-950">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-[#E8E8E8] bg-[#f6f5f1] text-neutral-950">
                 <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>
                   check_circle
                 </span>
               </div>
-              <p className="mt-4 text-[11px] font-bold uppercase tracking-[0.18em] text-neutral-400">Drink Log Saved</p>
-              <h3 className="mt-1 text-xl font-bold text-neutral-950">成功添加了一杯酒</h3>
+              <p className="mt-4 text-[11px] font-medium uppercase tracking-[0.18em] text-neutral-400">Drink Log Saved</p>
+              <h3 className="mt-1 text-xl font-medium text-neutral-950">成功添加了一杯酒</h3>
               <p className="mt-2 text-sm leading-6 text-neutral-500">
                 {drinkLogSuccess.recipeName} 已存入酒记。今天已经喝了{" "}
-                <span className="font-bold text-neutral-950">{drinkLogSuccess.todayCount}</span> 杯。
+                <span className="font-medium text-neutral-950">{drinkLogSuccess.todayCount}</span> 杯。
               </p>
 
               <div className="mt-5 grid grid-cols-2 gap-2.5">
                 <button
                   type="button"
                   onClick={() => setDrinkLogSuccess(null)}
-                  className="h-11 cursor-pointer rounded-2xl border border-[#E8E8E8] bg-white text-sm font-bold text-neutral-600 active:scale-[0.98]"
+                  className="h-11 cursor-pointer rounded-2xl border border-[#E8E8E8] bg-white text-sm font-medium text-neutral-600 active:scale-[0.98]"
                 >
                   继续看看
                 </button>
@@ -450,7 +458,7 @@ export default function App() {
                     setDrinkLogSuccess(null);
                     setActiveTab("MY");
                   }}
-                  className="h-11 cursor-pointer rounded-2xl bg-neutral-950 text-sm font-bold text-white shadow-[0_10px_24px_rgba(15,23,42,0.14)] active:scale-[0.98]"
+                  className="h-11 cursor-pointer rounded-2xl bg-neutral-950 text-sm font-medium text-white shadow-none active:scale-[0.98]"
                 >
                   查看酒记
                 </button>
