@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { searchAndCollect,trustedSource,type SearchDeps } from './search';
+import { searchAndCollect,searchWebAnswer,trustedSource,type SearchDeps } from './search';
 import { draftSchema,reviewInput,normalizedQuestion,redact } from './contract';
 import { minimaxResults } from './minimax-search';
 
@@ -27,6 +27,13 @@ function fixture(status='no_evidence') {
 test('existing RAG evidence never invokes internet or creates drafts',async()=>{
   const f=fixture('answered');const result=await searchAndCollect('问题','',AbortSignal.timeout(5000),f.deps);
   assert.equal(result.claims[0].text,'已有知识');assert.equal(f.state().web,0);assert.equal(f.state().collections.length,0);
+});
+test('companion web answer returns source links without running collection',async()=>{
+  const f=fixture();
+  const result=await searchWebAnswer('威士忌搭配什么','',AbortSignal.timeout(5000),f.deps);
+  assert.equal(f.state().web,1);
+  assert.equal(f.state().collections.length,0);
+  assert.equal(result.citations[0].sources[0].url,hit.document.sources[0].url);
 });
 test('weak local retrieval skips its generation pass before web fallback',async()=>{
   const f=fixture('insufficient_evidence');let generations=0;

@@ -1,0 +1,79 @@
+{
+  "at": "2026-09-17T08:16:03.267Z",
+  "note": "Final replay of the remaining failed actual-materials case. Real intent model, fixture knowledge, no external writes.",
+  "pass": true,
+  "decision": {
+    "intent": "troubleshoot",
+    "dialogueAct": "new_task",
+    "materials": [
+      "金酒",
+      "养乐多"
+    ],
+    "recipeName": "",
+    "category": "any",
+    "capability": "none",
+    "question": "你用了多少金酒和多少养乐多？",
+    "knowledgeQuestion": "",
+    "facts": {
+      "missingMaterial": "",
+      "availableMaterialsKnown": true,
+      "actualMaterials": "金酒、养乐多",
+      "actualSteps": "一起倒进杯子，搅了几下"
+    }
+  },
+  "result": {
+    "status": "answered",
+    "message": "",
+    "clarification": "",
+    "actions": [],
+    "recipes": [],
+    "knowledge": {
+      "status": "answered",
+      "claims": [
+        {
+          "text": "检索测试占位",
+          "evidenceIds": [
+            "test"
+          ]
+        }
+      ],
+      "citations": [
+        {
+          "id": "test",
+          "title": "测试",
+          "sources": [
+            {
+              "title": "测试",
+              "url": "https://example.com/evidence"
+            }
+          ]
+        }
+      ]
+    },
+    "pending": null,
+    "taskId": "a7a927dc-158d-4dce-975f-a16d4977859b",
+    "contextVersion": 0,
+    "trace": [
+      {
+        "tool": "recognize_intent",
+        "status": "troubleshoot",
+        "elapsedMs": 0
+      },
+      {
+        "tool": "search_knowledge",
+        "status": "answered",
+        "elapsedMs": 0
+      }
+    ],
+    "model": "MiniMax-M2.5",
+    "usage": {
+      "total_tokens": 1755,
+      "total_characters": 0,
+      "prompt_tokens": 1298,
+      "completion_tokens": 457,
+      "prompt_tokens_details": {
+        "cached_tokens": 443
+      }
+    }
+  }
+}

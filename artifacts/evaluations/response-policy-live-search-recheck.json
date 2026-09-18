@@ -1,0 +1,20 @@
+{
+  "at": "2026-09-17T08:16:36.759Z",
+  "note": "Real local retrieval and web fallback, after requiring evidence for substitution differences. Collection disabled; no database writes.",
+  "question": "玛格丽特缺少君度，手边只有橙汁。能用橙汁替代吗，有什么风味差异？",
+  "local": 1,
+  "web": 1,
+  "elapsedMs": 20700,
+  "answer": {
+    "status": "insufficient_evidence",
+    "claims": [],
+    "citations": [],
+    "model": "MiniMax-M2.5",
+    "usage": {
+      "total_tokens": 1279,
+      "total_characters": 0,
+      "prompt_tokens": 897,
+      "completion_tokens": 382
+    }
+  }
+}

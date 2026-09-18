@@ -1,0 +1,19 @@
+{
+  "at": "2026-09-17T08:18:51.424Z",
+  "note": "Real UI and runCompanion; model, knowledge, authentication and account APIs use fixtures. No external writes.",
+  "checks": [
+    "missing-first-no-category-buttons",
+    "missing-followup-asks-stock",
+    "stock-followup-answer-sources-shortcut",
+    "retry-preserves-stock-pending-without-duplicate-message",
+    "actual-materials-then-steps-then-advice",
+    "flavour-handoff-without-search",
+    "recipe-expands-without-navigation",
+    "recipe-collapse-and-reopen",
+    "mobile-no-overflow",
+    "desktop-within-app-shell",
+    "full-recipe-link-opens-detail",
+    "no-browser-exceptions"
+  ],
+  "errors": []
+}

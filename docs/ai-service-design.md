@@ -67,9 +67,11 @@ HTTP 常见结果：401 未登录、403 无权限、400 参数错误、413 过�
 | page | kind=classic/convenience/lab；recipeId、name、ingredients、note；严格校验 |
 | page.ingredients | 最多30项；name为1–100字符；amount可省略，提供时为正数且≤10000 |
 | history | 最多12条，每条role=user/assistant，content≤2000；取消前历史不再发送 |
-| pending | null或category澄清状态，保存待分类的材料；不代表长期库存 |
+| pending | null、category（类别选择）、substitution（缺料／可用材料追问）或troubleshoot（实际材料／操作追问）；保存当前任务事实，不代表长期库存 |
 
 服务端按真实目录重新解析配方背景；页面文本不能授权工具或写入。v2 一次意图识别，协议失败最多修复一次；明确取消和类别按钮回答可直接处理。明确酒单、搭配和库存列表有受控规则校正模型路由，仍使用同一业务目录。需要知识时最多一次 RAG 调用。
+
+2026-09-17：缺料先问缺什么、再问手边有什么；实际故障先问实际材料、再问操作。已知信息跳过追问，短回答延续 pending，模型识别的新任务放下旧 pending。只有 category 显示类别按钮。缺料信息齐全后先查站内酒库搭配参考，仍需替换依据时调用 `searchAndCollect`，先站内 RAG、证据不足再联网，返回来源链接。索引或网络故障保留为服务失败。
 
 返回 `status、message、clarification、recipes、actions、knowledge、pending、taskId、contextVersion、trace、model、requestId`；usage仅服务端日志使用。status为answered、needs_info、handoff、no_results、cancelled、out_of_scope、unavailable或timeout；客户端还需检查knowledge的证据状态。
 

@@ -73,6 +73,7 @@ ingest 会写索引并产生嵌入费用。先在测试环境校验知识 schema
 | npm test | 离线测试；包含历史 Agent 和当前制作助手 |
 | npm run test:agent / npm run test:rag | 单独离线套件 |
 | npm run typecheck / npm run build | 类型／生产构建；构建需要项目所需配置 |
+| node --import tsx scripts/check-agent-responses-browser.mjs | 本地服务默认3003、隔离 Chrome 调试端口9222；验证连续追问、来源和酒单展开；模型与账号 API 使用 fixtures，无外部写入 |
 | npm run test:rag:live / npm run eval:rag | 真实数据库和模型，有费用 |
 | npm run eval:agent | 悬浮助手 v2 的5条真实冒烟，有费用；报告文件包含时间戳 |
 | npm run eval:agent:preparation | 兼容 v1 制作助手真实评估，有费用；会覆盖旧同名报告 |

@@ -187,6 +187,10 @@ button:not(:disabled), summary { cursor: pointer; }
 .assistant-action,.assistant-recipe-card button { display:flex; align-items:center; justify-content:space-between; gap:8px; border:1px solid #d5d3cd; border-radius:12px; min-height:44px; padding:8px 12px; margin-top:10px; background:#f6f5f1; font-size:13px; width:100%; }
 .assistant-recipe-card { padding:12px; border:1px solid #dedcd5; border-radius:14px; margin-top:10px; }
 .assistant-recipe-card p { font-size:12px; color:#66645e; }
+.assistant-recipe-details { margin-top:12px; font-size:12px; line-height:1.7; }
+.assistant-recipe-details ul,.assistant-recipe-details ol { padding-left:20px; margin:6px 0 12px; }
+.assistant-recipe-details ul { list-style:disc; }
+.assistant-recipe-details ol { list-style:decimal; }
 .assistant-choices { display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
 .assistant-choices button { border:1px solid #c9c6bd; background:white; border-radius:12px; padding:8px 12px; min-height:44px; font-size:13px; }
 .assistant-sources { border-top:1px solid #e5e3dc; margin-top:12px; padding-top:8px; font-size:12px; color:#66645e; }

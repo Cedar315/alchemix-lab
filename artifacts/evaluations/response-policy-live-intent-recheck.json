@@ -1,0 +1,132 @@
+{
+  "at": "2026-09-17T08:13:23.988Z",
+  "note": "Recheck of the two failed live intent cases after clarification fixes. Knowledge is a fixture; no database writes.",
+  "rows": [
+    {
+      "name": "new-knowledge-during-stock",
+      "pass": true,
+      "decision": {
+        "intent": "knowledge",
+        "dialogueAct": "new_task",
+        "materials": [],
+        "recipeName": "",
+        "category": "any",
+        "capability": "none",
+        "question": "",
+        "knowledgeQuestion": "过滤在鸡尾酒制作中的作用是什么？",
+        "facts": {
+          "missingMaterial": "",
+          "availableMaterialsKnown": false,
+          "actualMaterials": "",
+          "actualSteps": ""
+        }
+      },
+      "result": {
+        "status": "answered",
+        "message": "",
+        "clarification": "",
+        "actions": [],
+        "recipes": [],
+        "knowledge": {
+          "status": "answered",
+          "claims": [
+            {
+              "text": "检索测试占位",
+              "evidenceIds": [
+                "test"
+              ]
+            }
+          ],
+          "citations": [
+            {
+              "id": "test",
+              "title": "测试",
+              "sources": [
+                {
+                  "title": "测试",
+                  "url": "https://example.com/evidence"
+                }
+              ]
+            }
+          ]
+        },
+        "pending": null,
+        "taskId": "fc6bd852-f349-476d-b8c2-8004efdf8867",
+        "contextVersion": 0,
+        "trace": [
+          {
+            "tool": "recognize_intent",
+            "status": "knowledge",
+            "elapsedMs": 0
+          },
+          {
+            "tool": "search_knowledge",
+            "status": "answered",
+            "elapsedMs": 0
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": {
+          "total_tokens": 1708,
+          "total_characters": 0,
+          "prompt_tokens": 1321,
+          "completion_tokens": 387,
+          "prompt_tokens_details": {
+            "cached_tokens": 443
+          }
+        }
+      }
+    },
+    {
+      "name": "actual-complete",
+      "pass": false,
+      "decision": {
+        "intent": "troubleshoot",
+        "dialogueAct": "new_task",
+        "materials": [
+          "金酒",
+          "养乐多"
+        ],
+        "recipeName": "",
+        "category": "any",
+        "capability": "none",
+        "question": "你用了多少金酒和养乐多？有没有加冰块？",
+        "knowledgeQuestion": "",
+        "facts": {
+          "missingMaterial": "",
+          "availableMaterialsKnown": false,
+          "actualMaterials": "金酒和养乐多",
+          "actualSteps": "一起倒进杯子，搅了几下"
+        }
+      },
+      "result": {
+        "status": "needs_info",
+        "message": "",
+        "clarification": "你用了多少金酒和养乐多？有没有加冰块？",
+        "actions": [],
+        "recipes": [],
+        "knowledge": null,
+        "pending": null,
+        "taskId": "006bbac3-f7f2-4b5d-b63a-ad6b3f3ba267",
+        "contextVersion": 0,
+        "trace": [
+          {
+            "tool": "recognize_intent",
+            "status": "troubleshoot",
+            "elapsedMs": 0
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": {
+          "total_tokens": 1736,
+          "total_characters": 0,
+          "prompt_tokens": 1309,
+          "completion_tokens": 427,
+          "prompt_tokens_details": {
+            "cached_tokens": 891
+          }
+        }
+      }
+    }
+  ]
+}

@@ -7,8 +7,8 @@
 - 经典详情、便利店详情和实验室显示圆形入口；首页、浏览列表不显示。首页原“问问助手”卡改为浏览酒单，保留工作流优先。
 - 手机底部抽屉默认约67%屏高，可展开／收起、拖动和键盘关闭；电脑预览也在手机页面容器内展开。首次进入只有当前背景与自由输入，不展示帮助分类菜单。
 - 同页操作滚动定位并突出显示原功能；跨页只接受注册目的地或真实配方 ID。用户点击前不执行。
-- 材料查酒复用首页目录与排序，最多三杯；两类都有候选且用户未表偏好时询问类别，支持按钮和文字回答。
-- 缺料保持当前酒；经典详情提供原有便利店改良入口，必要时同时检索依据。该入口不保证每个缺料项都有对应替代方案。
+- 材料查酒复用首页目录与排序，最多三杯；两类都有候选且用户未表偏好时询问类别，支持按钮和文字回答。卡片点击展开真实材料与已有步骤，并保留完整详情入口。
+- 缺料保持当前酒，依次确认缺料项和可用材料；实际故障依次确认实际材料和操作。结构化 pending 保存当前追问，已知事实不重复问；经典详情保留便利店改良入口。信息齐全后先查站内酒库与资料，不足再联网；酒库的其他搭配只能作为不同配方参考，不能证明等味等量替换。
 - 实验室收到材料后进入待确认区，不自动填用量或立即分析。用户通过原材料选择与用量操作加入实验；有已有编辑时必须选择保留或替换。
 - 仅在当前页面内存中保留本杯最多24条消息，向服务端发送取消之后的最近12条。收起保留，换杯、离页或刷新清空；跳转实验室后按实验室当前内容开启新对话。
 - 任务 ID 和背景版本共同校验迟到回复及旧动作。登录身份变化时清除旧会话；未登录可以保留当前输入，但服务端拒绝问答调用。
@@ -20,7 +20,7 @@
 | 首页选酒 | [explore-catalog.ts](../src/lib/data/explore-catalog.ts) 的 BEGINNER_CATALOG；[beginner.ts](../src/lib/recommendations/beginner.ts) 的 matchDrinks | 维持原筛选与排序，页面不再作为后端目录依赖 |
 | 经典酒详情 | 同一模块的 classicExploreCocktails、CLASSIC_DATABASE | `/inspiration/classic-remix?cocktail=…`，通过标准化 ID 匹配 |
 | 便利店详情 | convenienceExploreCocktails、getConvenienceRecipeGuide | `/inspiration/convenience-mix?cocktail=…` |
-| 助手材料匹配 | [workflow-catalog.ts](../src/lib/agent/workflow-catalog.ts) 调 matchDrinks 后校验必要材料 | 经典候选必须有显式配方；只返回必要材料齐全的候选 |
+| 助手材料匹配 | [workflow-catalog.ts](../src/lib/agent/workflow-catalog.ts) 调 matchDrinks 后校验必要材料 | 经典候选必须有显式配方；材料齐全的候选排前，至少匹配两种且只缺一种时可作为接近选择展示，并明确缺料 |
 | 经典改良／步骤定位 | 现有详情控件 | 固定 capability → DOM 目标映射，模型不生成选择器 |
 | 实验室交接 | LabScreen 原材料检索、用量选择与加入逻辑 | sessionStorage 临时交接，5分钟有效；空缺用量由用户确认 |
 | 制作知识 | 现有 RAG runtime | 保留来源、适用范围、无证据与技术失败的区别 |
@@ -74,3 +74,12 @@ v2 使用一次模型意图识别，非法协议最多修复一次；明确取�
 - [真实模型初测5/7](../artifacts/evaluations/companion-2026-09-16T02-56-03-868Z.json)发现材料查酒路由偏差和嗨棒同名重复；修正后[完整7/7复测通过](../artifacts/evaluations/companion-2026-09-16T03-04-49-022Z.json)。真实用例调用现有模型和RAG，没有调用尚未配置的联网搜索。
 - [知识审核数据库7项通过](../artifacts/evaluations/knowledge-store-2026-09-16T02-53-07-123Z.json)：真实写入去重、待审不入索引、真实向量服务发布、过期修订拒绝、撤回删除索引及审计。所有测试条目事务回滚，没有向用户发布测试内容。
 - 2026-09-16：默认搜索改为 MiniMax-M3，现有 Key 真实调用成功；类型检查与16项知识检索/审核测试通过。完整真实 RAG → 联网 → 待审入库端到端链路尚未重新验收。Tavily 保留为可选提供方。
+
+### 2026-09-17 回复流程修订与验证
+
+按确认后的 [PRD](prd.md) 更新回复流程。[consultation.ts](../src/lib/agent/consultation.ts) 保存缺料及故障追问的上下文；[AssistantRecipeCard](../src/components/assistant/AssistantRecipeCard.tsx) 复用酒库数据，点击展开，再由完整酒单入口打开详情。资料查询失败保留追问状态，重试短回答不会丢失缺料项。
+
+- 相关离线测试84项通过，覆盖 v1/v2 Agent、RAG和知识检索；`npm run check`（类型检查与生产构建）通过。
+- [浏览器12项检查](../artifacts/browser/agent-responses-checks.json)通过：连续追问、类别按钮隔离、查询失败重试、来源、快捷入口、卡片展开和手机／桌面布局。真实 UI 与 `runCompanion`，模型、检索及账号接口使用 fixtures；[手机截图](../artifacts/browser/agent-responses-mobile.png)。
+- [真实意图首轮5例](../artifacts/evaluations/response-policy-live-intent.json)有2例未通过；过滤问题在[复测](../artifacts/evaluations/response-policy-live-intent-recheck.json)通过，完整实际操作在[最终单例复测](../artifacts/evaluations/response-policy-live-trouble-final.json)通过。这些测试使用真实意图模型和模拟知识回答，不是完整账号端到端验收。
+- [真实站内检索](../artifacts/evaluations/response-policy-live-search.json)验证命中时不联网；发现替换回答把“不等价”写成绝对不能替代，已加强证据生成约束。[替换问题复测](../artifacts/evaluations/response-policy-live-search-recheck.json)按站内不足 → 联网执行，联网仍缺少适用依据，因此未输出确定建议。检索验证跳过待审收集，无数据库写入。

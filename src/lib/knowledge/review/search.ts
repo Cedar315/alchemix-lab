@@ -41,6 +41,11 @@ function evidenceHits(results:{title:string;url:string;raw_content?:string|null}
   return accepted.map(r=>({semanticScore:1,keywordScore:0,score:1,document:{id:'source-'+createHash('sha256').update(r.url).digest('hex').slice(0,16),title:r.title.slice(0,300),aliases:[],category:'联网资料',answer:r.raw_content!.slice(0,10000),scope:kind+' 联网来源尚未人工审核。仅回答正文明确支持的结论，保留差异、限制和不确定性。',checkedAt:new Date().toISOString().slice(0,10),reviewStatus:'source_checked_initial' as const,evidenceType:'direct' as const,sources:[{title:r.title.slice(0,300),url:r.url}]}}));
 }
 export type SearchDeps={rag:typeof ask;retrieve?:typeof retrieve;web:typeof webEvidence;generate:typeof generate;collect:typeof collect};
+export async function searchWebAnswer(question:string,context:string,signal:AbortSignal,deps:Pick<SearchDeps,'web'|'generate'>={web:webEvidence,generate}):Promise<KnowledgeAnswer> {
+  const query=redact(question);
+  const hits=await timed('web_search',()=>deps.web(query,signal));
+  return timed('web_answer',()=>answerFromHits(query,context,hits,(q,c,h)=>deps.generate(q,c,h,signal)));
+}
 export async function searchAndCollect(question:string,context:string,signal:AbortSignal,deps:SearchDeps={rag:ask,retrieve,web:webEvidence,generate,collect}):Promise<KnowledgeAnswer> {
   // Infrastructure failures are not knowledge gaps: let the caller expose a retry.
   diagnostic('knowledge_input', { question: diagnosticText(question) });

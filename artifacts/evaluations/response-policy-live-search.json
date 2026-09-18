@@ -1,0 +1,82 @@
+{
+  "at": "2026-09-17T08:14:03.099Z",
+  "note": "Real local retrieval and web fallback; collection disabled, no database writes. No HTTP auth/budget timing.",
+  "rows": [
+    {
+      "question": "可乐能摇吗",
+      "local": 1,
+      "web": 0,
+      "elapsedMs": 9029,
+      "answer": {
+        "status": "answered",
+        "claims": [
+          {
+            "text": "可乐不宜放进摇酒壶摇，因为可乐属于气泡饮料（碳酸饮料），不应放入密闭摇酒壶中摇制。应按配方先处理非气泡部分，倒入杯中后再加入可乐。",
+            "evidenceIds": [
+              "carbonated-shaking"
+            ]
+          }
+        ],
+        "citations": [
+          {
+            "id": "carbonated-shaking",
+            "title": "气泡饮料能放进摇酒壶摇吗？",
+            "sources": [
+              {
+                "title": "Cocktail preparation instructions, City of York licensing attachment",
+                "url": "https://democracy.york.gov.uk/documents/s11684/Annex%203.pdf"
+              },
+              {
+                "title": "Difford’s Guide — Fizz recipe",
+                "url": "https://www.diffordsguide.com/cocktails/recipe/754/fizz-generic-name"
+              }
+            ]
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": {
+          "total_tokens": 620,
+          "total_characters": 0,
+          "prompt_tokens": 327,
+          "completion_tokens": 293
+        }
+      }
+    },
+    {
+      "question": "玛格丽特缺少君度，手边只有橙汁。能用橙汁替代吗，有什么风味差异？",
+      "local": 1,
+      "web": 0,
+      "elapsedMs": 6330,
+      "answer": {
+        "status": "answered",
+        "claims": [
+          {
+            "text": "不能用橙汁替代君度。君度是橙味利口酒，橙汁不是同一种材料，不能仅凭都有橙味就视为等价。",
+            "evidenceIds": [
+              "orange-liqueur"
+            ]
+          }
+        ],
+        "citations": [
+          {
+            "id": "orange-liqueur",
+            "title": "君度、Triple Sec 和橙味利口酒是什么关系？",
+            "sources": [
+              {
+                "title": "Cointreau — What is Cointreau?",
+                "url": "https://www.cointreau.com/us/en/what-cointreau"
+              }
+            ]
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": {
+          "total_tokens": 812,
+          "total_characters": 0,
+          "prompt_tokens": 527,
+          "completion_tokens": 285
+        }
+      }
+    }
+  ]
+}

@@ -514,7 +514,7 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
           const term = normalize(alias);
           return term.length > 0 && (normalize(name) === term || normalize(name).includes(term) || term.includes(normalize(name)));
         })));
-    }).slice(0, 3);
+    });
     return { canMake };
   }, [hasRecommended, materials]);
 
@@ -699,7 +699,7 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
           <section className="space-y-3">
             <div>
               <h3 className="text-lg font-medium text-neutral-950">可以直接做</h3>
-              <p className="text-xs text-neutral-400">按现有材料推荐，冰块请另备；不足三杯时只展示匹配的酒。</p>
+              <p className="text-xs text-neutral-400">展示所有能用已选材料完成的配方，冰块请另备。</p>
             </div>
             {recommendations.canMake.map((drink) => (
               <article key={drink.id} className="rounded-2xl border border-[#E1E1DE] bg-white p-4">

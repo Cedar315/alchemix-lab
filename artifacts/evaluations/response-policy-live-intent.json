@@ -1,0 +1,272 @@
+{
+  "at": "2026-09-17T08:11:19.247Z",
+  "note": "Real intent model with fixture knowledge responses; no database writes or real knowledge-answer validation.",
+  "rows": [
+    {
+      "name": "natural-trouble",
+      "pass": true,
+      "intent": "troubleshoot",
+      "elapsedMs": 9732,
+      "query": "",
+      "result": {
+        "status": "needs_info",
+        "message": "",
+        "clarification": "这杯实际用了哪些材料？",
+        "actions": [],
+        "recipes": [],
+        "knowledge": null,
+        "pending": {
+          "kind": "troubleshoot",
+          "stage": "materials",
+          "question": "刚做的这杯甜得发腻，救一下",
+          "actualMaterials": "",
+          "actualSteps": ""
+        },
+        "taskId": "8de1a3b7-4ee5-4a6a-b608-81dc270409ce",
+        "contextVersion": 0,
+        "trace": [
+          {
+            "tool": "recognize_intent",
+            "status": "troubleshoot",
+            "elapsedMs": 0
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": {
+          "total_tokens": 1744,
+          "total_characters": 0,
+          "prompt_tokens": 1236,
+          "completion_tokens": 508
+        }
+      }
+    },
+    {
+      "name": "stock-correction",
+      "pass": true,
+      "intent": "change",
+      "elapsedMs": 7232,
+      "query": "玛格丽特缺少的是君度；用户手边有橙汁。没有青柠怎么办？ 请说明适用替代选项、风味差异和限制；没有合适选项时直接说明。",
+      "result": {
+        "status": "answered",
+        "message": "",
+        "clarification": "",
+        "actions": [
+          {
+            "label": "查看便利店改良选项",
+            "action": {
+              "kind": "locate",
+              "target": "substitute"
+            }
+          }
+        ],
+        "recipes": [],
+        "knowledge": {
+          "status": "answered",
+          "claims": [
+            {
+              "text": "检索测试占位，仅用于验证对话路由。",
+              "evidenceIds": [
+                "test"
+              ]
+            }
+          ],
+          "citations": [
+            {
+              "id": "test",
+              "title": "测试",
+              "sources": [
+                {
+                  "title": "测试",
+                  "url": "https://example.com/evidence"
+                }
+              ]
+            }
+          ]
+        },
+        "pending": null,
+        "taskId": "c75d22fd-2553-4ca0-86b3-3fbbb4ffbc8a",
+        "contextVersion": 0,
+        "trace": [
+          {
+            "tool": "search_recipe_catalog",
+            "status": "0",
+            "elapsedMs": 0
+          },
+          {
+            "tool": "recognize_intent",
+            "status": "change",
+            "elapsedMs": 0
+          },
+          {
+            "tool": "search_knowledge",
+            "status": "answered",
+            "elapsedMs": 0
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": {
+          "total_tokens": 1687,
+          "total_characters": 0,
+          "prompt_tokens": 1270,
+          "completion_tokens": 417,
+          "prompt_tokens_details": {
+            "cached_tokens": 891
+          }
+        }
+      }
+    },
+    {
+      "name": "new-knowledge-during-stock",
+      "pass": false,
+      "intent": "knowledge",
+      "elapsedMs": 7348,
+      "query": "",
+      "result": {
+        "status": "needs_info",
+        "message": "",
+        "clarification": "你是指鸡尾酒制作中的过滤，还是其他方面的过滤？",
+        "actions": [],
+        "recipes": [],
+        "knowledge": null,
+        "pending": null,
+        "taskId": "10b731ae-106f-4b9a-abf9-f16fab15d63d",
+        "contextVersion": 0,
+        "trace": [
+          {
+            "tool": "recognize_intent",
+            "status": "knowledge",
+            "elapsedMs": 0
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": {
+          "total_tokens": 1665,
+          "total_characters": 0,
+          "prompt_tokens": 1258,
+          "completion_tokens": 407,
+          "prompt_tokens_details": {
+            "cached_tokens": 891
+          }
+        }
+      }
+    },
+    {
+      "name": "flavour-handoff",
+      "pass": true,
+      "intent": "explore",
+      "elapsedMs": 5076,
+      "query": "橙汁加伏特加的口感怎么样",
+      "result": {
+        "status": "answered",
+        "message": "把橙汁和伏特加带到实验室查看搭配，用量由你确认。",
+        "clarification": "",
+        "actions": [
+          {
+            "label": "到实验室查看搭配",
+            "action": {
+              "kind": "prefill",
+              "materials": [
+                {
+                  "name": "橙汁"
+                },
+                {
+                  "name": "伏特加"
+                }
+              ]
+            }
+          }
+        ],
+        "recipes": [],
+        "knowledge": {
+          "status": "answered",
+          "claims": [
+            {
+              "text": "检索测试占位，仅用于验证对话路由。",
+              "evidenceIds": [
+                "test"
+              ]
+            }
+          ],
+          "citations": [
+            {
+              "id": "test",
+              "title": "测试",
+              "sources": [
+                {
+                  "title": "测试",
+                  "url": "https://example.com/evidence"
+                }
+              ]
+            }
+          ]
+        },
+        "pending": null,
+        "taskId": "b3b6331f-20d7-401e-8bd2-d3cab5bb90de",
+        "contextVersion": 0,
+        "trace": [
+          {
+            "tool": "recognize_intent",
+            "status": "explore",
+            "elapsedMs": 0
+          },
+          {
+            "tool": "search_knowledge",
+            "status": "answered",
+            "elapsedMs": 0
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": {
+          "total_tokens": 1577,
+          "total_characters": 0,
+          "prompt_tokens": 1233,
+          "completion_tokens": 344,
+          "prompt_tokens_details": {
+            "cached_tokens": 891
+          }
+        }
+      }
+    },
+    {
+      "name": "actual-complete",
+      "pass": false,
+      "intent": "troubleshoot",
+      "elapsedMs": 6243,
+      "query": "",
+      "result": {
+        "status": "needs_info",
+        "message": "",
+        "clarification": "这杯实际用了哪些材料？",
+        "actions": [],
+        "recipes": [],
+        "knowledge": null,
+        "pending": {
+          "kind": "troubleshoot",
+          "stage": "materials",
+          "question": "这杯分层了。我把金酒和养乐多一起倒进杯子，搅了几下",
+          "actualMaterials": "",
+          "actualSteps": "搅了几下"
+        },
+        "taskId": "defbf02e-7708-407e-b655-1d68f8103937",
+        "contextVersion": 0,
+        "trace": [
+          {
+            "tool": "recognize_intent",
+            "status": "troubleshoot",
+            "elapsedMs": 0
+          }
+        ],
+        "model": "MiniMax-M2.5",
+        "usage": {
+          "total_tokens": 1637,
+          "total_characters": 0,
+          "prompt_tokens": 1240,
+          "completion_tokens": 397,
+          "prompt_tokens_details": {
+            "cached_tokens": 891
+          }
+        }
+      }
+    }
+  ]
+}

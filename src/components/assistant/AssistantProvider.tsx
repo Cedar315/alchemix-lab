@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { MessageCircle, X, Send, ChevronUp, ChevronDown, ArrowRight } from 'lucide-react';
 import { companionOutput, type PageContext, type PageAction, type CompanionResult, capabilityTargets, navigationTargets } from '@/lib/agent/companion-contract';
 import { actionHref } from '@/lib/agent/workflow-catalog';
+import AssistantRecipeCard from './AssistantRecipeCard';
 import { type Session, SESSION_KEY, createTask, taskKey, acceptsResult, labHasDraft, LAB_TRANSFER_KEY } from '@/lib/agent/companion-session';
 const Context = createContext<{
     setSurface: (owner: string, page: PageContext | null) => void;
@@ -208,10 +209,10 @@ export default function AssistantProvider({ children }: {
  <div className="assistant-messages" role="log" aria-label="与调酒助手的对话" aria-live="polite">
  {task.messages.map((m, i) => <div key={i} className={`assistant-message ${m.role}`}>
  {!m.result ? <p>{m.content}</p> : <><p>{m.result.message}</p>{m.result.knowledge?.claims.map((c, j) => <p key={j}>{c.text}</p>)}{m.result.clarification && <p>{m.result.clarification}</p>}
- {m.result.recipes.map(r => <article className="assistant-recipe-card" key={r.id}><strong>{r.name}</strong><p>{r.reason}</p>{r.missing.length > 0 && <p>还缺：{r.missing.join('、')}</p>}<button disabled={!validAction(m.result!)} onClick={() => execute(r.action, m.result!)}>查看酒单 <ArrowRight size={15}/></button></article>)}
+ {m.result.recipes.map(r => <AssistantRecipeCard key={`${r.category}:${r.id}`} recipe={r} disabled={!validAction(m.result!)} onOpen={() => execute(r.action, m.result!)} />)}
  {m.result.actions.map((a, j) => <button key={j} className="assistant-action" disabled={!validAction(m.result!)} onClick={() => execute(a.action, m.result!)}>{a.label}<ArrowRight size={15}/></button>)}
- {m.result.pending && i === task.messages.length - 1 && <div className="assistant-choices"><button disabled={busy} onClick={() => void send('经典酒')}>经典酒</button><button disabled={busy} onClick={() => void send('便利店调酒')}>便利店调酒</button></div>}
- {!!m.result.knowledge?.citations.length && <details className="assistant-sources"><summary>资料依据</summary>{m.result.knowledge.citations.map(c => <div key={c.id}><p>{c.title}</p>{c.sources.map(s => <a key={s.url} href={s.url} target="_blank" rel="noreferrer">{s.title}</a>)}</div>)}</details>}
+ {m.result.pending?.kind === 'category' && i === task.messages.length - 1 && <div className="assistant-choices"><button disabled={busy} onClick={() => void send('经典酒')}>经典酒</button><button disabled={busy} onClick={() => void send('便利店调酒')}>便利店调酒</button></div>}
+ {!!m.result.knowledge?.citations.length && <div className="assistant-sources"><strong>资料链接</strong>{m.result.knowledge.citations.map(c => <div key={c.id}>{c.sources.map(s => <a key={s.url} href={s.url} target="_blank" rel="noreferrer">{s.title}</a>)}</div>)}</div>}
  </>}
  </div>)}
  {busy && <div role="status" className="assistant-message assistant"><p>正在输入…</p><button onClick={stop}>停止</button></div>}

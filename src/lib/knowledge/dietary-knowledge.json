@@ -1,0 +1,48 @@
+{
+  "entries": [
+    {
+      "id": "lactose-intolerance-cocktail",
+      "title": "乳糖不耐受可以喝这杯鸡尾酒吗？",
+      "aliases": ["乳糖不耐受", "不能喝乳糖", "椰奶饮料有乳糖吗", "椰香朗姆乳糖"],
+      "category": "饮食限制",
+      "answer": "乳糖不耐受需要关注实际使用的材料是否含乳糖。植物饮料可以作为乳制品替代品，但不能仅凭‘椰奶饮料’等商品名称判断具体产品是否适合；查看包装配料，留意牛奶、乳糖、乳清和奶粉等成分。没有具体产品配料时，不能保证这杯一定适合饮用。",
+      "scope": "适用于乳糖不耐受的饮食信息，不等同于牛奶蛋白过敏；具体饮料以实际包装配料和个人耐受情况为准。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-17",
+      "sources": [
+        { "title": "NIDDK — Eating, Diet, & Nutrition for Lactose Intolerance", "url": "https://www.niddk.nih.gov/health-information/digestive-diseases/lactose-intolerance/eating-diet-nutrition" },
+        { "title": "NHS — Dairy and alternatives in your diet", "url": "https://www.nhs.uk/live-well/eat-well/food-types/milk-and-dairy-nutrition/" }
+      ]
+    },
+    {
+      "id": "milk-allergy-cocktail",
+      "title": "牛奶过敏可以喝这杯鸡尾酒吗？",
+      "aliases": ["牛奶过敏", "奶类过敏", "乳制品过敏", "奶蛋白过敏"],
+      "category": "过敏原",
+      "answer": "牛奶过敏针对牛奶蛋白，与乳糖不耐受不同；标注‘无乳糖’不能证明没有牛奶蛋白。使用包装饮料调酒时，应核对配料和过敏原声明；未确认具体产品前，不应断言这杯对牛奶过敏者安全。",
+      "scope": "适用于牛奶蛋白过敏的配料判断；不根据酒款名称或‘椰奶’字样推断成品无奶，也不替代个人过敏管理建议。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-17",
+      "sources": [
+        { "title": "Cambridge University Hospitals — Milk allergy", "url": "https://www.cuh.nhs.uk/patient-information/milk-allergy/" },
+        { "title": "Food Standards Australia New Zealand — Allergen labelling for consumers", "url": "https://www.foodstandards.gov.au/consumer/labelling/allergen-labelling" }
+      ]
+    },
+    {
+      "id": "pregnancy-alcohol-cocktail",
+      "title": "怀孕期间可以喝鸡尾酒吗？",
+      "aliases": ["怀孕能喝酒吗", "孕妇能喝吗", "孕期饮酒", "备孕喝酒"],
+      "category": "饮酒限制",
+      "answer": "怀孕期间没有已知安全的饮酒量，也没有已知安全的饮酒时段；酒、啤酒和烈酒都包括在内。含酒精的鸡尾酒不应作为孕期可安全饮用的选择。",
+      "scope": "适用于怀孕或可能怀孕时的饮酒问题；若已饮酒且担忧个人情况，应向医疗专业人员咨询。",
+      "evidenceType": "direct",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-17",
+      "sources": [
+        { "title": "CDC — About Alcohol Use During Pregnancy", "url": "https://www.cdc.gov/alcohol-pregnancy/about/index.html" }
+      ]
+    }
+  ]
+}
