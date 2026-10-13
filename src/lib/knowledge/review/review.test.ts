@@ -2,21 +2,21 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { searchAndCollect,searchWebAnswer,trustedSource,type SearchDeps } from './search';
 import { draftSchema,reviewInput,normalizedQuestion,redact } from './contract';
-import { minimaxResults } from './minimax-search';
+import { deepseekResults } from './deepseek-search';
 
-test('MiniMax generated URLs and client tool requests are not search evidence',()=>{
+test('DeepSeek generated URLs and client tool requests are not search evidence',()=>{
   for(const content of [[{type:'text',text:'https://iba-world.com/'}],[{type:'tool_use',name:'web_search',id:'a'}]]) {
-    assert.throws(()=>minimaxResults({content}),/SEARCH_NOT_EXECUTED/);
+    assert.throws(()=>deepseekResults({content}),/SEARCH_NOT_EXECUTED/);
   }
 });
-test('MiniMax accepts only results linked to a real server search call',()=>{
+test('DeepSeek accepts only results linked to a real server search call',()=>{
   const result={type:'web_search_result',title:'IBA',url:'https://iba-world.com/',content:'Source excerpt'};
-  assert.deepEqual(minimaxResults({content:[
+  assert.deepEqual(deepseekResults({content:[
     {type:'server_tool_use',name:'web_search',id:'a'},
     {type:'web_search_tool_result',tool_use_id:'unrelated',content:[result]},
     {type:'web_search_tool_result',tool_use_id:'a',content:[result,{type:'text',text:'unsupported'}]},
   ]}),[result]);
-  assert.throws(()=>minimaxResults({base_resp:{status_code:1004},content:[]}),/SEARCH_UNAVAILABLE/);
+  assert.throws(()=>deepseekResults({base_resp:{status_code:1004},content:[]}),/SEARCH_UNAVAILABLE/);
 });
 const hit={semanticScore:1,keywordScore:0,score:1,document:{id:'web-test',title:'test',aliases:[],category:'调酒',answer:'原文证据',scope:'适用限制',checkedAt:'2026-09-15',reviewStatus:'source_checked_initial' as const,evidenceType:'direct' as const,sources:[{title:'IBA',url:'https://iba-world.com/iba-cocktail/paloma/'}]}};
 function fixture(status='no_evidence') {
@@ -96,4 +96,9 @@ test("empty web evidence reports web no_evidence instead of stale local insuffic
  const f=fixture("insufficient_evidence"); f.deps.web=async()=>[];
  const answer=await searchAndCollect("问题","",AbortSignal.timeout(5000),f.deps);
  assert.equal(answer.status,"no_evidence"); assert.equal(f.state().collections.length,1);
+});
+
+test('DeepSeek encrypted search results preserve source identity without inventing plaintext',()=>{
+ const rows=deepseekResults({content:[{type:'server_tool_use',name:'web_search',id:'s'}, {type:'web_search_tool_result',tool_use_id:'s',content:[{type:'web_search_result',title:'Source',url:'https://www.diffordsguide.com/example',encrypted_content:'opaque'}]}]});
+ assert.equal(rows.length,1);assert.equal(rows[0].content,'');assert.equal(rows[0].url,'https://www.diffordsguide.com/example');
 });

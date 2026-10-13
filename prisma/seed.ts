@@ -1,3 +1,4 @@
+import { dedupeRecipes, databaseRecipeKey } from '../src/lib/recipes/identity';
 import { PrismaClient } from '@prisma/client';
 import { CONVENIENCE_DRINK_INGREDIENTS } from '../src/lib/data/convenience-drink-ingredients';
 import { CLASSIC_RECIPE_SEEDS, INSPIRATION_RECIPES, REMIX_TAGS, RecipeSeed } from '../src/lib/data/inspiration-catalog';
@@ -715,10 +716,13 @@ async function seedInspirationCatalog() {
     tagMap[remixTag.nameCn] = created.id;
   }
 
-  for (const recipe of INSPIRATION_RECIPES) {
+  for (const recipe of dedupeRecipes(INSPIRATION_RECIPES)) {
+    const canonicalKey = databaseRecipeKey(recipe);
+    const canonical = canonicalKey ? await prisma.recipe.findUnique({where:{canonicalKey}}) : null;
     const createdRecipe = await prisma.recipe.upsert({
-      where: { slug: recipe.slug },
+      where: { slug: canonical?.slug ?? recipe.slug },
       update: {
+        canonicalKey,
         nameCn: recipe.nameCn,
         nameEn: recipe.nameEn,
         type: recipe.type,
@@ -744,6 +748,7 @@ async function seedInspirationCatalog() {
         aiGenerated: false,
       },
       create: {
+        canonicalKey: databaseRecipeKey(recipe),
         slug: recipe.slug,
         nameCn: recipe.nameCn,
         nameEn: recipe.nameEn,

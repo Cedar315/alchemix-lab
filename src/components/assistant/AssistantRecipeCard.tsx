@@ -6,10 +6,11 @@ import type { CompanionResult } from '@/lib/agent/companion-contract';
 import { findRecipe } from '@/lib/agent/workflow-catalog';
 import { CLASSIC_DATABASE, getConvenienceRecipeGuide, normalizeClassicCocktailId } from '@/lib/data/explore-catalog';
 
-export default function AssistantRecipeCard({ recipe, disabled, onOpen }: {
+export default function AssistantRecipeCard({ recipe, disabled, onOpen, missingLabel = '缺少材料' }: {
     recipe: CompanionResult['recipes'][number];
     disabled: boolean;
     onOpen: () => void;
+    missingLabel?: string;
 }) {
     const [expanded, setExpanded] = useState(false);
     const detailsId = useId();
@@ -23,7 +24,7 @@ export default function AssistantRecipeCard({ recipe, disabled, onOpen }: {
         <strong>{recipe.name}</strong>
         {entry && <p>{entry.nameEn}</p>}
         <p>{recipe.reason}</p>
-        {recipe.missing.length > 0 && <p>缺少材料：{recipe.missing.join('、')}</p>}
+        {recipe.missing.length > 0 && <p>{missingLabel}：{recipe.missing.join('、')}</p>}
         <button type="button" aria-expanded={expanded} aria-controls={detailsId} disabled={disabled || !entry} onClick={() => setExpanded(v => !v)}>
             {expanded ? '收起酒单' : '展开酒单'}{expanded ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
         </button>

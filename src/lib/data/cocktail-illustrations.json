@@ -1,0 +1,2506 @@
+{
+  "margarita": {
+    "asset": "margarita",
+    "mode": "dedicated"
+  },
+  "singapore-sling": {
+    "asset": "singapore-sling",
+    "mode": "dedicated"
+  },
+  "strawberry-daiquiri": {
+    "asset": "strawberry-daiquiri",
+    "mode": "dedicated"
+  },
+  "mojito": {
+    "asset": "mojito",
+    "mode": "dedicated"
+  },
+  "gin-tonic": {
+    "asset": "gin-tonic",
+    "mode": "dedicated"
+  },
+  "negroni": {
+    "asset": "negroni",
+    "mode": "dedicated"
+  },
+  "old-fashioned": {
+    "asset": "old-fashioned",
+    "mode": "dedicated"
+  },
+  "martini": {
+    "asset": "martini",
+    "mode": "dedicated"
+  },
+  "whisky-highball": {
+    "asset": "whisky-highball",
+    "mode": "dedicated"
+  },
+  "whiskey-sour": {
+    "asset": "whiskey-sour",
+    "mode": "dedicated"
+  },
+  "cosmopolitan": {
+    "asset": "cosmopolitan",
+    "mode": "dedicated"
+  },
+  "moscow-mule": {
+    "asset": "moscow-mule",
+    "mode": "dedicated"
+  },
+  "aperol-spritz": {
+    "asset": "aperol-spritz",
+    "mode": "dedicated"
+  },
+  "pina-colada": {
+    "asset": "pina-colada",
+    "mode": "dedicated"
+  },
+  "tom-collins": {
+    "asset": "tom-collins",
+    "mode": "dedicated"
+  },
+  "paloma": {
+    "asset": "paloma",
+    "mode": "dedicated"
+  },
+  "mai-tai": {
+    "asset": "mai-tai",
+    "mode": "dedicated"
+  },
+  "alexander": {
+    "asset": "alexander",
+    "mode": "dedicated"
+  },
+  "americano": {
+    "asset": "americano",
+    "mode": "dedicated"
+  },
+  "aviation": {
+    "asset": "aviation",
+    "mode": "dedicated"
+  },
+  "boulevardier": {
+    "asset": "boulevardier",
+    "mode": "dedicated"
+  },
+  "brandy-crusta": {
+    "asset": "brandy-crusta",
+    "mode": "dedicated"
+  },
+  "casino": {
+    "asset": "casino",
+    "mode": "dedicated"
+  },
+  "clover-club": {
+    "asset": "clover-club",
+    "mode": "dedicated"
+  },
+  "dry-martini": {
+    "asset": "dry-martini",
+    "mode": "dedicated"
+  },
+  "gin-fizz": {
+    "asset": "gin-fizz",
+    "mode": "dedicated"
+  },
+  "hanky-panky": {
+    "asset": "hanky-panky",
+    "mode": "dedicated"
+  },
+  "last-word": {
+    "asset": "last-word",
+    "mode": "dedicated"
+  },
+  "manhattan": {
+    "asset": "manhattan",
+    "mode": "dedicated"
+  },
+  "martinez": {
+    "asset": "martinez",
+    "mode": "dedicated"
+  },
+  "mary-pickford": {
+    "asset": "mary-pickford",
+    "mode": "dedicated"
+  },
+  "monkey-gland": {
+    "asset": "monkey-gland",
+    "mode": "dedicated"
+  },
+  "ramos-gin-fizz": {
+    "asset": "ramos-gin-fizz",
+    "mode": "dedicated"
+  },
+  "rusty-nail": {
+    "asset": "rusty-nail",
+    "mode": "dedicated"
+  },
+  "sazerac": {
+    "asset": "sazerac",
+    "mode": "dedicated"
+  },
+  "sidecar": {
+    "asset": "sidecar",
+    "mode": "dedicated"
+  },
+  "vieux-carre": {
+    "asset": "vieux-carre",
+    "mode": "dedicated"
+  },
+  "white-lady": {
+    "asset": "white-lady",
+    "mode": "dedicated"
+  },
+  "black-russian": {
+    "asset": "black-russian",
+    "mode": "dedicated"
+  },
+  "bloody-mary": {
+    "asset": "bloody-mary",
+    "mode": "dedicated"
+  },
+  "caipirinha": {
+    "asset": "caipirinha",
+    "mode": "dedicated"
+  },
+  "champagne-cocktail": {
+    "asset": "champagne-cocktail",
+    "mode": "dedicated"
+  },
+  "corpse-reviver-2": {
+    "asset": "corpse-reviver-2",
+    "mode": "dedicated"
+  },
+  "cuba-libre": {
+    "asset": "cuba-libre",
+    "mode": "dedicated"
+  },
+  "french-75": {
+    "asset": "french-75",
+    "mode": "dedicated"
+  },
+  "grasshopper": {
+    "asset": "grasshopper",
+    "mode": "dedicated"
+  },
+  "hemingway-special": {
+    "asset": "hemingway-special",
+    "mode": "dedicated"
+  },
+  "irish-coffee": {
+    "asset": "irish-coffee",
+    "mode": "dedicated"
+  },
+  "lemon-drop": {
+    "asset": "lemon-drop",
+    "mode": "dedicated"
+  },
+  "long-island-iced-tea": {
+    "asset": "long-island-iced-tea",
+    "mode": "dedicated"
+  },
+  "mimosa": {
+    "asset": "mimosa",
+    "mode": "dedicated"
+  },
+  "mint-julep": {
+    "asset": "mint-julep",
+    "mode": "dedicated"
+  },
+  "pisco-sour": {
+    "asset": "pisco-sour",
+    "mode": "dedicated"
+  },
+  "sea-breeze": {
+    "asset": "sea-breeze",
+    "mode": "dedicated"
+  },
+  "sex-on-the-beach": {
+    "asset": "sex-on-the-beach",
+    "mode": "dedicated"
+  },
+  "tequila-sunrise": {
+    "asset": "tequila-sunrise",
+    "mode": "dedicated"
+  },
+  "vesper": {
+    "asset": "vesper",
+    "mode": "dedicated"
+  },
+  "zombie": {
+    "asset": "zombie",
+    "mode": "dedicated"
+  },
+  "bees-knees": {
+    "asset": "bees-knees",
+    "mode": "dedicated"
+  },
+  "bramble": {
+    "asset": "bramble",
+    "mode": "dedicated"
+  },
+  "dark-and-stormy": {
+    "asset": "dark-and-stormy",
+    "mode": "dedicated"
+  },
+  "espresso-martini-classic": {
+    "asset": "espresso-martini-classic",
+    "mode": "dedicated"
+  },
+  "french-martini": {
+    "asset": "french-martini",
+    "mode": "dedicated"
+  },
+  "jungle-bird": {
+    "asset": "jungle-bird",
+    "mode": "dedicated"
+  },
+  "naked-and-famous": {
+    "asset": "naked-and-famous",
+    "mode": "dedicated"
+  },
+  "new-york-sour": {
+    "asset": "new-york-sour",
+    "mode": "dedicated"
+  },
+  "paper-plane": {
+    "asset": "paper-plane",
+    "mode": "dedicated"
+  },
+  "penicillin": {
+    "asset": "penicillin",
+    "mode": "dedicated"
+  },
+  "porn-star-martini": {
+    "asset": "porn-star-martini",
+    "mode": "dedicated"
+  },
+  "tommy-margarita": {
+    "asset": "tommy-margarita",
+    "mode": "dedicated"
+  },
+  "classic-gin-sour": {
+    "asset": "template-sour",
+    "mode": "shared"
+  },
+  "classic-gin-fizz": {
+    "asset": "template-fizz",
+    "mode": "shared"
+  },
+  "classic-gin-collins": {
+    "asset": "template-collins",
+    "mode": "shared"
+  },
+  "classic-gin-daisy": {
+    "asset": "template-daisy",
+    "mode": "shared"
+  },
+  "classic-gin-smash": {
+    "asset": "template-smash",
+    "mode": "shared"
+  },
+  "classic-gin-rickey": {
+    "asset": "template-rickey",
+    "mode": "shared"
+  },
+  "classic-gin-buck": {
+    "asset": "template-buck",
+    "mode": "shared"
+  },
+  "classic-gin-mule": {
+    "asset": "template-mule",
+    "mode": "shared"
+  },
+  "classic-gin-highball": {
+    "asset": "template-highball",
+    "mode": "shared"
+  },
+  "classic-gin-cooler": {
+    "asset": "template-cooler",
+    "mode": "shared"
+  },
+  "classic-gin-cobbler": {
+    "asset": "template-cobbler",
+    "mode": "shared"
+  },
+  "classic-gin-fix": {
+    "asset": "template-fix",
+    "mode": "shared"
+  },
+  "classic-gin-crusta": {
+    "asset": "template-crusta",
+    "mode": "shared"
+  },
+  "classic-gin-sling": {
+    "asset": "template-sling",
+    "mode": "shared"
+  },
+  "classic-gin-punch": {
+    "asset": "template-punch",
+    "mode": "shared"
+  },
+  "classic-gin-julep": {
+    "asset": "template-julep",
+    "mode": "shared"
+  },
+  "classic-gin-flip": {
+    "asset": "template-flip",
+    "mode": "shared"
+  },
+  "classic-gin-toddy": {
+    "asset": "template-toddy",
+    "mode": "shared"
+  },
+  "classic-gin-milk-punch": {
+    "asset": "template-milk-punch",
+    "mode": "shared"
+  },
+  "classic-gin-old-fashioned": {
+    "asset": "template-old-fashioned",
+    "mode": "shared"
+  },
+  "classic-gin-martini-style": {
+    "asset": "template-martini-style",
+    "mode": "shared"
+  },
+  "classic-gin-negroni-style": {
+    "asset": "template-negroni-style",
+    "mode": "shared"
+  },
+  "classic-gin-spritz": {
+    "asset": "template-spritz",
+    "mode": "shared"
+  },
+  "classic-gin-royale": {
+    "asset": "template-royale",
+    "mode": "shared"
+  },
+  "classic-vodka-sour": {
+    "asset": "template-sour",
+    "mode": "shared"
+  },
+  "classic-vodka-fizz": {
+    "asset": "template-fizz",
+    "mode": "shared"
+  },
+  "classic-vodka-collins": {
+    "asset": "template-collins",
+    "mode": "shared"
+  },
+  "classic-vodka-daisy": {
+    "asset": "template-daisy",
+    "mode": "shared"
+  },
+  "classic-vodka-smash": {
+    "asset": "template-smash",
+    "mode": "shared"
+  },
+  "classic-vodka-rickey": {
+    "asset": "template-rickey",
+    "mode": "shared"
+  },
+  "classic-vodka-buck": {
+    "asset": "template-buck",
+    "mode": "shared"
+  },
+  "classic-vodka-mule": {
+    "asset": "template-mule",
+    "mode": "shared"
+  },
+  "classic-vodka-highball": {
+    "asset": "template-highball",
+    "mode": "shared"
+  },
+  "classic-vodka-cooler": {
+    "asset": "template-cooler",
+    "mode": "shared"
+  },
+  "classic-vodka-cobbler": {
+    "asset": "template-cobbler",
+    "mode": "shared"
+  },
+  "classic-vodka-fix": {
+    "asset": "template-fix",
+    "mode": "shared"
+  },
+  "classic-vodka-crusta": {
+    "asset": "template-crusta",
+    "mode": "shared"
+  },
+  "classic-vodka-sling": {
+    "asset": "template-sling",
+    "mode": "shared"
+  },
+  "classic-vodka-punch": {
+    "asset": "template-punch",
+    "mode": "shared"
+  },
+  "classic-vodka-julep": {
+    "asset": "template-julep",
+    "mode": "shared"
+  },
+  "classic-vodka-flip": {
+    "asset": "template-flip",
+    "mode": "shared"
+  },
+  "classic-vodka-toddy": {
+    "asset": "template-toddy",
+    "mode": "shared"
+  },
+  "classic-vodka-milk-punch": {
+    "asset": "template-milk-punch",
+    "mode": "shared"
+  },
+  "classic-vodka-old-fashioned": {
+    "asset": "template-old-fashioned",
+    "mode": "shared"
+  },
+  "classic-vodka-martini-style": {
+    "asset": "template-martini-style",
+    "mode": "shared"
+  },
+  "classic-vodka-negroni-style": {
+    "asset": "template-negroni-style",
+    "mode": "shared"
+  },
+  "classic-vodka-spritz": {
+    "asset": "template-spritz",
+    "mode": "shared"
+  },
+  "classic-vodka-royale": {
+    "asset": "template-royale",
+    "mode": "shared"
+  },
+  "classic-rum-sour": {
+    "asset": "template-sour",
+    "mode": "shared"
+  },
+  "classic-rum-fizz": {
+    "asset": "template-fizz",
+    "mode": "shared"
+  },
+  "classic-rum-collins": {
+    "asset": "template-collins",
+    "mode": "shared"
+  },
+  "classic-rum-daisy": {
+    "asset": "template-daisy",
+    "mode": "shared"
+  },
+  "classic-rum-smash": {
+    "asset": "template-smash",
+    "mode": "shared"
+  },
+  "classic-rum-rickey": {
+    "asset": "template-rickey",
+    "mode": "shared"
+  },
+  "classic-rum-buck": {
+    "asset": "template-buck",
+    "mode": "shared"
+  },
+  "classic-rum-mule": {
+    "asset": "template-mule",
+    "mode": "shared"
+  },
+  "classic-rum-highball": {
+    "asset": "template-highball",
+    "mode": "shared"
+  },
+  "classic-rum-cooler": {
+    "asset": "template-cooler",
+    "mode": "shared"
+  },
+  "classic-rum-cobbler": {
+    "asset": "template-cobbler",
+    "mode": "shared"
+  },
+  "classic-rum-fix": {
+    "asset": "template-fix",
+    "mode": "shared"
+  },
+  "classic-rum-crusta": {
+    "asset": "template-crusta",
+    "mode": "shared"
+  },
+  "classic-rum-sling": {
+    "asset": "template-sling",
+    "mode": "shared"
+  },
+  "classic-rum-punch": {
+    "asset": "template-punch",
+    "mode": "shared"
+  },
+  "classic-rum-julep": {
+    "asset": "template-julep",
+    "mode": "shared"
+  },
+  "classic-rum-flip": {
+    "asset": "template-flip",
+    "mode": "shared"
+  },
+  "classic-rum-toddy": {
+    "asset": "template-toddy",
+    "mode": "shared"
+  },
+  "classic-rum-milk-punch": {
+    "asset": "template-milk-punch",
+    "mode": "shared"
+  },
+  "classic-rum-old-fashioned": {
+    "asset": "template-old-fashioned",
+    "mode": "shared"
+  },
+  "classic-rum-martini-style": {
+    "asset": "template-martini-style",
+    "mode": "shared"
+  },
+  "classic-rum-negroni-style": {
+    "asset": "template-negroni-style",
+    "mode": "shared"
+  },
+  "classic-rum-spritz": {
+    "asset": "template-spritz",
+    "mode": "shared"
+  },
+  "classic-rum-royale": {
+    "asset": "template-royale",
+    "mode": "shared"
+  },
+  "classic-whiskey-sour": {
+    "asset": "template-sour",
+    "mode": "shared"
+  },
+  "classic-whiskey-fizz": {
+    "asset": "template-fizz",
+    "mode": "shared"
+  },
+  "classic-whiskey-collins": {
+    "asset": "template-collins",
+    "mode": "shared"
+  },
+  "classic-whiskey-daisy": {
+    "asset": "template-daisy",
+    "mode": "shared"
+  },
+  "classic-whiskey-smash": {
+    "asset": "template-smash",
+    "mode": "shared"
+  },
+  "classic-whiskey-rickey": {
+    "asset": "template-rickey",
+    "mode": "shared"
+  },
+  "classic-whiskey-buck": {
+    "asset": "template-buck",
+    "mode": "shared"
+  },
+  "classic-whiskey-mule": {
+    "asset": "template-mule",
+    "mode": "shared"
+  },
+  "classic-whiskey-highball": {
+    "asset": "whisky-highball",
+    "mode": "shared"
+  },
+  "classic-whiskey-cooler": {
+    "asset": "template-cooler",
+    "mode": "shared"
+  },
+  "classic-whiskey-cobbler": {
+    "asset": "template-cobbler",
+    "mode": "shared"
+  },
+  "classic-whiskey-fix": {
+    "asset": "template-fix",
+    "mode": "shared"
+  },
+  "classic-whiskey-crusta": {
+    "asset": "template-crusta",
+    "mode": "shared"
+  },
+  "classic-whiskey-sling": {
+    "asset": "template-sling",
+    "mode": "shared"
+  },
+  "classic-whiskey-punch": {
+    "asset": "template-punch",
+    "mode": "shared"
+  },
+  "classic-whiskey-julep": {
+    "asset": "template-julep",
+    "mode": "shared"
+  },
+  "classic-whiskey-flip": {
+    "asset": "template-flip",
+    "mode": "shared"
+  },
+  "classic-whiskey-toddy": {
+    "asset": "template-toddy",
+    "mode": "shared"
+  },
+  "classic-whiskey-milk-punch": {
+    "asset": "template-milk-punch",
+    "mode": "shared"
+  },
+  "classic-whiskey-old-fashioned": {
+    "asset": "old-fashioned",
+    "mode": "shared"
+  },
+  "classic-whiskey-martini-style": {
+    "asset": "template-martini-style",
+    "mode": "shared"
+  },
+  "classic-whiskey-negroni-style": {
+    "asset": "template-negroni-style",
+    "mode": "shared"
+  },
+  "classic-whiskey-spritz": {
+    "asset": "template-spritz",
+    "mode": "shared"
+  },
+  "classic-whiskey-royale": {
+    "asset": "template-royale",
+    "mode": "shared"
+  },
+  "classic-tequila-sour": {
+    "asset": "template-sour",
+    "mode": "shared"
+  },
+  "classic-tequila-fizz": {
+    "asset": "template-fizz",
+    "mode": "shared"
+  },
+  "classic-tequila-collins": {
+    "asset": "template-collins",
+    "mode": "shared"
+  },
+  "classic-tequila-daisy": {
+    "asset": "template-daisy",
+    "mode": "shared"
+  },
+  "classic-tequila-smash": {
+    "asset": "template-smash",
+    "mode": "shared"
+  },
+  "classic-tequila-rickey": {
+    "asset": "template-rickey",
+    "mode": "shared"
+  },
+  "classic-tequila-buck": {
+    "asset": "template-buck",
+    "mode": "shared"
+  },
+  "classic-tequila-mule": {
+    "asset": "template-mule",
+    "mode": "shared"
+  },
+  "classic-tequila-highball": {
+    "asset": "template-highball",
+    "mode": "shared"
+  },
+  "classic-tequila-cooler": {
+    "asset": "template-cooler",
+    "mode": "shared"
+  },
+  "classic-tequila-cobbler": {
+    "asset": "template-cobbler",
+    "mode": "shared"
+  },
+  "classic-tequila-fix": {
+    "asset": "template-fix",
+    "mode": "shared"
+  },
+  "classic-tequila-crusta": {
+    "asset": "template-crusta",
+    "mode": "shared"
+  },
+  "classic-tequila-sling": {
+    "asset": "template-sling",
+    "mode": "shared"
+  },
+  "classic-tequila-punch": {
+    "asset": "template-punch",
+    "mode": "shared"
+  },
+  "classic-tequila-julep": {
+    "asset": "template-julep",
+    "mode": "shared"
+  },
+  "classic-tequila-flip": {
+    "asset": "template-flip",
+    "mode": "shared"
+  },
+  "classic-tequila-toddy": {
+    "asset": "template-toddy",
+    "mode": "shared"
+  },
+  "classic-tequila-milk-punch": {
+    "asset": "template-milk-punch",
+    "mode": "shared"
+  },
+  "classic-tequila-old-fashioned": {
+    "asset": "template-old-fashioned",
+    "mode": "shared"
+  },
+  "classic-tequila-martini-style": {
+    "asset": "template-martini-style",
+    "mode": "shared"
+  },
+  "classic-tequila-negroni-style": {
+    "asset": "template-negroni-style",
+    "mode": "shared"
+  },
+  "classic-tequila-spritz": {
+    "asset": "template-spritz",
+    "mode": "shared"
+  },
+  "classic-tequila-royale": {
+    "asset": "template-royale",
+    "mode": "shared"
+  },
+  "classic-brandy-sour": {
+    "asset": "template-sour",
+    "mode": "shared"
+  },
+  "classic-brandy-fizz": {
+    "asset": "template-fizz",
+    "mode": "shared"
+  },
+  "classic-brandy-collins": {
+    "asset": "template-collins",
+    "mode": "shared"
+  },
+  "classic-brandy-daisy": {
+    "asset": "template-daisy",
+    "mode": "shared"
+  },
+  "classic-brandy-smash": {
+    "asset": "template-smash",
+    "mode": "shared"
+  },
+  "classic-brandy-rickey": {
+    "asset": "template-rickey",
+    "mode": "shared"
+  },
+  "classic-brandy-buck": {
+    "asset": "template-buck",
+    "mode": "shared"
+  },
+  "classic-brandy-mule": {
+    "asset": "template-mule",
+    "mode": "shared"
+  },
+  "classic-brandy-highball": {
+    "asset": "whisky-highball",
+    "mode": "shared"
+  },
+  "classic-brandy-cooler": {
+    "asset": "template-cooler",
+    "mode": "shared"
+  },
+  "classic-brandy-cobbler": {
+    "asset": "template-cobbler",
+    "mode": "shared"
+  },
+  "classic-brandy-fix": {
+    "asset": "template-fix",
+    "mode": "shared"
+  },
+  "classic-brandy-crusta": {
+    "asset": "template-crusta",
+    "mode": "shared"
+  },
+  "classic-brandy-sling": {
+    "asset": "template-sling",
+    "mode": "shared"
+  },
+  "classic-brandy-punch": {
+    "asset": "template-punch",
+    "mode": "shared"
+  },
+  "classic-brandy-julep": {
+    "asset": "template-julep",
+    "mode": "shared"
+  },
+  "classic-brandy-flip": {
+    "asset": "template-flip",
+    "mode": "shared"
+  },
+  "classic-brandy-toddy": {
+    "asset": "template-toddy",
+    "mode": "shared"
+  },
+  "classic-brandy-milk-punch": {
+    "asset": "template-milk-punch",
+    "mode": "shared"
+  },
+  "classic-brandy-old-fashioned": {
+    "asset": "old-fashioned",
+    "mode": "shared"
+  },
+  "classic-brandy-martini-style": {
+    "asset": "template-martini-style",
+    "mode": "shared"
+  },
+  "classic-brandy-negroni-style": {
+    "asset": "template-negroni-style",
+    "mode": "shared"
+  },
+  "classic-brandy-spritz": {
+    "asset": "template-spritz",
+    "mode": "shared"
+  },
+  "classic-brandy-royale": {
+    "asset": "template-royale",
+    "mode": "shared"
+  },
+  "classic-mezcal-sour": {
+    "asset": "template-sour",
+    "mode": "shared"
+  },
+  "classic-mezcal-fizz": {
+    "asset": "template-fizz",
+    "mode": "shared"
+  },
+  "classic-mezcal-collins": {
+    "asset": "template-collins",
+    "mode": "shared"
+  },
+  "classic-mezcal-daisy": {
+    "asset": "template-daisy",
+    "mode": "shared"
+  },
+  "classic-mezcal-smash": {
+    "asset": "template-smash",
+    "mode": "shared"
+  },
+  "classic-mezcal-rickey": {
+    "asset": "template-rickey",
+    "mode": "shared"
+  },
+  "classic-mezcal-buck": {
+    "asset": "template-buck",
+    "mode": "shared"
+  },
+  "classic-mezcal-mule": {
+    "asset": "template-mule",
+    "mode": "shared"
+  },
+  "classic-mezcal-highball": {
+    "asset": "template-highball",
+    "mode": "shared"
+  },
+  "classic-mezcal-cooler": {
+    "asset": "template-cooler",
+    "mode": "shared"
+  },
+  "classic-mezcal-cobbler": {
+    "asset": "template-cobbler",
+    "mode": "shared"
+  },
+  "classic-mezcal-fix": {
+    "asset": "template-fix",
+    "mode": "shared"
+  },
+  "classic-mezcal-crusta": {
+    "asset": "template-crusta",
+    "mode": "shared"
+  },
+  "classic-mezcal-sling": {
+    "asset": "template-sling",
+    "mode": "shared"
+  },
+  "classic-mezcal-punch": {
+    "asset": "template-punch",
+    "mode": "shared"
+  },
+  "classic-mezcal-julep": {
+    "asset": "template-julep",
+    "mode": "shared"
+  },
+  "classic-mezcal-flip": {
+    "asset": "template-flip",
+    "mode": "shared"
+  },
+  "classic-mezcal-toddy": {
+    "asset": "template-toddy",
+    "mode": "shared"
+  },
+  "classic-mezcal-milk-punch": {
+    "asset": "template-milk-punch",
+    "mode": "shared"
+  },
+  "classic-mezcal-old-fashioned": {
+    "asset": "template-old-fashioned",
+    "mode": "shared"
+  },
+  "classic-mezcal-martini-style": {
+    "asset": "template-martini-style",
+    "mode": "shared"
+  },
+  "classic-mezcal-negroni-style": {
+    "asset": "template-negroni-style",
+    "mode": "shared"
+  },
+  "classic-mezcal-spritz": {
+    "asset": "template-spritz",
+    "mode": "shared"
+  },
+  "classic-mezcal-royale": {
+    "asset": "template-royale",
+    "mode": "shared"
+  },
+  "classic-pisco-sour": {
+    "asset": "template-sour",
+    "mode": "shared"
+  },
+  "classic-pisco-fizz": {
+    "asset": "template-fizz",
+    "mode": "shared"
+  },
+  "classic-pisco-collins": {
+    "asset": "template-collins",
+    "mode": "shared"
+  },
+  "classic-pisco-daisy": {
+    "asset": "template-daisy",
+    "mode": "shared"
+  },
+  "classic-pisco-smash": {
+    "asset": "template-smash",
+    "mode": "shared"
+  },
+  "classic-pisco-rickey": {
+    "asset": "template-rickey",
+    "mode": "shared"
+  },
+  "classic-pisco-buck": {
+    "asset": "template-buck",
+    "mode": "shared"
+  },
+  "classic-pisco-mule": {
+    "asset": "template-mule",
+    "mode": "shared"
+  },
+  "classic-pisco-highball": {
+    "asset": "template-highball",
+    "mode": "shared"
+  },
+  "classic-pisco-cooler": {
+    "asset": "template-cooler",
+    "mode": "shared"
+  },
+  "classic-pisco-cobbler": {
+    "asset": "template-cobbler",
+    "mode": "shared"
+  },
+  "classic-pisco-fix": {
+    "asset": "template-fix",
+    "mode": "shared"
+  },
+  "classic-pisco-crusta": {
+    "asset": "template-crusta",
+    "mode": "shared"
+  },
+  "classic-pisco-sling": {
+    "asset": "template-sling",
+    "mode": "shared"
+  },
+  "classic-pisco-punch": {
+    "asset": "template-punch",
+    "mode": "shared"
+  },
+  "classic-pisco-julep": {
+    "asset": "template-julep",
+    "mode": "shared"
+  },
+  "classic-pisco-flip": {
+    "asset": "template-flip",
+    "mode": "shared"
+  },
+  "classic-pisco-toddy": {
+    "asset": "template-toddy",
+    "mode": "shared"
+  },
+  "classic-pisco-milk-punch": {
+    "asset": "template-milk-punch",
+    "mode": "shared"
+  },
+  "classic-pisco-old-fashioned": {
+    "asset": "template-old-fashioned",
+    "mode": "shared"
+  },
+  "classic-pisco-martini-style": {
+    "asset": "template-martini-style",
+    "mode": "shared"
+  },
+  "classic-pisco-negroni-style": {
+    "asset": "template-negroni-style",
+    "mode": "shared"
+  },
+  "classic-pisco-spritz": {
+    "asset": "template-spritz",
+    "mode": "shared"
+  },
+  "classic-pisco-royale": {
+    "asset": "template-royale",
+    "mode": "shared"
+  },
+  "classic-cachaca-sour": {
+    "asset": "template-sour",
+    "mode": "shared"
+  },
+  "classic-cachaca-fizz": {
+    "asset": "template-fizz",
+    "mode": "shared"
+  },
+  "classic-cachaca-collins": {
+    "asset": "template-collins",
+    "mode": "shared"
+  },
+  "classic-cachaca-daisy": {
+    "asset": "template-daisy",
+    "mode": "shared"
+  },
+  "classic-cachaca-smash": {
+    "asset": "template-smash",
+    "mode": "shared"
+  },
+  "classic-cachaca-rickey": {
+    "asset": "template-rickey",
+    "mode": "shared"
+  },
+  "classic-cachaca-buck": {
+    "asset": "template-buck",
+    "mode": "shared"
+  },
+  "classic-cachaca-mule": {
+    "asset": "template-mule",
+    "mode": "shared"
+  },
+  "classic-cachaca-highball": {
+    "asset": "template-highball",
+    "mode": "shared"
+  },
+  "classic-cachaca-cooler": {
+    "asset": "template-cooler",
+    "mode": "shared"
+  },
+  "classic-cachaca-cobbler": {
+    "asset": "template-cobbler",
+    "mode": "shared"
+  },
+  "classic-cachaca-fix": {
+    "asset": "template-fix",
+    "mode": "shared"
+  },
+  "classic-cachaca-crusta": {
+    "asset": "template-crusta",
+    "mode": "shared"
+  },
+  "classic-cachaca-sling": {
+    "asset": "template-sling",
+    "mode": "shared"
+  },
+  "classic-cachaca-punch": {
+    "asset": "template-punch",
+    "mode": "shared"
+  },
+  "classic-cachaca-julep": {
+    "asset": "template-julep",
+    "mode": "shared"
+  },
+  "classic-cachaca-flip": {
+    "asset": "template-flip",
+    "mode": "shared"
+  },
+  "classic-cachaca-toddy": {
+    "asset": "template-toddy",
+    "mode": "shared"
+  },
+  "classic-cachaca-milk-punch": {
+    "asset": "template-milk-punch",
+    "mode": "shared"
+  },
+  "classic-cachaca-old-fashioned": {
+    "asset": "template-old-fashioned",
+    "mode": "shared"
+  },
+  "classic-cachaca-martini-style": {
+    "asset": "template-martini-style",
+    "mode": "shared"
+  },
+  "classic-cachaca-negroni-style": {
+    "asset": "template-negroni-style",
+    "mode": "shared"
+  },
+  "classic-cachaca-spritz": {
+    "asset": "template-spritz",
+    "mode": "shared"
+  },
+  "classic-cachaca-royale": {
+    "asset": "template-royale",
+    "mode": "shared"
+  },
+  "grapefruit-beer": {
+    "asset": "grapefruit-beer",
+    "mode": "dedicated"
+  },
+  "coconut-rum": {
+    "asset": "mix-coconut-milk-drink",
+    "mode": "shared"
+  },
+  "lime-soju-soda": {
+    "asset": "lime-soju-soda",
+    "mode": "dedicated"
+  },
+  "gin-lemon-tea": {
+    "asset": "mix-lemon-tea",
+    "mode": "shared"
+  },
+  "gin-grapefruit-soda": {
+    "asset": "mix-grapefruit-soda",
+    "mode": "shared"
+  },
+  "vodka-orange": {
+    "asset": "mix-orange-juice",
+    "mode": "shared"
+  },
+  "vodka-cranberry": {
+    "asset": "mix-cranberry-juice",
+    "mode": "shared"
+  },
+  "whisky-oolong": {
+    "asset": "mix-oolong-tea",
+    "mode": "shared"
+  },
+  "whisky-cola": {
+    "asset": "mix-cola",
+    "mode": "shared"
+  },
+  "rum-cola": {
+    "asset": "mix-cola",
+    "mode": "shared"
+  },
+  "rum-pineapple": {
+    "asset": "mix-pineapple-juice",
+    "mode": "shared"
+  },
+  "tequila-grapefruit": {
+    "asset": "mix-grapefruit-soda",
+    "mode": "shared"
+  },
+  "tequila-orange": {
+    "asset": "mix-orange-juice",
+    "mode": "shared"
+  },
+  "beer-tomato": {
+    "asset": "beer-tomato",
+    "mode": "dedicated"
+  },
+  "soju-yakult": {
+    "asset": "mix-yakult",
+    "mode": "shared"
+  },
+  "umeshu-soda": {
+    "asset": "mix-soda-water",
+    "mode": "shared"
+  },
+  "cv-gin-oolong-tea": {
+    "asset": "mix-oolong-tea",
+    "mode": "shared"
+  },
+  "cv-gin-green-tea": {
+    "asset": "mix-green-tea",
+    "mode": "shared"
+  },
+  "cv-gin-jasmine-tea": {
+    "asset": "mix-jasmine-tea",
+    "mode": "shared"
+  },
+  "cv-gin-cola": {
+    "asset": "mix-cola",
+    "mode": "shared"
+  },
+  "cv-gin-lemon-lime-soda": {
+    "asset": "mix-lemon-lime-soda",
+    "mode": "shared"
+  },
+  "cv-gin-soda-water": {
+    "asset": "mix-soda-water",
+    "mode": "shared"
+  },
+  "cv-gin-tonic-water": {
+    "asset": "mix-tonic-water",
+    "mode": "shared"
+  },
+  "cv-gin-ginger-ale": {
+    "asset": "mix-ginger-ale",
+    "mode": "shared"
+  },
+  "cv-gin-orange-juice": {
+    "asset": "mix-orange-juice",
+    "mode": "shared"
+  },
+  "cv-gin-apple-juice": {
+    "asset": "mix-apple-juice",
+    "mode": "shared"
+  },
+  "cv-gin-pineapple-juice": {
+    "asset": "mix-pineapple-juice",
+    "mode": "shared"
+  },
+  "cv-gin-cranberry-juice": {
+    "asset": "mix-cranberry-juice",
+    "mode": "shared"
+  },
+  "cv-gin-grape-juice": {
+    "asset": "mix-grape-juice",
+    "mode": "shared"
+  },
+  "cv-gin-mango-juice": {
+    "asset": "mix-mango-juice",
+    "mode": "shared"
+  },
+  "cv-gin-coconut-milk-drink": {
+    "asset": "mix-coconut-milk-drink",
+    "mode": "shared"
+  },
+  "cv-gin-coconut-water": {
+    "asset": "mix-coconut-water",
+    "mode": "shared"
+  },
+  "cv-gin-yakult": {
+    "asset": "mix-yakult",
+    "mode": "shared"
+  },
+  "cv-gin-calpis": {
+    "asset": "mix-calpis",
+    "mode": "shared"
+  },
+  "cv-gin-yogurt-drink": {
+    "asset": "mix-yogurt-drink",
+    "mode": "shared"
+  },
+  "cv-gin-milk-tea": {
+    "asset": "mix-milk-tea",
+    "mode": "shared"
+  },
+  "cv-gin-black-coffee": {
+    "asset": "mix-black-coffee",
+    "mode": "shared"
+  },
+  "cv-gin-energy-drink": {
+    "asset": "mix-energy-drink",
+    "mode": "shared"
+  },
+  "cv-gin-vitamin-c-drink": {
+    "asset": "mix-vitamin-c-drink",
+    "mode": "shared"
+  },
+  "cv-gin-honey-citron-drink": {
+    "asset": "mix-honey-citron-drink",
+    "mode": "shared"
+  },
+  "cv-gin-pear-drink": {
+    "asset": "mix-pear-drink",
+    "mode": "shared"
+  },
+  "cv-gin-sour-plum-drink": {
+    "asset": "mix-sour-plum-drink",
+    "mode": "shared"
+  },
+  "cv-vodka-grapefruit-soda": {
+    "asset": "mix-grapefruit-soda",
+    "mode": "shared"
+  },
+  "cv-vodka-lemon-tea": {
+    "asset": "mix-lemon-tea",
+    "mode": "shared"
+  },
+  "cv-vodka-oolong-tea": {
+    "asset": "mix-oolong-tea",
+    "mode": "shared"
+  },
+  "cv-vodka-green-tea": {
+    "asset": "mix-green-tea",
+    "mode": "shared"
+  },
+  "cv-vodka-jasmine-tea": {
+    "asset": "mix-jasmine-tea",
+    "mode": "shared"
+  },
+  "cv-vodka-cola": {
+    "asset": "mix-cola",
+    "mode": "shared"
+  },
+  "cv-vodka-lemon-lime-soda": {
+    "asset": "mix-lemon-lime-soda",
+    "mode": "shared"
+  },
+  "cv-vodka-soda-water": {
+    "asset": "mix-soda-water",
+    "mode": "shared"
+  },
+  "cv-vodka-tonic-water": {
+    "asset": "mix-tonic-water",
+    "mode": "shared"
+  },
+  "cv-vodka-ginger-ale": {
+    "asset": "mix-ginger-ale",
+    "mode": "shared"
+  },
+  "cv-vodka-apple-juice": {
+    "asset": "mix-apple-juice",
+    "mode": "shared"
+  },
+  "cv-vodka-pineapple-juice": {
+    "asset": "mix-pineapple-juice",
+    "mode": "shared"
+  },
+  "cv-vodka-grape-juice": {
+    "asset": "mix-grape-juice",
+    "mode": "shared"
+  },
+  "cv-vodka-mango-juice": {
+    "asset": "mix-mango-juice",
+    "mode": "shared"
+  },
+  "cv-vodka-coconut-milk-drink": {
+    "asset": "mix-coconut-milk-drink",
+    "mode": "shared"
+  },
+  "cv-vodka-coconut-water": {
+    "asset": "mix-coconut-water",
+    "mode": "shared"
+  },
+  "cv-vodka-yakult": {
+    "asset": "mix-yakult",
+    "mode": "shared"
+  },
+  "cv-vodka-calpis": {
+    "asset": "mix-calpis",
+    "mode": "shared"
+  },
+  "cv-vodka-yogurt-drink": {
+    "asset": "mix-yogurt-drink",
+    "mode": "shared"
+  },
+  "cv-vodka-milk-tea": {
+    "asset": "mix-milk-tea",
+    "mode": "shared"
+  },
+  "cv-vodka-black-coffee": {
+    "asset": "mix-black-coffee",
+    "mode": "shared"
+  },
+  "cv-vodka-energy-drink": {
+    "asset": "mix-energy-drink",
+    "mode": "shared"
+  },
+  "cv-vodka-vitamin-c-drink": {
+    "asset": "mix-vitamin-c-drink",
+    "mode": "shared"
+  },
+  "cv-vodka-honey-citron-drink": {
+    "asset": "mix-honey-citron-drink",
+    "mode": "shared"
+  },
+  "cv-vodka-pear-drink": {
+    "asset": "mix-pear-drink",
+    "mode": "shared"
+  },
+  "cv-vodka-sour-plum-drink": {
+    "asset": "mix-sour-plum-drink",
+    "mode": "shared"
+  },
+  "cv-whisky-grapefruit-soda": {
+    "asset": "mix-grapefruit-soda",
+    "mode": "shared"
+  },
+  "cv-whisky-lemon-tea": {
+    "asset": "mix-lemon-tea",
+    "mode": "shared"
+  },
+  "cv-whisky-green-tea": {
+    "asset": "mix-green-tea",
+    "mode": "shared"
+  },
+  "cv-whisky-jasmine-tea": {
+    "asset": "mix-jasmine-tea",
+    "mode": "shared"
+  },
+  "cv-whisky-lemon-lime-soda": {
+    "asset": "mix-lemon-lime-soda",
+    "mode": "shared"
+  },
+  "cv-whisky-soda-water": {
+    "asset": "mix-soda-water",
+    "mode": "shared"
+  },
+  "cv-whisky-tonic-water": {
+    "asset": "mix-tonic-water",
+    "mode": "shared"
+  },
+  "cv-whisky-ginger-ale": {
+    "asset": "mix-ginger-ale",
+    "mode": "shared"
+  },
+  "cv-whisky-orange-juice": {
+    "asset": "mix-orange-juice",
+    "mode": "shared"
+  },
+  "cv-whisky-apple-juice": {
+    "asset": "mix-apple-juice",
+    "mode": "shared"
+  },
+  "cv-whisky-pineapple-juice": {
+    "asset": "mix-pineapple-juice",
+    "mode": "shared"
+  },
+  "cv-whisky-cranberry-juice": {
+    "asset": "mix-cranberry-juice",
+    "mode": "shared"
+  },
+  "cv-whisky-grape-juice": {
+    "asset": "mix-grape-juice",
+    "mode": "shared"
+  },
+  "cv-whisky-mango-juice": {
+    "asset": "mix-mango-juice",
+    "mode": "shared"
+  },
+  "cv-whisky-coconut-milk-drink": {
+    "asset": "mix-coconut-milk-drink",
+    "mode": "shared"
+  },
+  "cv-whisky-coconut-water": {
+    "asset": "mix-coconut-water",
+    "mode": "shared"
+  },
+  "cv-whisky-yakult": {
+    "asset": "mix-yakult",
+    "mode": "shared"
+  },
+  "cv-whisky-calpis": {
+    "asset": "mix-calpis",
+    "mode": "shared"
+  },
+  "cv-whisky-yogurt-drink": {
+    "asset": "mix-yogurt-drink",
+    "mode": "shared"
+  },
+  "cv-whisky-milk-tea": {
+    "asset": "mix-milk-tea",
+    "mode": "shared"
+  },
+  "cv-whisky-black-coffee": {
+    "asset": "mix-black-coffee",
+    "mode": "shared"
+  },
+  "cv-whisky-energy-drink": {
+    "asset": "mix-energy-drink",
+    "mode": "shared"
+  },
+  "cv-whisky-vitamin-c-drink": {
+    "asset": "mix-vitamin-c-drink",
+    "mode": "shared"
+  },
+  "cv-whisky-honey-citron-drink": {
+    "asset": "mix-honey-citron-drink",
+    "mode": "shared"
+  },
+  "cv-whisky-pear-drink": {
+    "asset": "mix-pear-drink",
+    "mode": "shared"
+  },
+  "cv-whisky-sour-plum-drink": {
+    "asset": "mix-sour-plum-drink",
+    "mode": "shared"
+  },
+  "cv-rum-grapefruit-soda": {
+    "asset": "mix-grapefruit-soda",
+    "mode": "shared"
+  },
+  "cv-rum-lemon-tea": {
+    "asset": "mix-lemon-tea",
+    "mode": "shared"
+  },
+  "cv-rum-oolong-tea": {
+    "asset": "mix-oolong-tea",
+    "mode": "shared"
+  },
+  "cv-rum-green-tea": {
+    "asset": "mix-green-tea",
+    "mode": "shared"
+  },
+  "cv-rum-jasmine-tea": {
+    "asset": "mix-jasmine-tea",
+    "mode": "shared"
+  },
+  "cv-rum-lemon-lime-soda": {
+    "asset": "mix-lemon-lime-soda",
+    "mode": "shared"
+  },
+  "cv-rum-soda-water": {
+    "asset": "mix-soda-water",
+    "mode": "shared"
+  },
+  "cv-rum-tonic-water": {
+    "asset": "mix-tonic-water",
+    "mode": "shared"
+  },
+  "cv-rum-ginger-ale": {
+    "asset": "mix-ginger-ale",
+    "mode": "shared"
+  },
+  "cv-rum-orange-juice": {
+    "asset": "mix-orange-juice",
+    "mode": "shared"
+  },
+  "cv-rum-apple-juice": {
+    "asset": "mix-apple-juice",
+    "mode": "shared"
+  },
+  "cv-rum-cranberry-juice": {
+    "asset": "mix-cranberry-juice",
+    "mode": "shared"
+  },
+  "cv-rum-grape-juice": {
+    "asset": "mix-grape-juice",
+    "mode": "shared"
+  },
+  "cv-rum-mango-juice": {
+    "asset": "mix-mango-juice",
+    "mode": "shared"
+  },
+  "cv-rum-coconut-milk-drink": {
+    "asset": "mix-coconut-milk-drink",
+    "mode": "shared"
+  },
+  "cv-rum-coconut-water": {
+    "asset": "mix-coconut-water",
+    "mode": "shared"
+  },
+  "cv-rum-yakult": {
+    "asset": "mix-yakult",
+    "mode": "shared"
+  },
+  "cv-rum-calpis": {
+    "asset": "mix-calpis",
+    "mode": "shared"
+  },
+  "cv-rum-yogurt-drink": {
+    "asset": "mix-yogurt-drink",
+    "mode": "shared"
+  },
+  "cv-rum-milk-tea": {
+    "asset": "mix-milk-tea",
+    "mode": "shared"
+  },
+  "cv-rum-black-coffee": {
+    "asset": "mix-black-coffee",
+    "mode": "shared"
+  },
+  "cv-rum-energy-drink": {
+    "asset": "mix-energy-drink",
+    "mode": "shared"
+  },
+  "cv-rum-vitamin-c-drink": {
+    "asset": "mix-vitamin-c-drink",
+    "mode": "shared"
+  },
+  "cv-rum-honey-citron-drink": {
+    "asset": "mix-honey-citron-drink",
+    "mode": "shared"
+  },
+  "cv-rum-pear-drink": {
+    "asset": "mix-pear-drink",
+    "mode": "shared"
+  },
+  "cv-rum-sour-plum-drink": {
+    "asset": "mix-sour-plum-drink",
+    "mode": "shared"
+  },
+  "cv-tequila-lemon-tea": {
+    "asset": "mix-lemon-tea",
+    "mode": "shared"
+  },
+  "cv-tequila-oolong-tea": {
+    "asset": "mix-oolong-tea",
+    "mode": "shared"
+  },
+  "cv-tequila-green-tea": {
+    "asset": "mix-green-tea",
+    "mode": "shared"
+  },
+  "cv-tequila-jasmine-tea": {
+    "asset": "mix-jasmine-tea",
+    "mode": "shared"
+  },
+  "cv-tequila-cola": {
+    "asset": "mix-cola",
+    "mode": "shared"
+  },
+  "cv-tequila-lemon-lime-soda": {
+    "asset": "mix-lemon-lime-soda",
+    "mode": "shared"
+  },
+  "cv-tequila-soda-water": {
+    "asset": "mix-soda-water",
+    "mode": "shared"
+  },
+  "cv-tequila-tonic-water": {
+    "asset": "mix-tonic-water",
+    "mode": "shared"
+  },
+  "cv-tequila-ginger-ale": {
+    "asset": "mix-ginger-ale",
+    "mode": "shared"
+  },
+  "cv-tequila-apple-juice": {
+    "asset": "mix-apple-juice",
+    "mode": "shared"
+  },
+  "cv-tequila-pineapple-juice": {
+    "asset": "mix-pineapple-juice",
+    "mode": "shared"
+  },
+  "cv-tequila-cranberry-juice": {
+    "asset": "mix-cranberry-juice",
+    "mode": "shared"
+  },
+  "cv-tequila-grape-juice": {
+    "asset": "mix-grape-juice",
+    "mode": "shared"
+  },
+  "cv-tequila-mango-juice": {
+    "asset": "mix-mango-juice",
+    "mode": "shared"
+  },
+  "cv-tequila-coconut-milk-drink": {
+    "asset": "mix-coconut-milk-drink",
+    "mode": "shared"
+  },
+  "cv-tequila-coconut-water": {
+    "asset": "mix-coconut-water",
+    "mode": "shared"
+  },
+  "cv-tequila-yakult": {
+    "asset": "mix-yakult",
+    "mode": "shared"
+  },
+  "cv-tequila-calpis": {
+    "asset": "mix-calpis",
+    "mode": "shared"
+  },
+  "cv-tequila-yogurt-drink": {
+    "asset": "mix-yogurt-drink",
+    "mode": "shared"
+  },
+  "cv-tequila-milk-tea": {
+    "asset": "mix-milk-tea",
+    "mode": "shared"
+  },
+  "cv-tequila-black-coffee": {
+    "asset": "mix-black-coffee",
+    "mode": "shared"
+  },
+  "cv-tequila-energy-drink": {
+    "asset": "mix-energy-drink",
+    "mode": "shared"
+  },
+  "cv-tequila-vitamin-c-drink": {
+    "asset": "mix-vitamin-c-drink",
+    "mode": "shared"
+  },
+  "cv-tequila-honey-citron-drink": {
+    "asset": "mix-honey-citron-drink",
+    "mode": "shared"
+  },
+  "cv-tequila-pear-drink": {
+    "asset": "mix-pear-drink",
+    "mode": "shared"
+  },
+  "cv-tequila-sour-plum-drink": {
+    "asset": "mix-sour-plum-drink",
+    "mode": "shared"
+  },
+  "cv-beer-lemon-tea": {
+    "asset": "mix-lemon-tea",
+    "mode": "shared"
+  },
+  "cv-beer-oolong-tea": {
+    "asset": "mix-oolong-tea",
+    "mode": "shared"
+  },
+  "cv-beer-green-tea": {
+    "asset": "mix-green-tea",
+    "mode": "shared"
+  },
+  "cv-beer-jasmine-tea": {
+    "asset": "mix-jasmine-tea",
+    "mode": "shared"
+  },
+  "cv-beer-cola": {
+    "asset": "mix-cola",
+    "mode": "shared"
+  },
+  "cv-beer-lemon-lime-soda": {
+    "asset": "mix-lemon-lime-soda",
+    "mode": "shared"
+  },
+  "cv-beer-soda-water": {
+    "asset": "mix-soda-water",
+    "mode": "shared"
+  },
+  "cv-beer-tonic-water": {
+    "asset": "mix-tonic-water",
+    "mode": "shared"
+  },
+  "cv-beer-ginger-ale": {
+    "asset": "mix-ginger-ale",
+    "mode": "shared"
+  },
+  "cv-beer-orange-juice": {
+    "asset": "mix-orange-juice",
+    "mode": "shared"
+  },
+  "cv-beer-apple-juice": {
+    "asset": "mix-apple-juice",
+    "mode": "shared"
+  },
+  "cv-beer-pineapple-juice": {
+    "asset": "mix-pineapple-juice",
+    "mode": "shared"
+  },
+  "cv-beer-cranberry-juice": {
+    "asset": "mix-cranberry-juice",
+    "mode": "shared"
+  },
+  "cv-beer-grape-juice": {
+    "asset": "mix-grape-juice",
+    "mode": "shared"
+  },
+  "cv-beer-mango-juice": {
+    "asset": "mix-mango-juice",
+    "mode": "shared"
+  },
+  "cv-beer-coconut-milk-drink": {
+    "asset": "mix-coconut-milk-drink",
+    "mode": "shared"
+  },
+  "cv-beer-coconut-water": {
+    "asset": "mix-coconut-water",
+    "mode": "shared"
+  },
+  "cv-beer-yakult": {
+    "asset": "mix-yakult",
+    "mode": "shared"
+  },
+  "cv-beer-calpis": {
+    "asset": "mix-calpis",
+    "mode": "shared"
+  },
+  "cv-beer-yogurt-drink": {
+    "asset": "mix-yogurt-drink",
+    "mode": "shared"
+  },
+  "cv-beer-milk-tea": {
+    "asset": "mix-milk-tea",
+    "mode": "shared"
+  },
+  "cv-beer-black-coffee": {
+    "asset": "mix-black-coffee",
+    "mode": "shared"
+  },
+  "cv-beer-energy-drink": {
+    "asset": "mix-energy-drink",
+    "mode": "shared"
+  },
+  "cv-beer-vitamin-c-drink": {
+    "asset": "mix-vitamin-c-drink",
+    "mode": "shared"
+  },
+  "cv-beer-honey-citron-drink": {
+    "asset": "mix-honey-citron-drink",
+    "mode": "shared"
+  },
+  "cv-beer-pear-drink": {
+    "asset": "mix-pear-drink",
+    "mode": "shared"
+  },
+  "cv-beer-sour-plum-drink": {
+    "asset": "mix-sour-plum-drink",
+    "mode": "shared"
+  },
+  "cv-soju-grapefruit-soda": {
+    "asset": "mix-grapefruit-soda",
+    "mode": "shared"
+  },
+  "cv-soju-lemon-tea": {
+    "asset": "mix-lemon-tea",
+    "mode": "shared"
+  },
+  "cv-soju-oolong-tea": {
+    "asset": "mix-oolong-tea",
+    "mode": "shared"
+  },
+  "cv-soju-green-tea": {
+    "asset": "mix-green-tea",
+    "mode": "shared"
+  },
+  "cv-soju-jasmine-tea": {
+    "asset": "mix-jasmine-tea",
+    "mode": "shared"
+  },
+  "cv-soju-cola": {
+    "asset": "mix-cola",
+    "mode": "shared"
+  },
+  "cv-soju-lemon-lime-soda": {
+    "asset": "mix-lemon-lime-soda",
+    "mode": "shared"
+  },
+  "cv-soju-soda-water": {
+    "asset": "mix-soda-water",
+    "mode": "shared"
+  },
+  "cv-soju-tonic-water": {
+    "asset": "mix-tonic-water",
+    "mode": "shared"
+  },
+  "cv-soju-ginger-ale": {
+    "asset": "mix-ginger-ale",
+    "mode": "shared"
+  },
+  "cv-soju-orange-juice": {
+    "asset": "mix-orange-juice",
+    "mode": "shared"
+  },
+  "cv-soju-apple-juice": {
+    "asset": "mix-apple-juice",
+    "mode": "shared"
+  },
+  "cv-soju-pineapple-juice": {
+    "asset": "mix-pineapple-juice",
+    "mode": "shared"
+  },
+  "cv-soju-cranberry-juice": {
+    "asset": "mix-cranberry-juice",
+    "mode": "shared"
+  },
+  "cv-soju-grape-juice": {
+    "asset": "mix-grape-juice",
+    "mode": "shared"
+  },
+  "cv-soju-mango-juice": {
+    "asset": "mix-mango-juice",
+    "mode": "shared"
+  },
+  "cv-soju-coconut-milk-drink": {
+    "asset": "mix-coconut-milk-drink",
+    "mode": "shared"
+  },
+  "cv-soju-coconut-water": {
+    "asset": "mix-coconut-water",
+    "mode": "shared"
+  },
+  "cv-soju-calpis": {
+    "asset": "mix-calpis",
+    "mode": "shared"
+  },
+  "cv-soju-yogurt-drink": {
+    "asset": "mix-yogurt-drink",
+    "mode": "shared"
+  },
+  "cv-soju-milk-tea": {
+    "asset": "mix-milk-tea",
+    "mode": "shared"
+  },
+  "cv-soju-black-coffee": {
+    "asset": "mix-black-coffee",
+    "mode": "shared"
+  },
+  "cv-soju-energy-drink": {
+    "asset": "mix-energy-drink",
+    "mode": "shared"
+  },
+  "cv-soju-vitamin-c-drink": {
+    "asset": "mix-vitamin-c-drink",
+    "mode": "shared"
+  },
+  "cv-soju-honey-citron-drink": {
+    "asset": "mix-honey-citron-drink",
+    "mode": "shared"
+  },
+  "cv-soju-pear-drink": {
+    "asset": "mix-pear-drink",
+    "mode": "shared"
+  },
+  "cv-soju-sour-plum-drink": {
+    "asset": "mix-sour-plum-drink",
+    "mode": "shared"
+  },
+  "cv-umeshu-grapefruit-soda": {
+    "asset": "mix-grapefruit-soda",
+    "mode": "shared"
+  },
+  "cv-umeshu-lemon-tea": {
+    "asset": "mix-lemon-tea",
+    "mode": "shared"
+  },
+  "cv-umeshu-oolong-tea": {
+    "asset": "mix-oolong-tea",
+    "mode": "shared"
+  },
+  "cv-umeshu-green-tea": {
+    "asset": "mix-green-tea",
+    "mode": "shared"
+  },
+  "cv-umeshu-jasmine-tea": {
+    "asset": "mix-jasmine-tea",
+    "mode": "shared"
+  },
+  "cv-umeshu-cola": {
+    "asset": "mix-cola",
+    "mode": "shared"
+  },
+  "cv-umeshu-lemon-lime-soda": {
+    "asset": "mix-lemon-lime-soda",
+    "mode": "shared"
+  },
+  "cv-umeshu-tonic-water": {
+    "asset": "mix-tonic-water",
+    "mode": "shared"
+  },
+  "cv-umeshu-ginger-ale": {
+    "asset": "mix-ginger-ale",
+    "mode": "shared"
+  },
+  "cv-umeshu-orange-juice": {
+    "asset": "mix-orange-juice",
+    "mode": "shared"
+  },
+  "cv-umeshu-apple-juice": {
+    "asset": "mix-apple-juice",
+    "mode": "shared"
+  },
+  "cv-umeshu-pineapple-juice": {
+    "asset": "mix-pineapple-juice",
+    "mode": "shared"
+  },
+  "cv-umeshu-cranberry-juice": {
+    "asset": "mix-cranberry-juice",
+    "mode": "shared"
+  },
+  "cv-umeshu-grape-juice": {
+    "asset": "mix-grape-juice",
+    "mode": "shared"
+  },
+  "cv-umeshu-mango-juice": {
+    "asset": "mix-mango-juice",
+    "mode": "shared"
+  },
+  "cv-umeshu-coconut-milk-drink": {
+    "asset": "mix-coconut-milk-drink",
+    "mode": "shared"
+  },
+  "cv-umeshu-coconut-water": {
+    "asset": "mix-coconut-water",
+    "mode": "shared"
+  },
+  "cv-umeshu-yakult": {
+    "asset": "mix-yakult",
+    "mode": "shared"
+  },
+  "cv-umeshu-calpis": {
+    "asset": "mix-calpis",
+    "mode": "shared"
+  },
+  "cv-umeshu-yogurt-drink": {
+    "asset": "mix-yogurt-drink",
+    "mode": "shared"
+  },
+  "cv-umeshu-milk-tea": {
+    "asset": "mix-milk-tea",
+    "mode": "shared"
+  },
+  "cv-umeshu-black-coffee": {
+    "asset": "mix-black-coffee",
+    "mode": "shared"
+  },
+  "cv-umeshu-energy-drink": {
+    "asset": "mix-energy-drink",
+    "mode": "shared"
+  },
+  "cv-umeshu-vitamin-c-drink": {
+    "asset": "mix-vitamin-c-drink",
+    "mode": "shared"
+  },
+  "cv-umeshu-honey-citron-drink": {
+    "asset": "mix-honey-citron-drink",
+    "mode": "shared"
+  },
+  "cv-umeshu-pear-drink": {
+    "asset": "mix-pear-drink",
+    "mode": "shared"
+  },
+  "cv-umeshu-sour-plum-drink": {
+    "asset": "mix-sour-plum-drink",
+    "mode": "shared"
+  },
+  "cv-brandy-grapefruit-soda": {
+    "asset": "mix-grapefruit-soda",
+    "mode": "shared"
+  },
+  "cv-brandy-lemon-tea": {
+    "asset": "mix-lemon-tea",
+    "mode": "shared"
+  },
+  "cv-brandy-oolong-tea": {
+    "asset": "mix-oolong-tea",
+    "mode": "shared"
+  },
+  "cv-brandy-green-tea": {
+    "asset": "mix-green-tea",
+    "mode": "shared"
+  },
+  "cv-brandy-jasmine-tea": {
+    "asset": "mix-jasmine-tea",
+    "mode": "shared"
+  },
+  "cv-brandy-cola": {
+    "asset": "mix-cola",
+    "mode": "shared"
+  },
+  "cv-brandy-lemon-lime-soda": {
+    "asset": "mix-lemon-lime-soda",
+    "mode": "shared"
+  },
+  "cv-brandy-soda-water": {
+    "asset": "mix-soda-water",
+    "mode": "shared"
+  },
+  "cv-brandy-tonic-water": {
+    "asset": "mix-tonic-water",
+    "mode": "shared"
+  },
+  "cv-brandy-ginger-ale": {
+    "asset": "mix-ginger-ale",
+    "mode": "shared"
+  },
+  "cv-brandy-orange-juice": {
+    "asset": "mix-orange-juice",
+    "mode": "shared"
+  },
+  "cv-brandy-apple-juice": {
+    "asset": "mix-apple-juice",
+    "mode": "shared"
+  },
+  "cv-brandy-pineapple-juice": {
+    "asset": "mix-pineapple-juice",
+    "mode": "shared"
+  },
+  "cv-brandy-cranberry-juice": {
+    "asset": "mix-cranberry-juice",
+    "mode": "shared"
+  },
+  "cv-brandy-grape-juice": {
+    "asset": "mix-grape-juice",
+    "mode": "shared"
+  },
+  "cv-brandy-mango-juice": {
+    "asset": "mix-mango-juice",
+    "mode": "shared"
+  },
+  "cv-brandy-coconut-milk-drink": {
+    "asset": "mix-coconut-milk-drink",
+    "mode": "shared"
+  },
+  "cv-brandy-coconut-water": {
+    "asset": "mix-coconut-water",
+    "mode": "shared"
+  },
+  "cv-brandy-yakult": {
+    "asset": "mix-yakult",
+    "mode": "shared"
+  },
+  "cv-brandy-calpis": {
+    "asset": "mix-calpis",
+    "mode": "shared"
+  },
+  "cv-brandy-yogurt-drink": {
+    "asset": "mix-yogurt-drink",
+    "mode": "shared"
+  },
+  "cv-brandy-milk-tea": {
+    "asset": "mix-milk-tea",
+    "mode": "shared"
+  },
+  "cv-brandy-black-coffee": {
+    "asset": "mix-black-coffee",
+    "mode": "shared"
+  },
+  "cv-brandy-energy-drink": {
+    "asset": "mix-energy-drink",
+    "mode": "shared"
+  },
+  "cv-brandy-vitamin-c-drink": {
+    "asset": "mix-vitamin-c-drink",
+    "mode": "shared"
+  },
+  "cv-brandy-honey-citron-drink": {
+    "asset": "mix-honey-citron-drink",
+    "mode": "shared"
+  },
+  "cv-brandy-pear-drink": {
+    "asset": "mix-pear-drink",
+    "mode": "shared"
+  },
+  "cv-brandy-sour-plum-drink": {
+    "asset": "mix-sour-plum-drink",
+    "mode": "shared"
+  },
+  "cv-sake-grapefruit-soda": {
+    "asset": "mix-grapefruit-soda",
+    "mode": "shared"
+  },
+  "cv-sake-lemon-tea": {
+    "asset": "mix-lemon-tea",
+    "mode": "shared"
+  },
+  "cv-sake-oolong-tea": {
+    "asset": "mix-oolong-tea",
+    "mode": "shared"
+  },
+  "cv-sake-green-tea": {
+    "asset": "mix-green-tea",
+    "mode": "shared"
+  },
+  "cv-sake-jasmine-tea": {
+    "asset": "mix-jasmine-tea",
+    "mode": "shared"
+  },
+  "cv-sake-cola": {
+    "asset": "mix-cola",
+    "mode": "shared"
+  },
+  "cv-sake-lemon-lime-soda": {
+    "asset": "mix-lemon-lime-soda",
+    "mode": "shared"
+  },
+  "cv-sake-soda-water": {
+    "asset": "mix-soda-water",
+    "mode": "shared"
+  },
+  "cv-sake-tonic-water": {
+    "asset": "mix-tonic-water",
+    "mode": "shared"
+  },
+  "cv-sake-ginger-ale": {
+    "asset": "mix-ginger-ale",
+    "mode": "shared"
+  },
+  "cv-sake-orange-juice": {
+    "asset": "mix-orange-juice",
+    "mode": "shared"
+  },
+  "cv-sake-apple-juice": {
+    "asset": "mix-apple-juice",
+    "mode": "shared"
+  },
+  "cv-sake-pineapple-juice": {
+    "asset": "mix-pineapple-juice",
+    "mode": "shared"
+  },
+  "cv-sake-cranberry-juice": {
+    "asset": "mix-cranberry-juice",
+    "mode": "shared"
+  },
+  "cv-sake-grape-juice": {
+    "asset": "mix-grape-juice",
+    "mode": "shared"
+  },
+  "cv-sake-mango-juice": {
+    "asset": "mix-mango-juice",
+    "mode": "shared"
+  },
+  "cv-sake-coconut-milk-drink": {
+    "asset": "mix-coconut-milk-drink",
+    "mode": "shared"
+  },
+  "cv-sake-coconut-water": {
+    "asset": "mix-coconut-water",
+    "mode": "shared"
+  },
+  "cv-sake-yakult": {
+    "asset": "mix-yakult",
+    "mode": "shared"
+  },
+  "cv-sake-calpis": {
+    "asset": "mix-calpis",
+    "mode": "shared"
+  },
+  "cv-sake-yogurt-drink": {
+    "asset": "mix-yogurt-drink",
+    "mode": "shared"
+  },
+  "cv-sake-milk-tea": {
+    "asset": "mix-milk-tea",
+    "mode": "shared"
+  },
+  "cv-sake-black-coffee": {
+    "asset": "mix-black-coffee",
+    "mode": "shared"
+  },
+  "cv-sake-energy-drink": {
+    "asset": "mix-energy-drink",
+    "mode": "shared"
+  },
+  "cv-sake-vitamin-c-drink": {
+    "asset": "mix-vitamin-c-drink",
+    "mode": "shared"
+  },
+  "cv-sake-honey-citron-drink": {
+    "asset": "mix-honey-citron-drink",
+    "mode": "shared"
+  },
+  "cv-sake-pear-drink": {
+    "asset": "mix-pear-drink",
+    "mode": "shared"
+  },
+  "cv-sake-sour-plum-drink": {
+    "asset": "mix-sour-plum-drink",
+    "mode": "shared"
+  },
+  "cv-liqueur-grapefruit-soda": {
+    "asset": "mix-grapefruit-soda",
+    "mode": "shared"
+  },
+  "cv-liqueur-lemon-tea": {
+    "asset": "mix-lemon-tea",
+    "mode": "shared"
+  },
+  "cv-liqueur-oolong-tea": {
+    "asset": "mix-oolong-tea",
+    "mode": "shared"
+  },
+  "cv-liqueur-green-tea": {
+    "asset": "mix-green-tea",
+    "mode": "shared"
+  },
+  "cv-liqueur-jasmine-tea": {
+    "asset": "mix-jasmine-tea",
+    "mode": "shared"
+  },
+  "cv-liqueur-cola": {
+    "asset": "mix-cola",
+    "mode": "shared"
+  },
+  "cv-liqueur-lemon-lime-soda": {
+    "asset": "mix-lemon-lime-soda",
+    "mode": "shared"
+  },
+  "cv-liqueur-soda-water": {
+    "asset": "mix-soda-water",
+    "mode": "shared"
+  },
+  "cv-liqueur-tonic-water": {
+    "asset": "mix-tonic-water",
+    "mode": "shared"
+  },
+  "cv-liqueur-ginger-ale": {
+    "asset": "mix-ginger-ale",
+    "mode": "shared"
+  },
+  "cv-liqueur-orange-juice": {
+    "asset": "mix-orange-juice",
+    "mode": "shared"
+  },
+  "cv-liqueur-apple-juice": {
+    "asset": "mix-apple-juice",
+    "mode": "shared"
+  },
+  "cv-liqueur-pineapple-juice": {
+    "asset": "mix-pineapple-juice",
+    "mode": "shared"
+  },
+  "cv-liqueur-cranberry-juice": {
+    "asset": "mix-cranberry-juice",
+    "mode": "shared"
+  },
+  "cv-liqueur-grape-juice": {
+    "asset": "mix-grape-juice",
+    "mode": "shared"
+  },
+  "cv-liqueur-mango-juice": {
+    "asset": "mix-mango-juice",
+    "mode": "shared"
+  },
+  "cv-liqueur-coconut-milk-drink": {
+    "asset": "mix-coconut-milk-drink",
+    "mode": "shared"
+  },
+  "cv-liqueur-coconut-water": {
+    "asset": "mix-coconut-water",
+    "mode": "shared"
+  },
+  "cv-liqueur-yakult": {
+    "asset": "mix-yakult",
+    "mode": "shared"
+  },
+  "cv-liqueur-calpis": {
+    "asset": "mix-calpis",
+    "mode": "shared"
+  },
+  "cv-liqueur-yogurt-drink": {
+    "asset": "mix-yogurt-drink",
+    "mode": "shared"
+  },
+  "cv-liqueur-milk-tea": {
+    "asset": "mix-milk-tea",
+    "mode": "shared"
+  },
+  "cv-liqueur-black-coffee": {
+    "asset": "mix-black-coffee",
+    "mode": "shared"
+  },
+  "cv-liqueur-energy-drink": {
+    "asset": "mix-energy-drink",
+    "mode": "shared"
+  },
+  "cv-liqueur-vitamin-c-drink": {
+    "asset": "mix-vitamin-c-drink",
+    "mode": "shared"
+  },
+  "cv-liqueur-honey-citron-drink": {
+    "asset": "mix-honey-citron-drink",
+    "mode": "shared"
+  },
+  "cv-liqueur-pear-drink": {
+    "asset": "mix-pear-drink",
+    "mode": "shared"
+  },
+  "cv-liqueur-sour-plum-drink": {
+    "asset": "mix-sour-plum-drink",
+    "mode": "shared"
+  },
+  "cv-aperitif-grapefruit-soda": {
+    "asset": "mix-grapefruit-soda",
+    "mode": "shared"
+  },
+  "cv-aperitif-lemon-tea": {
+    "asset": "mix-lemon-tea",
+    "mode": "shared"
+  },
+  "cv-aperitif-oolong-tea": {
+    "asset": "mix-oolong-tea",
+    "mode": "shared"
+  },
+  "cv-aperitif-green-tea": {
+    "asset": "mix-green-tea",
+    "mode": "shared"
+  },
+  "cv-aperitif-jasmine-tea": {
+    "asset": "mix-jasmine-tea",
+    "mode": "shared"
+  },
+  "cv-aperitif-cola": {
+    "asset": "mix-cola",
+    "mode": "shared"
+  },
+  "cv-aperitif-lemon-lime-soda": {
+    "asset": "mix-lemon-lime-soda",
+    "mode": "shared"
+  },
+  "cv-aperitif-soda-water": {
+    "asset": "mix-soda-water",
+    "mode": "shared"
+  },
+  "cv-aperitif-tonic-water": {
+    "asset": "mix-tonic-water",
+    "mode": "shared"
+  },
+  "cv-aperitif-ginger-ale": {
+    "asset": "mix-ginger-ale",
+    "mode": "shared"
+  },
+  "cv-aperitif-orange-juice": {
+    "asset": "mix-orange-juice",
+    "mode": "shared"
+  },
+  "cv-aperitif-apple-juice": {
+    "asset": "mix-apple-juice",
+    "mode": "shared"
+  },
+  "cv-aperitif-pineapple-juice": {
+    "asset": "mix-pineapple-juice",
+    "mode": "shared"
+  },
+  "cv-aperitif-cranberry-juice": {
+    "asset": "mix-cranberry-juice",
+    "mode": "shared"
+  },
+  "cv-aperitif-grape-juice": {
+    "asset": "mix-grape-juice",
+    "mode": "shared"
+  },
+  "cv-aperitif-mango-juice": {
+    "asset": "mix-mango-juice",
+    "mode": "shared"
+  },
+  "cv-aperitif-coconut-milk-drink": {
+    "asset": "mix-coconut-milk-drink",
+    "mode": "shared"
+  },
+  "cv-aperitif-coconut-water": {
+    "asset": "mix-coconut-water",
+    "mode": "shared"
+  },
+  "cv-aperitif-yakult": {
+    "asset": "mix-yakult",
+    "mode": "shared"
+  },
+  "cv-aperitif-calpis": {
+    "asset": "mix-calpis",
+    "mode": "shared"
+  },
+  "cv-aperitif-yogurt-drink": {
+    "asset": "mix-yogurt-drink",
+    "mode": "shared"
+  },
+  "cv-aperitif-milk-tea": {
+    "asset": "mix-milk-tea",
+    "mode": "shared"
+  },
+  "cv-aperitif-black-coffee": {
+    "asset": "mix-black-coffee",
+    "mode": "shared"
+  },
+  "cv-aperitif-energy-drink": {
+    "asset": "mix-energy-drink",
+    "mode": "shared"
+  },
+  "cv-aperitif-vitamin-c-drink": {
+    "asset": "mix-vitamin-c-drink",
+    "mode": "shared"
+  },
+  "cv-aperitif-honey-citron-drink": {
+    "asset": "mix-honey-citron-drink",
+    "mode": "shared"
+  },
+  "cv-aperitif-pear-drink": {
+    "asset": "mix-pear-drink",
+    "mode": "shared"
+  },
+  "cv-aperitif-sour-plum-drink": {
+    "asset": "mix-sour-plum-drink",
+    "mode": "shared"
+  },
+  "daiquiri": {
+    "asset": "daiquiri",
+    "mode": "dedicated"
+  }
+}

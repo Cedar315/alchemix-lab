@@ -1,0 +1,19 @@
+{
+  "entries": [
+    {
+      "id": "shake-time-and-separation",
+      "title": "摇和时间与乳饮分层",
+      "aliases": ["摇10秒", "shake多久", "乳饮分层", "养乐多分层"],
+      "category": "调酒技法",
+      "answer": "仅凭摇了10秒不能确定分层原因。一般加冰摇和可把15–20秒作为重新尝试的参考，具体仍看配方和冰块条件。摇和能混合、降温并改变质地，但不保证乳饮持续稳定。奶蛋白遇酸可能凝结；如果出现絮状物或结块，不应认定为没摇够，也不能保证继续摇就能恢复。建议先用少量材料重新做一杯、观察是否均匀；不要把15–20秒当成解决所有分层的固定标准。",
+      "scope": "一般非碳酸饮品的加冰摇和参考；不诊断某品牌乳酸饮料的具体分层原因，不提供保证有效的补救。",
+      "evidenceType": "synthesis",
+      "reviewStatus": "source_checked_initial",
+      "checkedAt": "2026-09-19",
+      "sources": [
+        { "title": "Difford’s Guide — Stirring vs. shaking", "url": "https://www.diffordsguide.com/encyclopedia/315/cocktails/stirring-vs-shaking-a-cocktail" },
+        { "title": "Campari Academy — Milk Punch Guide", "url": "https://www.campariacademy.com/en-us/training/tools-techniques/milk-punch-guide-and-recipes/" }
+      ]
+    }
+  ]
+}

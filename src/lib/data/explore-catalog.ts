@@ -1,3 +1,5 @@
+import { coreIngredientKey,stableRecipeId } from '../recipes/identity';
+import { getCocktailIllustration } from './cocktail-illustrations';
 import { classify, type GuideDrink } from "../recommendations/beginner";
 export interface ClassicCocktailData {
   id: string;
@@ -904,10 +906,11 @@ export const normalizeClassicCocktailId = (value: string) => {
 export const dedupeCocktails = (items: InspirationCocktail[]) => {
   const seen = new Set<string>();
   return items.filter((item) => {
-    if (seen.has(item.id)) return false;
-    seen.add(item.id);
+    const key=item.id.startsWith('cv-')||item.href.includes('convenience-mix')?'convenience:'+coreIngredientKey(item.ingredients):stableRecipeId(item.id);
+    if (seen.has(key)) return false;
+    seen.add(key);
     return true;
-  });
+  }).map(item => ({ ...item, imageUrl: getCocktailIllustration(item.id) ?? item.imageUrl }));
 };
 
 export const actualClassicSeeds: Array<Omit<InspirationCocktail, "imageUrl" | "href">> = [
@@ -1105,6 +1108,11 @@ export const BEGINNER_CATALOG: GuideDrink[] = [
   ...classicExploreCocktails.map(d => classify(d, "classic")),
   ...convenienceExploreCocktails.map(d => classify(d, "easy")),
 ].filter((d): d is GuideDrink => d !== null);
+
+export const canonicalConvenienceId = (id:string) => {
+ const raw=[...curatedConvenienceExploreCocktails,...generatedConvenienceCocktails].find(r=>r.id===id);
+ return raw?convenienceExploreCocktails.find(r=>coreIngredientKey(r.ingredients)===coreIngredientKey(raw.ingredients))?.id||id:stableRecipeId(id);
+};
 
 export const getConvenienceRecipeGuide = (cocktail: InspirationCocktail): ConvenienceRecipeGuide => {
   const curated = convenienceRecipeGuides[cocktail.id];

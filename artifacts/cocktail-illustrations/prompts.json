@@ -1,0 +1,762 @@
+{
+  "mode": "built-in image_gen",
+  "reference": "User-approved Margarita watercolor illustration",
+  "assets": [
+    {
+      "id": "margarita",
+      "file": "public/images/cocktails/illustrated/margarita.png",
+      "prompt": "Use case: stylized-concept. Asset type: original cocktail illustration for AlcheMix recipe cards. Create a single Margarita cocktail in an elegant clear stemmed glass, pale yellow-green translucent liquid, irregular salt crystals along the rim, a fresh lime wheel on the right rim. Style: refined hand-drawn editorial beverage illustration, fine slightly organic charcoal contours, restrained flat watercolor-like color fills, delicate cool gray glass highlights, clearly drawn glass geometry. Entire glass visible, centered, occupying 76 percent of a square canvas with generous clean pure white margins. Front view with slightly visible elliptical rim. Quiet premium printed drinks-handbook feeling. White background. No hands, extra objects, scenery, typography, labels, logos, borders or watermark. Not a photograph or 3D render. Deliver one standalone illustration, not a UI or collage.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-efc593bc-50fe-44c8-b72b-1ac71d39dc5e.png"
+    },
+    {
+      "id": "daiquiri",
+      "file": "public/images/cocktails/illustrated/daiquiri.png",
+      "prompt": "Use case: stylized-concept. Original standalone Daiquiri cocktail recipe illustration: clear elegant stemmed coupe holding cloudy very pale lime-yellow liquid, no ice, one small lime wheel garnish. Match reference STYLE ONLY: delicate charcoal contours, refined watercolor fills, translucent glass highlights and pure white background. Complete glass visible, centered and occupying 80 percent of square canvas, generous margins. No text, branding, hands, extra objects, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-e0474190-f868-47ae-9292-a55695d6ffdb.png"
+    },
+    {
+      "id": "mojito",
+      "file": "public/images/cocktails/illustrated/mojito.png",
+      "prompt": "Use case: stylized-concept. Generate one original standalone cocktail illustration for a recipe card. Reference image is STYLE ONLY: match its delicate charcoal outlines, refined watercolor, translucent glass highlights, and white background, but draw this subject: Mojito: tall clear highball glass, very pale clear lime liquid, angular ice cubes, fresh mint leaves inside and a mint sprig with lime wedge on the rim. Whole glass visible and centered, 80 percent of square canvas, white margins. No text, labels, logos, hands, extra objects, UI, border or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-812534e9-4157-4e5b-bbef-ee91338f1f3f.png"
+    },
+    {
+      "id": "negroni",
+      "file": "public/images/cocktails/illustrated/negroni.png",
+      "prompt": "Use case: stylized-concept. Generate one original standalone cocktail illustration for a recipe card. Reference image is STYLE ONLY: match its delicate charcoal outlines, refined watercolor, translucent glass highlights, and white background, but draw this subject: Negroni: short heavy clear rocks glass, transparent ruby-orange drink, one large clear ice cube and a broad orange peel garnish. Whole glass visible and centered, 80 percent of square canvas, white margins. No text, labels, logos, hands, extra objects, UI, border or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-caff0811-746f-4a09-ac20-bf9c018959e5.png"
+    },
+    {
+      "id": "old-fashioned",
+      "file": "public/images/cocktails/illustrated/old-fashioned.png",
+      "prompt": "Use case: stylized-concept. Generate one original standalone cocktail illustration for a recipe card. Reference image is STYLE ONLY: match its delicate charcoal outlines, refined watercolor, translucent glass highlights, and white background, but draw this subject: Old Fashioned: short heavy clear rocks glass, transparent amber whiskey, one large clear ice cube and a curled orange peel. Whole glass visible and centered, 80 percent of square canvas, white margins. No text, labels, logos, hands, extra objects, UI, border or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-7c5c38ad-4c06-4b20-9754-e367705fd4b1.png"
+    },
+    {
+      "id": "gin-tonic",
+      "file": "public/images/cocktails/illustrated/gin-tonic.png",
+      "prompt": "Use case: stylized-concept. Generate one original standalone cocktail illustration for a recipe card. Reference image is STYLE ONLY: match its delicate charcoal outlines, refined watercolor, translucent glass highlights, and white background, but draw this subject: Gin and Tonic: tall clear highball glass, colorless transparent sparkling liquid, angular ice cubes and a lime wheel garnish. Whole glass visible and centered, 80 percent of square canvas, white margins. No text, labels, logos, hands, extra objects, UI, border or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-2eb48b24-cb04-4db1-9435-89ea1627274e.png"
+    },
+    {
+      "id": "singapore-sling",
+      "file": "public/images/cocktails/illustrated/singapore-sling.png",
+      "prompt": "Use case: stylized-concept. Generate one original standalone cocktail illustration for a recipe card. Reference image is STYLE ONLY: match its delicate charcoal outlines, refined watercolor, translucent glass highlights, and white background, but draw this subject: Singapore Sling in a tall hurricane glass, coral pink-red liquid, ice, pineapple wedge and red cherry. Whole glass visible and centered, 80 percent of square canvas, generous white margins. No text, labels, logos, hands, extra objects, UI, border or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-44924671-57e8-46f2-912b-fd8337ce4654.png"
+    },
+    {
+      "id": "strawberry-daiquiri",
+      "file": "public/images/cocktails/illustrated/strawberry-daiquiri.png",
+      "prompt": "Use case: stylized-concept. Generate one original standalone cocktail illustration for a recipe card. Reference image is STYLE ONLY: match its delicate charcoal outlines, refined watercolor, translucent glass highlights, and white background, but draw this subject: Strawberry Daiquiri in a clear stemmed coupe, opaque strawberry-red liquid, strawberry garnish, no ice cubes. Whole glass visible and centered, 80 percent of square canvas, generous white margins. No text, labels, logos, hands, extra objects, UI, border or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-a6089d28-0085-4696-b9aa-c54012fdc8ab.png"
+    },
+    {
+      "id": "martini",
+      "file": "public/images/cocktails/illustrated/martini.png",
+      "prompt": "Use case: stylized-concept. Generate one original standalone cocktail illustration for a recipe card. Reference image is STYLE ONLY: match its delicate charcoal outlines, refined watercolor, translucent glass highlights, and white background, but draw this subject: Dry Martini in a classic V-shaped stemmed martini glass, colorless transparent liquid without ice, green olive on a fine cocktail pick. Whole glass visible and centered, 80 percent of square canvas, generous white margins. No text, labels, logos, hands, extra objects, UI, border or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-be50c4fe-17a4-4e4e-90be-9be8c28b9562.png"
+    },
+    {
+      "id": "whisky-highball",
+      "file": "public/images/cocktails/illustrated/whisky-highball.png",
+      "prompt": "Use case: stylized-concept. Generate one original standalone cocktail illustration for a recipe card. Reference image is STYLE ONLY: match its delicate charcoal outlines, refined watercolor, translucent glass highlights, and white background, but draw this subject: Whisky Highball in a tall straight clear glass, pale golden transparent sparkling liquid and large clear ice cubes, no garnish. Whole glass visible and centered, 80 percent of square canvas, generous white margins. No text, labels, logos, hands, extra objects, UI, border or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-39dcc871-cf5a-4507-93ea-3a3f884beda8.png"
+    },
+    {
+      "id": "whiskey-sour",
+      "file": "public/images/cocktails/illustrated/whiskey-sour.png",
+      "prompt": "Use case: stylized-concept. Generate one original standalone cocktail illustration for a recipe card. Reference image is STYLE ONLY: match its delicate charcoal outlines, refined watercolor, translucent glass highlights, and white background, but draw this subject: Whiskey Sour in a short clear rocks glass, golden yellow liquid and ice, thin white foam cap and orange slice. Whole glass visible and centered, 80 percent of square canvas, generous white margins. No text, labels, logos, hands, extra objects, UI, border or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-df942b96-dd18-458d-97cb-d8d1d9e1c8c8.png"
+    },
+    {
+      "id": "cosmopolitan",
+      "file": "public/images/cocktails/illustrated/cosmopolitan.png",
+      "prompt": "Use case: stylized-concept. Generate one original standalone cocktail illustration for a recipe card. Reference image is STYLE ONLY: match its delicate charcoal outlines, refined watercolor, translucent glass highlights, and white background, but draw this subject: Cosmopolitan in a V-shaped stemmed martini glass, transparent cranberry pink liquid without ice, orange twist. Whole glass visible and centered, 80 percent of square canvas, generous white margins. No text, labels, logos, hands, extra objects, UI, border or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-f7079dca-c6e3-4765-93a1-19fba25af3fd.png"
+    },
+    {
+      "id": "moscow-mule",
+      "file": "public/images/cocktails/illustrated/moscow-mule.png",
+      "prompt": "Use case: stylized-concept. Generate one original standalone cocktail illustration for a recipe card. Reference image is STYLE ONLY: match its delicate charcoal outlines, refined watercolor, translucent glass highlights, and white background, but draw this subject: Moscow Mule in a copper mug with rounded handle, clear ice cubes, lime wedge, pale sparkling liquid. Whole glass visible and centered, 80 percent of square canvas, generous white margins. No text, labels, logos, hands, extra objects, UI, border or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-fbe200d1-b352-4e41-b5f8-e980e3cefe4e.png"
+    },
+    {
+      "id": "aperol-spritz",
+      "file": "public/images/cocktails/illustrated/aperol-spritz.png",
+      "prompt": "Use case: stylized-concept. Generate one original standalone cocktail illustration for a recipe card. Reference image is STYLE ONLY: match its delicate charcoal outlines, refined watercolor, translucent glass highlights, and white background, but draw this subject: Aperol Spritz in a large stemmed wine glass, vibrant transparent orange liquid, ice, orange half-wheel. Whole glass visible and centered, 80 percent of square canvas, generous white margins. No text, labels, logos, hands, extra objects, UI, border or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-1ac910bc-9cd5-4f87-a82e-bb2aa88c4c3e.png"
+    },
+    {
+      "id": "pina-colada",
+      "file": "public/images/cocktails/illustrated/pina-colada.png",
+      "prompt": "Use case: stylized-concept. Generate one original standalone cocktail illustration for a recipe card. Reference image is STYLE ONLY: match its delicate charcoal outlines, refined watercolor, translucent glass highlights, and white background, but draw this subject: Pina Colada in a curved hurricane glass, creamy ivory coconut-pineapple drink, pineapple wedge garnish. Whole glass visible and centered, 80 percent of square canvas, generous white margins. No text, labels, logos, hands, extra objects, UI, border or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-92d15ae1-f4ea-41a5-b7b5-a72540222780.png"
+    },
+    {
+      "id": "tom-collins",
+      "file": "public/images/cocktails/illustrated/tom-collins.png",
+      "prompt": "Use case: stylized-concept. Generate one original standalone cocktail illustration for a recipe card. Reference image is STYLE ONLY: match its delicate charcoal outlines, refined watercolor, translucent glass highlights, and white background, but draw this subject: Tom Collins in a slender tall clear glass, pale lemon sparkling liquid, clear ice cubes, lemon wheel. Whole glass visible and centered, 80 percent of square canvas, generous white margins. No text, labels, logos, hands, extra objects, UI, border or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-f09ce6cb-94f1-443a-b0a1-3e9de1a81a01.png"
+    },
+    {
+      "id": "paloma",
+      "file": "public/images/cocktails/illustrated/paloma.png",
+      "prompt": "Use case: stylized-concept. Generate one original standalone cocktail illustration for a recipe card. Reference image is STYLE ONLY: match its delicate charcoal outlines, refined watercolor, translucent glass highlights, and white background, but draw this subject: Paloma in a tall clear highball glass, pale pink grapefruit sparkling liquid, ice cubes, half salt rim and grapefruit wedge. Whole glass visible and centered, 80 percent of square canvas, generous white margins. No text, labels, logos, hands, extra objects, UI, border or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-26eb8d34-dc28-4219-8c36-1052b5da8af2.png"
+    },
+    {
+      "id": "mai-tai",
+      "file": "public/images/cocktails/illustrated/mai-tai.png",
+      "prompt": "Use case: stylized-concept. Generate one original standalone cocktail illustration for a recipe card. Reference image is STYLE ONLY: match its delicate charcoal outlines, refined watercolor, translucent glass highlights, and white background, but draw this subject: Mai Tai in a short clear double rocks glass, amber-golden rum drink, crushed ice, lime shell and mint sprig. Whole glass visible and centered, 80 percent of square canvas, generous white margins. No text, labels, logos, hands, extra objects, UI, border or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-77045398-4a77-4291-a6ee-b8f147a7db95.png"
+    },
+    {
+      "id": "alexander",
+      "file": "public/images/cocktails/illustrated/alexander.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: alexander. Depict creamy light cocoa drink in a coupe, nutmeg dust. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-2def27c7-b647-48dd-81e6-ee1d6029d108.png"
+    },
+    {
+      "id": "americano",
+      "file": "public/images/cocktails/illustrated/americano.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: americano. Depict ruby red sparkling drink in rocks glass, ice and orange half-wheel. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-7eecc093-c219-4977-aaff-c74c63c0fb42.png"
+    },
+    {
+      "id": "aviation",
+      "file": "public/images/cocktails/illustrated/aviation.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: aviation. Depict pale lavender drink in coupe, one dark cherry. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-512cf42c-9015-491c-be11-8a65554f8fdd.png"
+    },
+    {
+      "id": "boulevardier",
+      "file": "public/images/cocktails/illustrated/boulevardier.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: boulevardier. Depict deep amber red drink in rocks glass with large ice cube and orange twist. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-22108a4c-5126-4f77-b5ff-019b065334b0.png"
+    },
+    {
+      "id": "brandy-crusta",
+      "file": "public/images/cocktails/illustrated/brandy-crusta.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: brandy crusta. Depict golden amber in small stemmed tulip glass, sugar crust rim and large lemon peel lining rim. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-bdb15d3e-d31a-4fa4-bdda-eeaeae0f30f7.png"
+    },
+    {
+      "id": "casino",
+      "file": "public/images/cocktails/illustrated/casino.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: casino. Depict pale yellow in coupe with a red cherry. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-61387187-043b-4f28-b3a1-0a868c159842.png"
+    },
+    {
+      "id": "clover-club",
+      "file": "public/images/cocktails/illustrated/clover-club.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: clover club. Depict raspberry pink in coupe with white foam cap and raspberries. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-8311c677-8d8d-402e-9865-daa6c93fb313.png"
+    },
+    {
+      "id": "dry-martini",
+      "file": "public/images/cocktails/illustrated/dry-martini.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: dry martini. Depict colorless in V shaped martini glass, olive on pick. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-f51d5882-51d4-461e-a17c-c905e1131e73.png"
+    },
+    {
+      "id": "gin-fizz",
+      "file": "public/images/cocktails/illustrated/gin-fizz.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: gin fizz. Depict pale lemon fizzy liquid in narrow tall glass, thin frothy top, no ice. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-b10dd444-d19c-45c9-93b2-5830a7574109.png"
+    },
+    {
+      "id": "hanky-panky",
+      "file": "public/images/cocktails/illustrated/hanky-panky.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: hanky panky. Depict deep reddish amber in coupe with orange twist. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-8966c9de-dc08-4122-b4bb-644f0d01859d.png"
+    },
+    {
+      "id": "last-word",
+      "file": "public/images/cocktails/illustrated/last-word.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: last word. Depict pale green in coupe with small dark cherry. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-8afe79be-ebfe-4bc0-b80f-1305dc805ad8.png"
+    },
+    {
+      "id": "manhattan",
+      "file": "public/images/cocktails/illustrated/manhattan.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: manhattan. Depict transparent deep amber in stemmed coupe with dark cherry. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-e19e76b8-87f0-4f1e-8779-9b6d00363be2.png"
+    },
+    {
+      "id": "martinez",
+      "file": "public/images/cocktails/illustrated/martinez.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: martinez. Depict copper amber in stemmed coupe with orange twist. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-392cd07c-927a-4402-b7f6-18f648491a06.png"
+    },
+    {
+      "id": "mary-pickford",
+      "file": "public/images/cocktails/illustrated/mary-pickford.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: mary pickford. Depict rosy pink pineapple liquid in coupe, small cherry. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-b9bbf9b8-fa2d-4bc0-af75-e06f831ea1cc.png"
+    },
+    {
+      "id": "monkey-gland",
+      "file": "public/images/cocktails/illustrated/monkey-gland.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: monkey gland. Depict orange-pink liquid in coupe, orange twist. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-468cdeed-3137-46f7-9322-d4f303e642eb.png"
+    },
+    {
+      "id": "ramos-gin-fizz",
+      "file": "public/images/cocktails/illustrated/ramos-gin-fizz.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: ramos gin fizz. Depict opaque ivory liquid in tall Collins glass, thick white foam rising above rim. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-ac9e048e-b81b-4764-ab5e-25ce3970498d.png"
+    },
+    {
+      "id": "rusty-nail",
+      "file": "public/images/cocktails/illustrated/rusty-nail.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: rusty nail. Depict golden amber in rocks glass with ice and lemon twist. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-60bfbf33-3828-40ed-a6c8-9defc35d8c0a.png"
+    },
+    {
+      "id": "sazerac",
+      "file": "public/images/cocktails/illustrated/sazerac.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: sazerac. Depict small measure transparent amber in short rocks glass without ice, lemon peel. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-af0d4bb6-1c75-44be-8ac8-3a835c163ad0.png"
+    },
+    {
+      "id": "sidecar",
+      "file": "public/images/cocktails/illustrated/sidecar.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: sidecar. Depict golden amber-yellow liquid in coupe, sugar half rim, orange twist. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-66d6b097-9e1d-4532-89b4-f700bc3734df.png"
+    },
+    {
+      "id": "vieux-carre",
+      "file": "public/images/cocktails/illustrated/vieux-carre.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: vieux carre. Depict deep amber in rocks glass with large ice cube and lemon peel. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-8cf0bffc-d21b-4532-bd2d-c064ac7cc1b0.png"
+    },
+    {
+      "id": "white-lady",
+      "file": "public/images/cocktails/illustrated/white-lady.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: white lady. Depict pale cloudy lemon liquid in coupe without ice. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-4cea9897-2000-4acf-87eb-d4017849b45d.png"
+    },
+    {
+      "id": "black-russian",
+      "file": "public/images/cocktails/illustrated/black-russian.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: black russian. Depict dark brown coffee liqueur drink in rocks glass with large clear ice. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-0db0a1ff-71ae-4d0d-b0f6-ed62db658403.png"
+    },
+    {
+      "id": "bloody-mary",
+      "file": "public/images/cocktails/illustrated/bloody-mary.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: bloody mary. Depict opaque red tomato drink in highball with ice, celery stalk and lemon wedge. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-68f1e196-3477-4418-879f-91b1d69fb562.png"
+    },
+    {
+      "id": "caipirinha",
+      "file": "public/images/cocktails/illustrated/caipirinha.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: caipirinha. Depict cloudy pale lime liquid in rocks glass with crushed ice and muddled lime chunks. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-16e6b76b-dc0f-4f4d-b3b6-0359566c8a20.png"
+    },
+    {
+      "id": "champagne-cocktail",
+      "file": "public/images/cocktails/illustrated/champagne-cocktail.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: champagne cocktail. Depict golden bubbling liquid in champagne flute, sugar cube at bottom. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-18ed8931-0ab9-4662-a4a6-34920578eb0a.png"
+    },
+    {
+      "id": "corpse-reviver-2",
+      "file": "public/images/cocktails/illustrated/corpse-reviver-2.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: corpse reviver 2. Depict pale cloudy yellow in coupe, orange peel. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-b3cb50ee-7575-4a57-8b33-137464d49fc6.png"
+    },
+    {
+      "id": "cuba-libre",
+      "file": "public/images/cocktails/illustrated/cuba-libre.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: cuba libre. Depict dark brown cola drink in highball with ice and lime wedge. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-428aefe3-af13-453a-a333-9ec9e2a129ca.png"
+    },
+    {
+      "id": "french-75",
+      "file": "public/images/cocktails/illustrated/french-75.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: french 75. Depict pale golden bubbling liquid in champagne flute with lemon twist. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-9719e287-f2ef-4a98-874b-5541be986f58.png"
+    },
+    {
+      "id": "grasshopper",
+      "file": "public/images/cocktails/illustrated/grasshopper.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: grasshopper. Depict opaque pastel mint green in coupe, no ice. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-6088fd36-8230-4cb9-a3c9-7ec152f1afc4.png"
+    },
+    {
+      "id": "hemingway-special",
+      "file": "public/images/cocktails/illustrated/hemingway-special.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: hemingway special. Depict pale cloudy pink-white liquid in coupe, lime wheel. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-a0ab3cf5-01bf-45c1-b23e-3b53669069c2.png"
+    },
+    {
+      "id": "irish-coffee",
+      "file": "public/images/cocktails/illustrated/irish-coffee.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: irish coffee. Depict dark brown coffee in clear handled footed coffee glass, distinct thick white cream layer. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-aeef6da3-2acf-401b-b05d-a4fb29452ba2.png"
+    },
+    {
+      "id": "lemon-drop",
+      "file": "public/images/cocktails/illustrated/lemon-drop.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: lemon drop. Depict lemon yellow liquid in V shaped martini glass, sugar rim and lemon twist. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-2cf71fbd-15f4-4d54-913e-f869644dda50.png"
+    },
+    {
+      "id": "long-island-iced-tea",
+      "file": "public/images/cocktails/illustrated/long-island-iced-tea.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: long island iced tea. Depict transparent amber tea-colored liquid in highball, ice and lemon wedge. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-e93135c7-1b1e-4806-9435-eb3db54eaa68.png"
+    },
+    {
+      "id": "mimosa",
+      "file": "public/images/cocktails/illustrated/mimosa.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: mimosa. Depict opaque golden orange liquid in champagne flute. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-f8eabf9b-9d2d-471e-99d1-05d9c03a085b.png"
+    },
+    {
+      "id": "mint-julep",
+      "file": "public/images/cocktails/illustrated/mint-julep.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: mint julep. Depict silver metal julep cup filled with crushed ice and abundant fresh mint. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-2dac68db-c45b-4dc2-abe7-07439ae4b5d5.png"
+    },
+    {
+      "id": "pisco-sour",
+      "file": "public/images/cocktails/illustrated/pisco-sour.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: pisco sour. Depict pale creamy yellow liquid in coupe, white foam cap with three brown bitters dots. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-85d6ce76-101e-45c3-a313-c3267d66690d.png"
+    },
+    {
+      "id": "sea-breeze",
+      "file": "public/images/cocktails/illustrated/sea-breeze.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: sea breeze. Depict rosy red grapefruit-cranberry liquid in highball, ice and lime wedge. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-27bd546a-1e74-4379-a691-178b363dc3eb.png"
+    },
+    {
+      "id": "sex-on-the-beach",
+      "file": "public/images/cocktails/illustrated/sex-on-the-beach.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: sex on the beach. Depict orange-red fruit juice drink in highball, ice and orange half wheel. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-8eefd429-9df5-4dca-95d2-48c63ba83304.png"
+    },
+    {
+      "id": "tequila-sunrise",
+      "file": "public/images/cocktails/illustrated/tequila-sunrise.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: tequila sunrise. Depict highball of orange juice transitioning into deep red at bottom, ice and orange slice. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-ab18b601-e470-4f54-9210-425324b7e91e.png"
+    },
+    {
+      "id": "vesper",
+      "file": "public/images/cocktails/illustrated/vesper.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: vesper. Depict clear pale gold liquid in V shaped martini glass with lemon peel. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-4a3fd515-03bd-4865-becb-1fd984a5b95f.png"
+    },
+    {
+      "id": "zombie",
+      "file": "public/images/cocktails/illustrated/zombie.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: zombie. Depict amber-orange tropical drink in tall glass, crushed ice, mint and lime garnish. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-e6b4f49a-48de-4de0-8668-2560813238a2.png"
+    },
+    {
+      "id": "bees-knees",
+      "file": "public/images/cocktails/illustrated/bees-knees.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: bees knees. Depict cloudy honey yellow liquid in coupe with lemon twist. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-4e3dfe75-6252-4bd9-b6a0-e8f0738ac581.png"
+    },
+    {
+      "id": "bramble",
+      "file": "public/images/cocktails/illustrated/bramble.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: bramble. Depict rocks glass filled with crushed ice, pale lemon liquid with purple blackberry liqueur trickling down, blackberries. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-5b3a5f9d-92bf-40e1-bd09-6dd8d3421d14.png"
+    },
+    {
+      "id": "dark-and-stormy",
+      "file": "public/images/cocktails/illustrated/dark-and-stormy.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: dark and stormy. Depict tall highball, cloudy pale ginger drink below a dark rum float, ice and lime. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-efebc544-0ae7-4826-a0da-872fe37b1b9c.png"
+    },
+    {
+      "id": "espresso-martini-classic",
+      "file": "public/images/cocktails/illustrated/espresso-martini-classic.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: espresso martini classic. Depict dark coffee brown in martini glass, tan foam cap with exactly three coffee beans. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-571ae244-b2ac-4aa6-81a1-79743e4eea13.png"
+    },
+    {
+      "id": "french-martini",
+      "file": "public/images/cocktails/illustrated/french-martini.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: french martini. Depict cloudy rose-pink pineapple liquid in coupe with pale froth. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-4e86f56b-ec4c-4b69-81a9-7440bca5fcdb.png"
+    },
+    {
+      "id": "jungle-bird",
+      "file": "public/images/cocktails/illustrated/jungle-bird.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: jungle bird. Depict deep reddish orange in rocks glass with ice, pineapple wedge. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-65a6cef7-ee4d-4cc6-bc68-83dd835c9c98.png"
+    },
+    {
+      "id": "naked-and-famous",
+      "file": "public/images/cocktails/illustrated/naked-and-famous.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: naked and famous. Depict cloudy pale orange in coupe, no ice. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-1fc876fd-d1f7-4306-a651-4bfe44c11c91.png"
+    },
+    {
+      "id": "new-york-sour",
+      "file": "public/images/cocktails/illustrated/new-york-sour.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: new york sour. Depict rocks glass with clear ice, pale golden whiskey sour below distinct deep red wine float. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-b283792d-498b-47e8-872f-0caf04e302d5.png"
+    },
+    {
+      "id": "paper-plane",
+      "file": "public/images/cocktails/illustrated/paper-plane.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: paper plane. Depict cloudy orange-apricot in coupe without ice. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-ae2fc81a-8596-4d89-a8ca-8d28bd50e4d0.png"
+    },
+    {
+      "id": "penicillin",
+      "file": "public/images/cocktails/illustrated/penicillin.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: penicillin. Depict cloudy honey gold in rocks glass with large ice cube and candied ginger on pick. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-5f3e4034-3b2c-4cc3-9864-127c02a320f1.png"
+    },
+    {
+      "id": "porn-star-martini",
+      "file": "public/images/cocktails/illustrated/porn-star-martini.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: porn star martini. Depict opaque yellow-orange passionfruit drink in coupe, half passionfruit floating, no side glass. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-a0a446a0-22d8-4141-84ff-55217ab42551.png"
+    },
+    {
+      "id": "tommy-margarita",
+      "file": "public/images/cocktails/illustrated/tommy-margarita.png",
+      "prompt": "Use case: stylized-concept. Original standalone cocktail recipe illustration: tommy margarita. Depict cloudy pale lime drink in rocks glass with ice and lime wheel. Match the reference STYLE ONLY: refined delicate charcoal drawing, soft watercolor fills, subtle translucent glass highlights, pure white background. Complete glass centered occupying 80 percent of square canvas, generous white margins. No text, logos, labels, hands, extra objects, border, scenery, UI or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-b70f70af-cb89-4633-bec1-6c0cba1529e3.png"
+    },
+    {
+      "id": "mix-grapefruit-soda",
+      "file": "public/images/cocktails/illustrated/mix-grapefruit-soda.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with pale blush-pink translucent sparkling liquid, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-9316ecc5-104f-45a3-acc4-d38352b0807a.png"
+    },
+    {
+      "id": "mix-lemon-tea",
+      "file": "public/images/cocktails/illustrated/mix-lemon-tea.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with transparent golden brown lemon tea, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-63ee6961-dacf-4b6d-af32-eab46d73f7b9.png"
+    },
+    {
+      "id": "mix-oolong-tea",
+      "file": "public/images/cocktails/illustrated/mix-oolong-tea.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with transparent amber oolong tea, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-bc7b7adc-3fdb-47c5-89a9-6458b5c0dcee.png"
+    },
+    {
+      "id": "mix-green-tea",
+      "file": "public/images/cocktails/illustrated/mix-green-tea.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with transparent pale yellow green tea, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-a2f9c6d6-3f1a-4c49-8cf1-0806ded2cfb7.png"
+    },
+    {
+      "id": "mix-jasmine-tea",
+      "file": "public/images/cocktails/illustrated/mix-jasmine-tea.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with transparent pale straw jasmine tea, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-86cc4aae-0a59-40e7-a9e6-5a40a63cf985.png"
+    },
+    {
+      "id": "mix-cola",
+      "file": "public/images/cocktails/illustrated/mix-cola.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with dark transparent brown cola with tiny bubbles, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-7878015e-be2b-4d88-992e-adfc7c1c8b00.png"
+    },
+    {
+      "id": "mix-lemon-lime-soda",
+      "file": "public/images/cocktails/illustrated/mix-lemon-lime-soda.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with colorless transparent sparkling soda, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-7a4d896a-3a36-43fe-9a43-a1c63f67fc1e.png"
+    },
+    {
+      "id": "mix-soda-water",
+      "file": "public/images/cocktails/illustrated/mix-soda-water.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with colorless transparent sparkling water, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-700de21b-6fbb-430b-8eb9-dd18041e5c94.png"
+    },
+    {
+      "id": "mix-tonic-water",
+      "file": "public/images/cocktails/illustrated/mix-tonic-water.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with colorless transparent sparkling tonic, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-7b9fc58f-e741-4515-8664-76ef4cbb36d6.png"
+    },
+    {
+      "id": "mix-ginger-ale",
+      "file": "public/images/cocktails/illustrated/mix-ginger-ale.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with pale gold transparent sparkling ginger ale, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-e919773b-a70c-4fa3-9eae-2fa089c2c76a.png"
+    },
+    {
+      "id": "mix-orange-juice",
+      "file": "public/images/cocktails/illustrated/mix-orange-juice.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with opaque vivid golden orange juice, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-6fad9960-b720-4108-88f1-b772ebcfb262.png"
+    },
+    {
+      "id": "mix-apple-juice",
+      "file": "public/images/cocktails/illustrated/mix-apple-juice.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with transparent pale golden apple juice, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-9b8262d9-ade8-49e8-a477-bbd8d2d21ad9.png"
+    },
+    {
+      "id": "mix-pineapple-juice",
+      "file": "public/images/cocktails/illustrated/mix-pineapple-juice.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with cloudy pale yellow pineapple juice, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-ce46b905-85e6-49d0-a046-9952baf92a5d.png"
+    },
+    {
+      "id": "mix-cranberry-juice",
+      "file": "public/images/cocktails/illustrated/mix-cranberry-juice.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with transparent crimson cranberry juice, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-515cbc9d-5619-41fc-a757-0957caa0dd6c.png"
+    },
+    {
+      "id": "mix-grape-juice",
+      "file": "public/images/cocktails/illustrated/mix-grape-juice.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with deep purple grape juice, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-7e09d9b3-825e-489e-bffd-3cf7ae0001d3.png"
+    },
+    {
+      "id": "mix-mango-juice",
+      "file": "public/images/cocktails/illustrated/mix-mango-juice.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with opaque rich yellow-orange mango juice, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-ad4f774d-ecee-4b49-bd6a-b63edb555e85.png"
+    },
+    {
+      "id": "mix-coconut-milk-drink",
+      "file": "public/images/cocktails/illustrated/mix-coconut-milk-drink.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with opaque creamy white coconut milk, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-66880663-1baf-4e12-9b18-023a58dd3db5.png"
+    },
+    {
+      "id": "mix-coconut-water",
+      "file": "public/images/cocktails/illustrated/mix-coconut-water.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with nearly colorless slightly cloudy coconut water, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-0d8e5936-401c-4939-a471-1b9444f85f2b.png"
+    },
+    {
+      "id": "mix-yakult",
+      "file": "public/images/cocktails/illustrated/mix-yakult.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with opaque creamy pale beige cultured milk, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-4bfe8f5e-0bbe-4476-901e-e5223a20c8d7.png"
+    },
+    {
+      "id": "mix-calpis",
+      "file": "public/images/cocktails/illustrated/mix-calpis.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with opaque milky white cultured drink, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-148a715e-e950-4ddc-84a7-70f191d118a1.png"
+    },
+    {
+      "id": "mix-yogurt-drink",
+      "file": "public/images/cocktails/illustrated/mix-yogurt-drink.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with opaque thick white yogurt drink, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-6ae7abde-9e8d-486f-956a-7d5b6f009c7c.png"
+    },
+    {
+      "id": "mix-milk-tea",
+      "file": "public/images/cocktails/illustrated/mix-milk-tea.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with opaque creamy tan milk tea, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-c4e46b94-68c7-4685-9438-30ebeb354e15.png"
+    },
+    {
+      "id": "mix-black-coffee",
+      "file": "public/images/cocktails/illustrated/mix-black-coffee.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with transparent deep dark brown black coffee, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-a9fe0525-5928-4bb8-aa9c-16010fc857ff.png"
+    },
+    {
+      "id": "mix-energy-drink",
+      "file": "public/images/cocktails/illustrated/mix-energy-drink.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with transparent pale golden carbonated energy drink, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-36537c0f-34d8-4769-8769-355558de8458.png"
+    },
+    {
+      "id": "mix-vitamin-c-drink",
+      "file": "public/images/cocktails/illustrated/mix-vitamin-c-drink.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with transparent lemon yellow vitamin drink, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-0d60ac90-e899-4ab3-86c4-ee5e25a41517.png"
+    },
+    {
+      "id": "mix-honey-citron-drink",
+      "file": "public/images/cocktails/illustrated/mix-honey-citron-drink.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with translucent golden yellow honey citron drink, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-3dc44350-f378-4db1-8bb4-e2dfa44320b7.png"
+    },
+    {
+      "id": "mix-pear-drink",
+      "file": "public/images/cocktails/illustrated/mix-pear-drink.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with transparent pale golden pear drink, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-57a586f2-9460-4120-b517-746d85e964d7.png"
+    },
+    {
+      "id": "mix-sour-plum-drink",
+      "file": "public/images/cocktails/illustrated/mix-sour-plum-drink.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with transparent reddish dark brown sour plum drink, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-3a0fc687-c84f-4950-a57b-f0f05627630c.png"
+    },
+    {
+      "id": "beer-tomato",
+      "file": "public/images/cocktails/illustrated/beer-tomato.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with opaque tomato red beer with fine light cream foam, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-0d6e9f1b-f6ce-4e9f-9214-7702e7454af4.png"
+    },
+    {
+      "id": "grapefruit-beer",
+      "file": "public/images/cocktails/illustrated/grapefruit-beer.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with hazy pale pink-golden beer with fine cream foam, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-bc301c77-d916-47a3-be9d-b2fdcedf173e.png"
+    },
+    {
+      "id": "lime-soju-soda",
+      "file": "public/images/cocktails/illustrated/lime-soju-soda.png",
+      "prompt": "Use case: stylized-concept. Standalone beverage recipe illustration. A tall straight clear drinking glass with colorless sparkling soju soda with fresh lime wedges inside, angular clear ice cubes. No fruit garnish unless explicitly described. Match reference STYLE ONLY: fine charcoal outlines, delicate refined watercolor, translucent glass with cool gray highlights, pure white background. One entire glass centered, 80 percent of square canvas, generous white margins. No text, label, branding, hands, loose ingredients, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-ef9966f6-92f9-44e6-a18f-1c0956c2b7b8.png"
+    },
+    {
+      "id": "template-sour",
+      "file": "public/images/cocktails/illustrated/template-sour.png",
+      "prompt": "Use case: stylized-concept. Original cocktail template illustration for a drinks handbook. Depict one stemmed coupe with cloudy pale lemon-yellow sour drink, no ice, lemon twist. Match reference STYLE ONLY: delicate charcoal outlines, refined watercolor fills and translucent glass highlights, clean pure white background. Entire vessel centered and fully visible, occupies 80 percent of square canvas, generous margins. No text, labels, branding, hands, loose objects, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-6ead5c96-e2af-4bb4-ba5e-b28649d62d05.png"
+    },
+    {
+      "id": "template-fizz",
+      "file": "public/images/cocktails/illustrated/template-fizz.png",
+      "prompt": "Use case: stylized-concept. Original cocktail template illustration for a drinks handbook. Depict one tall narrow clear glass with cloudy pale lemon-yellow sparkling drink and fine white froth. Match reference STYLE ONLY: delicate charcoal outlines, refined watercolor fills and translucent glass highlights, clean pure white background. Entire vessel centered and fully visible, occupies 80 percent of square canvas, generous margins. No text, labels, branding, hands, loose objects, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-e2b0ceb2-5c79-445c-a767-72d33df417ea.png"
+    },
+    {
+      "id": "template-collins",
+      "file": "public/images/cocktails/illustrated/template-collins.png",
+      "prompt": "Use case: stylized-concept. Original cocktail template illustration for a drinks handbook. Depict one tall Collins glass, transparent pale lemon drink, ice, lemon slice. Match reference STYLE ONLY: delicate charcoal outlines, refined watercolor fills and translucent glass highlights, clean pure white background. Entire vessel centered and fully visible, occupies 80 percent of square canvas, generous margins. No text, labels, branding, hands, loose objects, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-964e4449-78f4-4b67-976e-38d1e223eeb7.png"
+    },
+    {
+      "id": "template-daisy",
+      "file": "public/images/cocktails/illustrated/template-daisy.png",
+      "prompt": "Use case: stylized-concept. Original cocktail template illustration for a drinks handbook. Depict one stemmed coupe with cloudy pale golden citrus drink, no ice, lemon peel. Match reference STYLE ONLY: delicate charcoal outlines, refined watercolor fills and translucent glass highlights, clean pure white background. Entire vessel centered and fully visible, occupies 80 percent of square canvas, generous margins. No text, labels, branding, hands, loose objects, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-416701dc-bf8e-49bd-a4a3-5103f9006e39.png"
+    },
+    {
+      "id": "template-smash",
+      "file": "public/images/cocktails/illustrated/template-smash.png",
+      "prompt": "Use case: stylized-concept. Original cocktail template illustration for a drinks handbook. Depict one short rocks glass with crushed ice, cloudy lemon drink, mint leaves and lemon wedge. Match reference STYLE ONLY: delicate charcoal outlines, refined watercolor fills and translucent glass highlights, clean pure white background. Entire vessel centered and fully visible, occupies 80 percent of square canvas, generous margins. No text, labels, branding, hands, loose objects, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-12508627-8399-4a5d-a746-3b8b2fe8174c.png"
+    },
+    {
+      "id": "template-rickey",
+      "file": "public/images/cocktails/illustrated/template-rickey.png",
+      "prompt": "Use case: stylized-concept. Original cocktail template illustration for a drinks handbook. Depict one tall clear highball with clear fizzy drink, ice and lime wedge. Match reference STYLE ONLY: delicate charcoal outlines, refined watercolor fills and translucent glass highlights, clean pure white background. Entire vessel centered and fully visible, occupies 80 percent of square canvas, generous margins. No text, labels, branding, hands, loose objects, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-5c271fa9-f857-4ae3-9fb7-a731cc7e95c3.png"
+    },
+    {
+      "id": "template-buck",
+      "file": "public/images/cocktails/illustrated/template-buck.png",
+      "prompt": "Use case: stylized-concept. Original cocktail template illustration for a drinks handbook. Depict one tall clear highball with pale golden ginger soda, ice and lime wedge. Match reference STYLE ONLY: delicate charcoal outlines, refined watercolor fills and translucent glass highlights, clean pure white background. Entire vessel centered and fully visible, occupies 80 percent of square canvas, generous margins. No text, labels, branding, hands, loose objects, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-9ca18ca4-a4ec-4262-aa2b-b51681894669.png"
+    },
+    {
+      "id": "template-mule",
+      "file": "public/images/cocktails/illustrated/template-mule.png",
+      "prompt": "Use case: stylized-concept. Original cocktail template illustration for a drinks handbook. Depict one copper mug with ice, cloudy pale golden ginger drink, lime wedge. Match reference STYLE ONLY: delicate charcoal outlines, refined watercolor fills and translucent glass highlights, clean pure white background. Entire vessel centered and fully visible, occupies 80 percent of square canvas, generous margins. No text, labels, branding, hands, loose objects, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-952aa222-b60c-4377-abe4-d36a022393c7.png"
+    },
+    {
+      "id": "template-highball",
+      "file": "public/images/cocktails/illustrated/template-highball.png",
+      "prompt": "Use case: stylized-concept. Original cocktail template illustration for a drinks handbook. Depict one tall clear highball with nearly colorless sparkling drink and angular ice, no garnish. Match reference STYLE ONLY: delicate charcoal outlines, refined watercolor fills and translucent glass highlights, clean pure white background. Entire vessel centered and fully visible, occupies 80 percent of square canvas, generous margins. No text, labels, branding, hands, loose objects, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-a1a03d76-ab13-453f-bfaf-c66eee4a7848.png"
+    },
+    {
+      "id": "template-cooler",
+      "file": "public/images/cocktails/illustrated/template-cooler.png",
+      "prompt": "Use case: stylized-concept. Original cocktail template illustration for a drinks handbook. Depict one tall clear glass of pale lemon sparkling drink, ice and lemon wheel. Match reference STYLE ONLY: delicate charcoal outlines, refined watercolor fills and translucent glass highlights, clean pure white background. Entire vessel centered and fully visible, occupies 80 percent of square canvas, generous margins. No text, labels, branding, hands, loose objects, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-f1c15139-6d61-433f-8683-90619c026362.png"
+    },
+    {
+      "id": "template-cobbler",
+      "file": "public/images/cocktails/illustrated/template-cobbler.png",
+      "prompt": "Use case: stylized-concept. Original cocktail template illustration for a drinks handbook. Depict one short clear goblet of pale golden liquid, crushed ice and fresh mixed fruit garnish. Match reference STYLE ONLY: delicate charcoal outlines, refined watercolor fills and translucent glass highlights, clean pure white background. Entire vessel centered and fully visible, occupies 80 percent of square canvas, generous margins. No text, labels, branding, hands, loose objects, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-9f19216a-3ef4-4f53-a543-994f36142b6f.png"
+    },
+    {
+      "id": "template-fix",
+      "file": "public/images/cocktails/illustrated/template-fix.png",
+      "prompt": "Use case: stylized-concept. Original cocktail template illustration for a drinks handbook. Depict one short clear rocks glass with cloudy pale yellow citrus drink and crushed ice, lemon slice. Match reference STYLE ONLY: delicate charcoal outlines, refined watercolor fills and translucent glass highlights, clean pure white background. Entire vessel centered and fully visible, occupies 80 percent of square canvas, generous margins. No text, labels, branding, hands, loose objects, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-0edba07f-1248-4878-9e89-3b13e43b559f.png"
+    },
+    {
+      "id": "template-crusta",
+      "file": "public/images/cocktails/illustrated/template-crusta.png",
+      "prompt": "Use case: stylized-concept. Original cocktail template illustration for a drinks handbook. Depict one small stemmed tulip glass with golden citrus drink, sugar crust rim and large lemon peel curled along inner rim. Match reference STYLE ONLY: delicate charcoal outlines, refined watercolor fills and translucent glass highlights, clean pure white background. Entire vessel centered and fully visible, occupies 80 percent of square canvas, generous margins. No text, labels, branding, hands, loose objects, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-8a5fcdec-692c-4d0e-ab27-a1b719d1bd6e.png"
+    },
+    {
+      "id": "template-sling",
+      "file": "public/images/cocktails/illustrated/template-sling.png",
+      "prompt": "Use case: stylized-concept. Original cocktail template illustration for a drinks handbook. Depict one tall clear glass with pale golden sparkling citrus drink, ice and lemon slice. Match reference STYLE ONLY: delicate charcoal outlines, refined watercolor fills and translucent glass highlights, clean pure white background. Entire vessel centered and fully visible, occupies 80 percent of square canvas, generous margins. No text, labels, branding, hands, loose objects, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-ec0c027b-0d36-44cd-af3e-ed774f488949.png"
+    },
+    {
+      "id": "template-punch",
+      "file": "public/images/cocktails/illustrated/template-punch.png",
+      "prompt": "Use case: stylized-concept. Original cocktail template illustration for a drinks handbook. Depict one short clear rocks glass with cloudy golden orange citrus drink, ice and citrus wheel. Match reference STYLE ONLY: delicate charcoal outlines, refined watercolor fills and translucent glass highlights, clean pure white background. Entire vessel centered and fully visible, occupies 80 percent of square canvas, generous margins. No text, labels, branding, hands, loose objects, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-07fa4473-af22-49d9-af66-827944d45cbd.png"
+    },
+    {
+      "id": "template-julep",
+      "file": "public/images/cocktails/illustrated/template-julep.png",
+      "prompt": "Use case: stylized-concept. Original cocktail template illustration for a drinks handbook. Depict one silver metal julep cup with crushed ice and mint sprig. Match reference STYLE ONLY: delicate charcoal outlines, refined watercolor fills and translucent glass highlights, clean pure white background. Entire vessel centered and fully visible, occupies 80 percent of square canvas, generous margins. No text, labels, branding, hands, loose objects, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-91e04a95-a37d-4290-8988-a58ae7a16bf5.png"
+    },
+    {
+      "id": "template-flip",
+      "file": "public/images/cocktails/illustrated/template-flip.png",
+      "prompt": "Use case: stylized-concept. Original cocktail template illustration for a drinks handbook. Depict one small stemmed coupe with opaque pale yellow creamy drink, fine froth and nutmeg dust. Match reference STYLE ONLY: delicate charcoal outlines, refined watercolor fills and translucent glass highlights, clean pure white background. Entire vessel centered and fully visible, occupies 80 percent of square canvas, generous margins. No text, labels, branding, hands, loose objects, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-8fd5489c-15a8-4453-80a5-8607ed5d2c79.png"
+    },
+    {
+      "id": "template-toddy",
+      "file": "public/images/cocktails/illustrated/template-toddy.png",
+      "prompt": "Use case: stylized-concept. Original cocktail template illustration for a drinks handbook. Depict one clear handled heatproof mug with warm transparent honey-gold liquid and lemon slice, subtle steam, no ice. Match reference STYLE ONLY: delicate charcoal outlines, refined watercolor fills and translucent glass highlights, clean pure white background. Entire vessel centered and fully visible, occupies 80 percent of square canvas, generous margins. No text, labels, branding, hands, loose objects, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-0dec7e04-96ca-41ae-b0fd-e412be089754.png"
+    },
+    {
+      "id": "template-milk-punch",
+      "file": "public/images/cocktails/illustrated/template-milk-punch.png",
+      "prompt": "Use case: stylized-concept. Original cocktail template illustration for a drinks handbook. Depict one short clear rocks glass with opaque ivory creamy drink, ice and a little nutmeg dust. Match reference STYLE ONLY: delicate charcoal outlines, refined watercolor fills and translucent glass highlights, clean pure white background. Entire vessel centered and fully visible, occupies 80 percent of square canvas, generous margins. No text, labels, branding, hands, loose objects, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-c5956c74-636c-400d-9498-bd53b34408e8.png"
+    },
+    {
+      "id": "template-old-fashioned",
+      "file": "public/images/cocktails/illustrated/template-old-fashioned.png",
+      "prompt": "Use case: stylized-concept. Original cocktail template illustration for a drinks handbook. Depict one short clear rocks glass with transparent pale straw liquid, large clear ice cube and orange peel. Match reference STYLE ONLY: delicate charcoal outlines, refined watercolor fills and translucent glass highlights, clean pure white background. Entire vessel centered and fully visible, occupies 80 percent of square canvas, generous margins. No text, labels, branding, hands, loose objects, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-b791016c-819a-48a9-9699-44b456437e7f.png"
+    },
+    {
+      "id": "template-martini-style",
+      "file": "public/images/cocktails/illustrated/template-martini-style.png",
+      "prompt": "Use case: stylized-concept. Original cocktail template illustration for a drinks handbook. Depict one V shaped clear martini glass with transparent pale straw liquid and lemon twist, no ice. Match reference STYLE ONLY: delicate charcoal outlines, refined watercolor fills and translucent glass highlights, clean pure white background. Entire vessel centered and fully visible, occupies 80 percent of square canvas, generous margins. No text, labels, branding, hands, loose objects, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-84b21eb1-3865-4e0b-8f5c-a4db084ccd7b.png"
+    },
+    {
+      "id": "template-negroni-style",
+      "file": "public/images/cocktails/illustrated/template-negroni-style.png",
+      "prompt": "Use case: stylized-concept. Original cocktail template illustration for a drinks handbook. Depict one short clear rocks glass with transparent ruby red liquid, large clear ice cube and orange peel. Match reference STYLE ONLY: delicate charcoal outlines, refined watercolor fills and translucent glass highlights, clean pure white background. Entire vessel centered and fully visible, occupies 80 percent of square canvas, generous margins. No text, labels, branding, hands, loose objects, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-a4ab6255-db8c-4d4f-b2fe-73054e8738e2.png"
+    },
+    {
+      "id": "template-spritz",
+      "file": "public/images/cocktails/illustrated/template-spritz.png",
+      "prompt": "Use case: stylized-concept. Original cocktail template illustration for a drinks handbook. Depict one large stemmed clear wine glass with transparent pale golden sparkling liquid and ice, no garnish. Match reference STYLE ONLY: delicate charcoal outlines, refined watercolor fills and translucent glass highlights, clean pure white background. Entire vessel centered and fully visible, occupies 80 percent of square canvas, generous margins. No text, labels, branding, hands, loose objects, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-77bca9eb-32b0-42dd-877e-0a8d02acfac9.png"
+    },
+    {
+      "id": "template-royale",
+      "file": "public/images/cocktails/illustrated/template-royale.png",
+      "prompt": "Use case: stylized-concept. Original cocktail template illustration for a drinks handbook. Depict one slender champagne flute of pale golden sparkling liquid, lemon twist, no ice. Match reference STYLE ONLY: delicate charcoal outlines, refined watercolor fills and translucent glass highlights, clean pure white background. Entire vessel centered and fully visible, occupies 80 percent of square canvas, generous margins. No text, labels, branding, hands, loose objects, UI, scenery or watermark.",
+      "source": "/Users/cedar/.codex/generated_images/01a124de-8246-72f3-a9ee-ef7724d46fd8/exec-5390ce2a-cc7a-400f-9830-4fe5a434fb03.png"
+    }
+  ]
+}

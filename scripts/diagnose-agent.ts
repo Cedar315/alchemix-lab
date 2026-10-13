@@ -4,7 +4,7 @@ nextEnv.loadEnvConfig(process.cwd(), process.env.NODE_ENV !== 'production');
 const { withAgentDiagnostics } = await import('../src/lib/agent/diagnostics');
 const { runCompanion, companionPrompt } = await import('../src/lib/agent/companion');
 const { companionInput } = await import('../src/lib/agent/companion-contract');
-const { modelJSON } = await import('../src/lib/agent/preparation-provider');
+const { companionToolModel } = await import('../src/lib/agent/preparation-provider');
 const { recipeContext } = await import('../src/lib/agent/workflow-catalog');
 const { searchAndCollect, webEvidence } = await import('../src/lib/knowledge/review/search');
 const { ask, retrieve } = await import('../src/lib/knowledge/rag/runtime');
@@ -21,9 +21,9 @@ const started = Date.now();
 try {
   const result = await withAgentDiagnostics(requestId, () => runCompanion(companionInput.parse({
     version: 2, taskId: crypto.randomUUID(), contextVersion: 0,
-    question: '我没有西柚了可以换什么饮料啊', page: recipeContext('convenience', 'grapefruit-beer'), history: [],
+    question: process.env.DIAGNOSTIC_QUESTION || '我没有西柚了可以换什么饮料啊', page: recipeContext('convenience', process.env.DIAGNOSTIC_RECIPE || 'grapefruit-beer'), history: [],
   }), {
-    model: (state, signal) => modelJSON(companionPrompt, state, signal),
+    model: (state, signal) => companionToolModel(companionPrompt, state, signal),
     search: (q,c,s) => searchAndCollect(q,c.slice(0,6000),s, {
       rag: ask, retrieve, web: webEvidence, generate,
       // Diagnostic replay does not add a duplicate knowledge-review candidate.

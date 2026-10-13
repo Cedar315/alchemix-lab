@@ -1,3 +1,4 @@
+import { dedupeRecipes } from '@/lib/recipes/identity';
 import { INSPIRATION_RECIPES } from '@/lib/data/inspiration-catalog';
 import prisma from '@/lib/db/prisma';
 
@@ -75,7 +76,7 @@ export async function GET(req: Request) {
     });
 
     if (recipes.length > 0) {
-      return json({ source: 'database', recipes });
+      return json({ source: 'database', recipes:dedupeRecipes(recipes) });
     }
   } catch (error) {
     console.error('GET /api/inspiration/recipes database fallback', error);
@@ -89,5 +90,5 @@ export async function GET(req: Request) {
     .sort((a, b) => b.beginnerScore - a.beginnerScore || b.convenienceScore - a.convenienceScore)
     .slice(0, limit);
 
-  return json({ source: 'local_seed_fallback', recipes: local });
+  return json({ source: 'local_seed_fallback', recipes: dedupeRecipes(local) });
 }

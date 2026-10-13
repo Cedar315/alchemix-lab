@@ -3,7 +3,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 nextEnv.loadEnvConfig(process.cwd(), process.env.NODE_ENV !== 'production');
 const { runCompanion, companionPrompt } = await import('../src/lib/agent/companion');
 const { companionInput } = await import('../src/lib/agent/companion-contract');
-const { modelJSON } = await import('../src/lib/agent/preparation-provider');
+const { companionToolModel } = await import('../src/lib/agent/preparation-provider');
 const { recipeContext } = await import('../src/lib/agent/workflow-catalog');
 const { ask } = await import('../src/lib/knowledge/rag/runtime');
 const { default: prisma } = await import('../src/lib/db/prisma');
@@ -20,7 +20,7 @@ const rows = [];
 try {
     for (const c of cases) {
         const start = Date.now();
-        const result = await runCompanion(companionInput.parse({ version: 2, taskId: crypto.randomUUID(), contextVersion: 0, question: c.question, page: recipeContext('classic', 'margarita'), history: [] }), { model: (state, s) => modelJSON(companionPrompt, state, s), search: async (q, ctx, s) => (await ask(q, ctx.slice(0, 6000), 3, s)).answer });
+        const result = await runCompanion(companionInput.parse({ version: 2, taskId: crypto.randomUUID(), contextVersion: 0, question: c.question, page: recipeContext('classic', 'margarita'), history: [] }), { model: (state, s) => companionToolModel(companionPrompt, state, s), search: async (q, ctx, s) => (await ask(q, ctx.slice(0, 6000), 3, s)).answer });
         const intent = result.trace.find(t => t.tool === 'recognize_intent')?.status;
         const pass = intent === c.expected && !['unavailable', 'timeout'].includes(result.status) && (c.expected !== 'named' || result.actions.some(a => a.action.kind === 'recipe' && a.action.id === (c.name==='highball-detail'?'whisky-highball':c.name==='paloma-detail'?'paloma':'margarita'))) && (c.expected !== 'explore' || result.actions.some(a => a.action.kind === 'prefill' && a.action.materials.every(m => m.amount === undefined))) && (c.name !== 'two-categories' || result.pending?.kind === 'category') && (c.expected !== 'change' || result.recipes.length === 0) && (c.expected !== 'knowledge' || result.knowledge?.status === 'answered');
         rows.push({ name: c.name, input: c.question, pass, elapsedMs: Date.now() - start, result });

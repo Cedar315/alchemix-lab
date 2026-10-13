@@ -1,3 +1,6 @@
+import { recordEvent } from '@/lib/admin/telemetry';
+import { isInternalIdentity } from '@/lib/admin/metrics';
+import { getCurrentUser } from '@/lib/auth/current-user';
 import prisma from "@/lib/db/prisma";
 import { authErrorResponse, requireAdmin } from "@/lib/auth/current-user";
 import { z } from "zod";
@@ -16,7 +19,12 @@ const analyticsSchema = z.object({
 
 export async function POST(request: Request) {
   try {
-    const body = analyticsSchema.parse(await request.json());
+    const raw=await request.text();
+    if(raw.length>16000) return Response.json({error:'内容过长'},{status:413});
+    const body = analyticsSchema.parse(JSON.parse(raw));
+    const current=await getCurrentUser();
+    if(['drink_recorded','ai_request'].includes(body.eventName))return Response.json({error:'保留事件名'},{status:400});
+    await recordEvent({userId:current?.user.id||null,visitorId:body.sessionId||crypto.randomUUID(),internal:current?isInternalIdentity(current.user.email,current.authUser.app_metadata):false,name:body.eventName,page:body.page,source:(body.source||'').slice(0,100)});
 
     const event = await prisma.analyticsEvent.create({
       data: {

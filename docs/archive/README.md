@@ -1,0 +1,26 @@
+# 历史档案
+
+此目录仅保留旧设计、阶段性验收和发布记录。文中“当前”“最新”、测试数量及部署结论均指记录当时；当前说明见[文档导航](../README.md)。历史失败与独特证据不因整理而删除。
+
+- [AI_PM_PROJECT_NOTES.md](AI_PM_PROJECT_NOTES.md)
+- [admin-metrics-plan.md](admin-metrics-plan.md)
+- [agent-flavor-followup-2026-09-25.md](agent-flavor-followup-2026-09-25.md)
+- [agent-material-return-2026-09-25.md](agent-material-return-2026-09-25.md)
+- [agent-next-prototype.md](agent-next-prototype.md)
+- [agent-recipe-alternatives-2026-09-25.md](agent-recipe-alternatives-2026-09-25.md)
+- [agent-response-guidelines.md](agent-response-guidelines.md)
+- [agent-streaming-release-2026-09-24.md](agent-streaming-release-2026-09-24.md)
+- [agent-verification.md](agent-verification.md)
+- [ai-service-design.md](ai-service-design.md)
+- [backend-operations.md](backend-operations.md)
+- [cocktail-agent-plan.md](cocktail-agent-plan.md)
+- [companion-implementation.md](companion-implementation.md)
+- [database-design.md](database-design.md)
+- [knowledge-learning.md](knowledge-learning.md)
+- [l2-task-state-2026-09-24.md](l2-task-state-2026-09-24.md)
+- [mobile-bug-fixes-2026-09-24.md](mobile-bug-fixes-2026-09-24.md)
+- [mvp-roadmap.md](mvp-roadmap.md)
+- [prd.md](prd.md)
+- [preparation-agent.md](preparation-agent.md)
+- [rag-acceptance-2026-09-22.md](rag-acceptance-2026-09-22.md)
+- [rag-setup.md](rag-setup.md)

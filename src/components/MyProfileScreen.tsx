@@ -1,4 +1,5 @@
 import CocktailLineArt from "./CocktailLineArt";
+import CocktailIllustration from "./CocktailIllustration";
 import { safeReturnPath } from "@/lib/auth/return-path";
 import React, { useEffect, useMemo, useState } from "react";
 import { DrinkLog, SavedCocktail } from "../types";
@@ -378,7 +379,9 @@ export default function MyProfileScreen({
       <article key={log.id} className="rounded-3xl border border-[#E8E8E8] bg-white p-4 shadow-none">
         <div className="flex items-start gap-3">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-[#E8E8E8] bg-[#f6f5f1]">
-            <CocktailLineArt name={log.recipeName} className="h-full w-full" />
+            {getLogSourceType(log) === "lab"
+              ? <CocktailLineArt name={log.recipeName} className="h-full w-full" />
+              : <CocktailIllustration id={snapshot.id || log.recipeId} name={log.recipeName} className="h-full w-full" sizes="48px" />}
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-start justify-between gap-2">
@@ -433,6 +436,9 @@ export default function MyProfileScreen({
 
   const renderSavedCocktailCard = (cocktail: SavedCocktail) => (
     <article key={cocktail.id} className="rounded-3xl border border-[#E8E8E8] bg-white p-4 shadow-none">
+      {getSavedSourceType(cocktail) !== "lab" && <div className="mb-3 flex h-40 justify-center bg-[#fff]">
+        <CocktailIllustration id={cocktail.recipeId || cocktail.id} name={cocktail.chineseName} className="h-full w-full" sizes="160px" />
+      </div>}
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <h4 className="truncate text-base font-medium text-neutral-950">{cocktail.chineseName}</h4>

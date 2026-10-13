@@ -1,3 +1,4 @@
+import { dedupeRecipes, databaseRecipeKey } from '../src/lib/recipes/identity';
 import { PrismaClient } from '@prisma/client';
 import { CLASSIC_RECIPE_SEEDS, INSPIRATION_RECIPES, REMIX_TAGS, RecipeSeed } from '../src/lib/data/inspiration-catalog';
 
@@ -92,22 +93,10 @@ async function main() {
     skipDuplicates: true,
   });
 
-  await prisma.recipe.deleteMany({
-    where: {
-      aiGenerated: false,
-      type: { in: ['classic', 'classic_variant', 'convenience', 'beginner', 'flavor', 'knowledge'] },
-      slug: { notIn: INSPIRATION_RECIPES.map((recipe) => recipe.slug) },
-    },
-  });
-  await prisma.recipe.deleteMany({
-    where: {
-      aiGenerated: false,
-      slug: { in: INSPIRATION_RECIPES.map((recipe) => recipe.slug) },
-    },
-  });
-
-  await prisma.recipe.createMany({
-    data: INSPIRATION_RECIPES.map((recipe) => ({
+  const canonicalRecipes = dedupeRecipes(INSPIRATION_RECIPES);
+  for (const recipe of canonicalRecipes) {
+    const data = {
+      canonicalKey: databaseRecipeKey(recipe),
       slug: recipe.slug,
       nameCn: recipe.nameCn,
       nameEn: recipe.nameEn,
@@ -132,12 +121,13 @@ async function main() {
       prepTimeMinutes: recipe.prepTimeMinutes,
       isPublished: true,
       aiGenerated: false,
-    })),
-    skipDuplicates: true,
-  });
+    };
+    const canonical = data.canonicalKey ? await prisma.recipe.findUnique({where:{canonicalKey:data.canonicalKey}}) : null;
+    await prisma.recipe.upsert({where:{slug:canonical?.slug ?? recipe.slug},create:data,update:{...data,slug:canonical?.slug ?? recipe.slug}});
+  }
 
   const recipes = await prisma.recipe.findMany({
-    where: { slug: { in: INSPIRATION_RECIPES.map((recipe) => recipe.slug) } },
+    where: { slug: { in: canonicalRecipes.map((recipe) => recipe.slug) } },
     select: { id: true, slug: true },
   });
   const recipeIdBySlug = new Map(recipes.map((recipe) => [recipe.slug, recipe.id]));
@@ -147,7 +137,7 @@ async function main() {
   await prisma.recipeTag.deleteMany({ where: { recipeId: { in: recipeIds } } });
 
   await prisma.recipeIngredient.createMany({
-    data: INSPIRATION_RECIPES.flatMap((recipe) => {
+    data: canonicalRecipes.flatMap((recipe) => {
       const recipeId = recipeIdBySlug.get(recipe.slug);
       if (!recipeId) return [];
       return recipe.ingredients.map((ingredient, index) => ({
@@ -170,7 +160,7 @@ async function main() {
   });
   const tagIdByName = new Map(tags.map((tag) => [tag.nameCn, tag.id]));
   await prisma.recipeTag.createMany({
-    data: INSPIRATION_RECIPES.flatMap((recipe) => {
+    data: canonicalRecipes.flatMap((recipe) => {
       const recipeId = recipeIdBySlug.get(recipe.slug);
       if (!recipeId) return [];
       return recipe.tags.flatMap((tag) => {

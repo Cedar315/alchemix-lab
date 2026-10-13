@@ -1,7 +1,8 @@
 "use client";
 
+import { fetchFavorites,saveFavorite,removeFavorite,FAVORITES_CHANGED } from './lib/recipes/favorites-client';
 import { useSearchParams } from "next/navigation";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { DrinkLog, SavedCocktail, MixTip } from "./types";
 import LabScreen from "./components/LabScreen";
 import AssistantScreen from "./components/AssistantScreen";
@@ -23,7 +24,7 @@ export default function App() {
     if (authState === "required" || authState === "forbidden") setActiveTab("MY");
   }, []);
 
-  // Saved cocktails state (persisted in localStorage)
+  // Favorites use the authenticated database as their source of truth.
   useEffect(() => {
     if (new URLSearchParams(window.location.search).get("from") === "materials") setActiveTab("MATERIALS");
   }, []);
@@ -55,23 +56,12 @@ export default function App() {
       .catch(() => null);
   };
 
+  const favoriteSyncVersion=useRef(0);
   const syncAuthenticatedCocktails = () => {
-    fetch("/api/saved-cocktails")
-      .then((response) => response.ok ? response.json() : null)
-      .then((data) => {
-        if (!data?.cocktails) return;
-        const local = JSON.parse(localStorage.getItem("alchemix_saved_cocktails") ?? "[]") as SavedCocktail[];
-        if (data.cocktails.length === 0 && local.length > 0) {
-          Promise.all(local.map((cocktail) => fetch("/api/saved-cocktails", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(cocktail) })))
-            .then(() => syncAuthenticatedCocktails()).catch(() => null);
-          return;
-        }
-        setSavedCocktails(data.cocktails);
-        localStorage.setItem("alchemix_saved_cocktails", JSON.stringify(data.cocktails));
-      })
-      .catch(() => null);
+    const version=++favoriteSyncVersion.current;
+    fetchFavorites().then(rows=>{if(version!==favoriteSyncVersion.current)return;setSavedCocktails(rows);}).catch(()=>{});
   };
-
+  useEffect(()=>{const refresh=()=>syncAuthenticatedCocktails();window.addEventListener(FAVORITES_CHANGED,refresh);window.addEventListener('focus',refresh);return()=>{window.removeEventListener(FAVORITES_CHANGED,refresh);window.removeEventListener('focus',refresh);};},[]);
   const syncAuthenticatedData = () => {
     syncAuthenticatedDrinkLogs();
     syncAuthenticatedCocktails();
@@ -80,6 +70,7 @@ export default function App() {
   const handleAuthChanged = (signedIn: boolean) => {
     if (signedIn) return syncAuthenticatedData();
     setDrinkLogs([]);
+    favoriteSyncVersion.current++;
     setSavedCocktails([]);
     localStorage.removeItem("alchemix_drink_logs");
     localStorage.removeItem("alchemix_saved_cocktails");
@@ -91,12 +82,6 @@ export default function App() {
     if (requestedTab && ["ASSISTANT", "LAB", "INSPIRATION", "MY"].includes(requestedTab)) {
       setActiveTab(requestedTab);
       localStorage.removeItem("alchemix_open_tab");
-    }
-
-    // Saved Cocktails
-    const localCocktails = localStorage.getItem("alchemix_saved_cocktails");
-    if (localCocktails) {
-      setSavedCocktails(JSON.parse(localCocktails));
     }
 
     const localDrinkLogs = localStorage.getItem("alchemix_drink_logs");
@@ -147,23 +132,12 @@ export default function App() {
   }, [activeTab]);
 
   // 2. Helpers to update states & sync with localStorage
-  const handleSaveCocktail = (cocktail: SavedCocktail) => {
-    const updated = [cocktail, ...savedCocktails];
-    setSavedCocktails(updated);
-    localStorage.setItem("alchemix_saved_cocktails", JSON.stringify(updated));
-    fetch("/api/saved-cocktails", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(cocktail) })
-      .then((response) => response.ok ? response.json() : null)
-      .then((data) => {
-        if (!data?.cocktail) return;
-        setSavedCocktails((current) => [data.cocktail, ...current.filter((item) => item.id !== cocktail.id)]);
-      }).catch(() => null);
+  const handleSaveCocktail = async (cocktail: SavedCocktail) => {
+    const saved=await saveFavorite(cocktail);
+    setSavedCocktails(current=>[saved,...current.filter(c=>c.id!==saved.id)]);
   };
-
-  const handleRemoveCocktail = (id: string) => {
-    const updated = savedCocktails.filter((c) => c.id !== id);
-    setSavedCocktails(updated);
-    localStorage.setItem("alchemix_saved_cocktails", JSON.stringify(updated));
-    if (/^[0-9a-f-]{36}$/i.test(id)) fetch(`/api/saved-cocktails/${id}`, { method: "DELETE" }).catch(() => null);
+  const handleRemoveCocktail = async (id: string) => {
+    try{await removeFavorite(id);setSavedCocktails(current=>current.filter(c=>c.id!==id));}catch(e){alert(e instanceof Error?e.message:'取消收藏失败');}
   };
 
   const handleSaveDrinkLog = (log: DrinkLog) => {

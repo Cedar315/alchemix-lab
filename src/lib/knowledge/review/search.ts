@@ -1,9 +1,9 @@
 import { diagnostic, diagnosticText, timed } from '../../agent/diagnostics';
 import { createHash } from 'node:crypto';
 import { z } from 'zod';
-import { minimaxSearch } from './minimax-search';
+import { deepseekSearch } from './deepseek-search';
 import { ask, retrieve } from '../rag/runtime';
-import { answerFromHits, type Hit } from '../rag/core';
+import { answerFromHits, applicableHits, type Hit } from '../rag/core';
 import { generate } from '../rag/providers';
 import { collect } from './store';
 import { redact, sourceSchema } from './contract';
@@ -15,10 +15,10 @@ export function trustedSource(url:string) {
   return trustedDomains.some(d=>host===d||host.endsWith('.'+d));
 }
 export async function webEvidence(question:string,signal:AbortSignal):Promise<Hit[]> {
-  const provider=process.env.KNOWLEDGE_SEARCH_PROVIDER||'minimax';
-  if(provider==='minimax') {
-    const results=await minimaxSearch(question,trustedDomains,signal);
-    return evidenceHits(results.map(r=>({...r,raw_content:r.content})),40,'搜索结果摘要，不是网页全文。仅回答摘要明确支持的事实，不得补全未提供的细节。');
+  const provider=process.env.KNOWLEDGE_SEARCH_PROVIDER||'deepseek';
+  if(provider==='deepseek') {
+    const results=await deepseekSearch(question,trustedDomains,signal);
+    return evidenceHits(results.map(r=>({...r,raw_content:r.content})),40,'搜索命中来源的网页正文提取，可能包含导航或评论。只使用适用正文，不把网友评论当作专业建议。');
   }
   if(provider!=='tavily') throw Error('SEARCH_NOT_CONFIGURED');
   if(!process.env.TAVILY_API_KEY) throw Error('SEARCH_NOT_CONFIGURED');
@@ -55,7 +55,9 @@ export async function searchAndCollect(question:string,context:string,signal:Abo
     diagnostic('local_hits', { threshold: local.threshold, hits: local.hits.map(h => ({ id: h.document.id, score: h.score, semanticScore: h.semanticScore, keywordScore: h.keywordScore })) });
     // Weak semantic neighbours used to trigger a full model call before the web fallback.
     // Only generate from local evidence when an alias matches or similarity is clearly strong.
-    const strongHits=local.hits.filter(h=>h.keywordScore===1||h.semanticScore>=0.68);
+    const applicable=applicableHits(local.hits,context);
+    diagnostic('local_scope_filter', { excludedIds: local.hits.filter(h=>!applicable.includes(h)).map(h=>h.document.id) });
+    const strongHits=applicable.filter(h=>h.keywordScore===1||(h.keywordScore===0.5&&h.semanticScore>=local.threshold)||h.semanticScore>=0.68);
     if(strongHits.length) {
       localAnswer=await timed('local_answer', () => answerFromHits(question,context,strongHits,(q,c,h)=>deps.generate(q,c,h,signal)));
       diagnostic('local_result', { status: localAnswer.status, claims: localAnswer.claims.length });
@@ -84,7 +86,7 @@ export async function searchAndCollect(question:string,context:string,signal:Abo
   try {
     await timed('knowledge_collection', () => deps.collect(query,recipeName,{title:query.slice(0,300),aliases:[],category:'调酒问答',answer:answer.claims.map(c=>c.text).join('\n'),scope:`适用场景：${recipeName}。待审核者核实完整适用条件、替换限制及资料差异。`,sources},hits.map(h=>({title:h.document.title,url:h.document.sources[0].url,excerpt:h.document.answer.slice(0,1200)})),reason));
   } catch { console.warn(JSON.stringify({event:'knowledge_collection_failed'})); }
-  console.info(JSON.stringify({event:'knowledge_search',provider:process.env.KNOWLEDGE_SEARCH_PROVIDER||'minimax',sourceCount:hits.length,status:searchError?'error':answer.status,errorCode:searchError instanceof Error && /^SEARCH_[A-Z_]+$/.test(searchError.message)?searchError.message:undefined}));
+  console.info(JSON.stringify({event:'knowledge_search',provider:process.env.KNOWLEDGE_SEARCH_PROVIDER||'deepseek',sourceCount:hits.length,status:searchError?'error':answer.status,errorCode:searchError instanceof Error && /^SEARCH_[A-Z_]+$/.test(searchError.message)?searchError.message:undefined}));
   if(searchError) throw searchError;
   return answer.claims.length ? {...answer,claims:answer.claims.map((c,i)=>({...c,text:(i===0?'根据联网资料：':'')+c.text}))} : answer;
 }

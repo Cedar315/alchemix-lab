@@ -25,6 +25,7 @@ export interface Cocktail {
 }
 
 export interface SavedCocktail extends Cocktail {
+  recipeId?: string;
   savedAt: string;
   ratingValue?: number; // 1-5 stars for overall rating
   sourcePage?: string;

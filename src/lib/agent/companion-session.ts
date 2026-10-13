@@ -15,7 +15,7 @@ export function acceptsResult(task: Task, result: {
 export const SESSION_KEY = 'alchemix_companion_v2';
 export const LAB_DRAFT_KEY = 'alchemix_lab_draft_v1';
 export const LAB_TRANSFER_KEY = 'alchemix_lab_transfer_v1';
-export const transferSchema = z.object({ taskId: z.string().uuid(), materials: z.array(z.object({ name: z.string().min(1).max(100), amount: z.number().positive().max(350).optional() })).min(1).max(30), createdAt: z.number(), replace: z.boolean() });
+export const transferSchema = z.object({ taskId: z.string().uuid(), materials: z.array(z.object({ name: z.string().min(1).max(100), amount: z.number().positive().max(350).optional() })).min(1).max(30), createdAt: z.number(), replace: z.boolean(), view: z.enum(['materials', 'results']).optional(), reference: z.enum(['standard', 'lower_alcohol', 'dilute']).optional() });
 export function readTransfer() { try {
     const r = transferSchema.safeParse(JSON.parse(sessionStorage.getItem(LAB_TRANSFER_KEY) || 'null'));
     return r.success && Date.now() - r.data.createdAt < 300000 ? r.data : null;

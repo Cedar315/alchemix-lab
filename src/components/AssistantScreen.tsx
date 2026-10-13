@@ -1,3 +1,4 @@
+import { dedupeRecipes } from '../lib/recipes/identity';
 import Link from "next/link";
 import { convenienceExploreCocktails, getConvenienceRecipeGuide } from "../lib/data/explore-catalog";
 import React, { useEffect, useMemo, useState } from "react";
@@ -9,7 +10,7 @@ import { DrinkLogButton } from "./DrinkLog";
 interface AssistantScreenProps {
   initialPage?: "home" | "material-picker";
   onBackHome?: () => void;
-  onSaveCocktail: (cocktail: SavedCocktail) => void;
+  onSaveCocktail: (cocktail: SavedCocktail) => Promise<void>;
   drinkLogs: DrinkLog[];
   onSaveDrinkLog: (log: DrinkLog) => void;
 }
@@ -172,7 +173,7 @@ const blindBoxConfig: BlindBox = {
   tags: [],
 };
 
-const recipePool = INSPIRATION_RECIPES
+const recipePool = dedupeRecipes(INSPIRATION_RECIPES)
   .filter((recipe) => recipe.difficulty <= 4 && recipe.alcoholIntensity <= 4)
   .slice(0, 520);
 
@@ -324,7 +325,8 @@ const moodEncouragement = (mood: MoodOption, recipe?: RecipeSeed) => {
 };
 
 const recipeToSavedCocktail = (recipe: RecipeSeed): SavedCocktail => ({
-  id: `assistant-recipe-${recipe.slug}-${Date.now()}`,
+  id: recipe.slug,
+  recipeId: recipe.slug,
   chineseName: recipe.nameCn,
   name: recipe.nameEn,
   subtitle: recipe.description,
@@ -373,17 +375,19 @@ function RecipeCard({
   missing?: string[];
   reason?: string;
   compact?: boolean;
-  onSave: (recipe: RecipeSeed) => void;
+  onSave: (recipe: RecipeSeed) => Promise<void>;
   drinkLogs: DrinkLog[];
   onSaveDrinkLog: (log: DrinkLog) => void;
   sourcePage: string;
 }) {
   const required = recipe.ingredients.filter((item) => !item.isOptional && Number(item.amount || 0) !== 0);
   const [justSaved, setJustSaved] = useState(false);
-  const handleFavorite = () => {
-    onSave(recipe);
-    setJustSaved(true);
-    window.setTimeout(() => setJustSaved(false), 1600);
+  const handleFavorite = async () => {
+    try {
+      await onSave(recipe);
+      setJustSaved(true);
+      window.setTimeout(() => setJustSaved(false), 1600);
+    } catch (error) { window.alert(error instanceof Error ? error.message : "收藏失败，请重试"); }
   };
 
   return (
@@ -559,8 +563,8 @@ export default function AssistantScreen({ onSaveCocktail, drinkLogs, onSaveDrink
     setIsBlindRevealed(false);
   };
 
-  const handleSave = (recipe: RecipeSeed) => {
-    onSaveCocktail(recipeToSavedCocktail(recipe));
+  const handleSave = async (recipe: RecipeSeed) => {
+    await onSaveCocktail(recipeToSavedCocktail(recipe));
   };
 
   const featured = useMemo(

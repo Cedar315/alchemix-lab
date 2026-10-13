@@ -1,7 +1,7 @@
 import { AssistantSurface } from "./assistant/AssistantProvider";
 import { recipeContext } from "../lib/agent/workflow-catalog";
 import { classify, GuideDrink } from "../lib/recommendations/beginner";
-import CocktailLineArt from "./CocktailLineArt";
+import CocktailIllustration from "./CocktailIllustration";
 import React, { useMemo, useState, useEffect } from "react";
 import { DrinkLog, DrinkLogRecipeSnapshot, MixTip } from "../types";
 import { INSPIRATION_RECIPES, RecipeSeed } from "../lib/data/inspiration-catalog";
@@ -37,7 +37,7 @@ interface InspirationScreenProps {
   onBackGuide?: () => void;
   tips: MixTip[];
   onAddTip: (tip: MixTip) => void;
-  onSaveCocktail?: (cocktail: any) => void;
+  onSaveCocktail?: (cocktail: any) => Promise<void>;
   drinkLogs?: DrinkLog[];
   onSaveDrinkLog?: (log: DrinkLog) => void;
   onLoadToLab?: (ingredients: any[], mixMethod: "Stir" | "Shake") => void;
@@ -46,11 +46,11 @@ interface InspirationScreenProps {
   initialExploreTab?: ExploreTab;
 }
 
-import { ClassicCocktailData, CLASSIC_DATABASE, directionOptions, ExploreTab, InspirationCocktail, ConvenienceRecipeGuide, getCocktailMvpMeta, convenienceCategories, classicCategories, curatedClassicExploreCocktails, curatedConvenienceExploreCocktails, convenienceRecipeGuides, exploreImagePool, simpleSlug, normalizeClassicCocktailId, dedupeCocktails, actualClassicSeeds, classicTemplateBases, classicTemplateStyles, generatedClassicCocktails, actualClassicCocktails, classicExploreCocktails, convenienceSpiritOptions, convenienceMixerOptions, generatedConvenienceCocktails, convenienceExploreCocktails, BEGINNER_CATALOG, getConvenienceRecipeGuide } from "../lib/data/explore-catalog";
+import { canonicalConvenienceId, ClassicCocktailData, CLASSIC_DATABASE, directionOptions, ExploreTab, InspirationCocktail, ConvenienceRecipeGuide, getCocktailMvpMeta, convenienceCategories, classicCategories, curatedClassicExploreCocktails, curatedConvenienceExploreCocktails, convenienceRecipeGuides, exploreImagePool, simpleSlug, normalizeClassicCocktailId, dedupeCocktails, actualClassicSeeds, classicTemplateBases, classicTemplateStyles, generatedClassicCocktails, actualClassicCocktails, classicExploreCocktails, convenienceSpiritOptions, convenienceMixerOptions, generatedConvenienceCocktails, convenienceExploreCocktails, BEGINNER_CATALOG, getConvenienceRecipeGuide } from "../lib/data/explore-catalog";
 export { BEGINNER_CATALOG } from "../lib/data/explore-catalog";
 
 function CocktailImage({ cocktail }: { cocktail: InspirationCocktail }) {
-  return <div className="cocktail-plate"><CocktailLineArt name={`${cocktail.nameZh} ${cocktail.nameEn}`} /><span className="eyebrow" aria-hidden="true">ALCHEMIX / RECIPE</span></div>;
+  return <div className="cocktail-plate"><CocktailIllustration id={cocktail.id} name={`${cocktail.nameZh} ${cocktail.nameEn}`} /><span className="eyebrow" aria-hidden="true">ALCHEMIX / RECIPE</span></div>;
 }
 
 const exploreCocktailToDrinkLogSnapshot = (cocktail: InspirationCocktail): DrinkLogRecipeSnapshot => ({
@@ -887,11 +887,12 @@ export default function InspirationScreen({ tips, onAddTip, onSaveCocktail, drin
   // Perform calculations reactively based on horizontal selections
   const improvedResult = calculateDomestication(selectedClassicId, activeDirections);
 
-  const handleSaveToFavorites = () => {
+  const handleSaveToFavorites = async () => {
     if (!improvedResult || !onSaveCocktail) return;
 
     const savedRecord = {
       id: `saved-improved-${Date.now()}`,
+      ingredients: improvedResult.improved.ingredients,
       chineseName: improvedResult.improved.chineseName,
       name: improvedResult.improved.name,
       subtitle: `【经典改良】基于经典款「${improvedResult.classic.chineseName}」的好喝进化`,
@@ -910,9 +911,11 @@ export default function InspirationScreen({ tips, onAddTip, onSaveCocktail, drin
       sourcePage: "classic_remix",
     };
 
-    onSaveCocktail(savedRecord);
-    setSaveSuccess(true);
-    setTimeout(() => setSaveSuccess(false), 2000);
+    try {
+      await onSaveCocktail(savedRecord);
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 2000);
+    } catch (error) { window.alert(error instanceof Error ? error.message : "收藏失败，请重试"); }
   };
 
   const renderStars = (val: number, isClassic: boolean) => {
@@ -1183,7 +1186,7 @@ export default function InspirationScreen({ tips, onAddTip, onSaveCocktail, drin
   };
 
   const renderConvenienceDetailPage = () => {
-    const cocktail = convenienceExploreCocktails.find((item) => item.id === routeCocktailId);
+    const cocktail = convenienceExploreCocktails.find((item) => item.id === canonicalConvenienceId(routeCocktailId));
     const guide = cocktail ? getConvenienceRecipeGuide(cocktail) : null;
 
     if (!cocktail || !guide) {
@@ -1361,7 +1364,7 @@ export default function InspirationScreen({ tips, onAddTip, onSaveCocktail, drin
 
   if (view === "classic-remix" && !CLASSIC_DATABASE[normalizeClassicCocktailId(selectedClassicId)]) {
     const item = classicExploreCocktails.find(r => normalizeClassicCocktailId(r.id) === normalizeClassicCocktailId(selectedClassicId));
-    return <section><button onClick={goBackToInspiration}>返回探索</button><h2 className="mt-6 text-2xl">{item?.nameZh ?? '酒单暂不可用'}</h2><p className="mt-3">{item?.description ?? '没有找到对应酒款，请返回重新选择。'}</p>{item && <><AssistantSurface context={recipeContext('classic',item.id)}/><p className="mt-4">材料：{item.ingredients.join('、')}</p><p className="mt-4">这杯酒的具体用量和制作步骤正在核实，暂不展示未核实的配方。</p></>}</section>;
+    return <section><button onClick={goBackToInspiration}>返回探索</button>{item && <div className="mx-auto mt-5 max-w-sm overflow-hidden rounded-2xl"><CocktailImage cocktail={item} /></div>}<h2 className="mt-6 text-2xl">{item?.nameZh ?? '酒单暂不可用'}</h2><p className="mt-3">{item?.description ?? '没有找到对应酒款，请返回重新选择。'}</p>{item && <><AssistantSurface context={recipeContext('classic',item.id)}/><p className="mt-4">材料：{item.ingredients.join('、')}</p><p className="mt-4">这杯酒的具体用量和制作步骤正在核实，暂不展示未核实的配方。</p></>}</section>;
   }
   if (view !== "classic-remix") {
     return renderRecipeListPage();
@@ -1451,6 +1454,9 @@ export default function InspirationScreen({ tips, onAddTip, onSaveCocktail, drin
 
       {isClassicDirectDetail && improvedResult && (
         <div className="space-y-1">
+          <div className="mb-5 flex h-64 justify-center rounded-2xl bg-[#fff] p-4">
+            <CocktailIllustration id={selectedClassicId} name={improvedResult.classic.chineseName} className="h-full w-full" sizes="224px" />
+          </div>
           <h2 className="text-[28px] font-medium leading-tight text-neutral-950">{improvedResult.classic.chineseName}</h2>
           <p className="text-[12px] font-medium uppercase tracking-[0.18em] text-neutral-400">{improvedResult.classic.name}</p>
           <div className="grid grid-cols-4 gap-2 pt-3">

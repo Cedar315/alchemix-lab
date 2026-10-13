@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import prisma from '@/lib/db/prisma';
-import { callMiniMaxJson } from '@/lib/ai/services/ai-client';
+import { callAIJson } from '@/lib/ai/services/ai-client';
 import { authErrorResponse, requireUser } from '@/lib/auth/current-user';
 
 const CustomizeRequest = z.object({
@@ -99,10 +99,10 @@ export async function POST(req: Request) {
     }
 
     let generated: any;
-    let sourceType = 'minimax';
+    let sourceType = 'deepseek';
 
     try {
-      generated = await callMiniMaxJson([
+      generated = await callAIJson([
         {
           role: 'system',
           content: 'You customize classic cocktails using only the database context provided. Return JSON only. Do not write to any database.',

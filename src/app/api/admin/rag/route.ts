@@ -1,3 +1,4 @@
+import { audit } from '@/lib/admin/telemetry';
 import { randomUUID } from 'node:crypto';
 import { requireAdmin, authErrorResponse } from '@/lib/auth/current-user';
 import { inputSchema, RagError } from '@/lib/knowledge/rag/core';
@@ -9,7 +10,8 @@ export async function POST(request: Request) {
   const requestId = randomUUID();
   const start = Date.now();
   try {
-    await requireAdmin();
+    const {user}=await requireAdmin();
+    if(request.headers.get('origin')&&request.headers.get('origin')!==new URL(request.url).origin)return Response.json({error:'来源不匹配'},{status:403});
     if (!request.headers.get("content-type")?.includes("application/json")) return Response.json({ error: "仅接受 application/json", requestId }, { status: 415 });
     const text = await request.text();
     if (text.length > 16000) return Response.json({ error: '请求过长', requestId }, { status: 413 });
@@ -18,6 +20,7 @@ export async function POST(request: Request) {
     const parsed = inputSchema.safeParse(body);
     if (!parsed.success) return Response.json({ error: '请求参数无效', details: parsed.error.flatten(), requestId }, { status: 400 });
     const { action, question, context, topK } = parsed.data;
+    await audit(user.id,'attempt_rag_'+action,requestId);
     const result = action === 'ingest' ? await ingest() : action === 'retrieve' ? await retrieve(question!, topK, context) : await ask(question!, context, topK);
     return Response.json({ ...result, requestId, elapsedMs: Date.now() - start }, { headers: { 'Cache-Control': 'no-store' } });
   } catch (error) {

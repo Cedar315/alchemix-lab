@@ -8,3 +8,11 @@ coverage/
 tsconfig.tsbuildinfo
 .env*
 !.env.example
+.vercel
+
+# Local test runs and generated review artifacts
+artifacts/*
+# Keep illustration provenance with the source assets
+!artifacts/cocktail-illustrations/
+artifacts/cocktail-illustrations/*
+!artifacts/cocktail-illustrations/prompts.json

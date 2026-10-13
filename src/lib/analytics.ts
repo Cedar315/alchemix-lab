@@ -23,10 +23,11 @@ const MAX_LOCAL_EVENTS = 500;
 
 const getSessionId = () => {
   if (typeof window === "undefined") return "server";
-  const existing = window.localStorage.getItem(SESSION_KEY);
+  let existing: string|null=null;
+  try { existing = window.localStorage.getItem(SESSION_KEY); } catch {}
   if (existing) return existing;
   const next = `session-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-  window.localStorage.setItem(SESSION_KEY, next);
+  try { window.localStorage.setItem(SESSION_KEY, next); } catch {}
   return next;
 };
 
@@ -51,7 +52,7 @@ export const trackAnalyticsEvent = (event: AnalyticsEventInput) => {
   };
 
   const next = [record, ...readAnalyticsEvents()].slice(0, MAX_LOCAL_EVENTS);
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+  try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch {}
 
   fetch("/api/analytics/events", {
     method: "POST",

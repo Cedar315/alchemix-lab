@@ -161,9 +161,10 @@ button:not(:disabled), summary { cursor: pointer; }
 .home-path-copy { flex: 1; min-width: 0; }
 .home-path-title { display: block; margin-top: 8px; font-size: 17px; font-weight: 500; letter-spacing: .04em; }
 .home-path-description { display: block; margin-top: 6px; font-size: 11px; line-height: 1.8; color: #77766f; }
-.cocktail-plate { display: flex; aspect-ratio: 4 / 3; width: 100%; flex-direction: column; align-items: center; justify-content: center; background: #f0efea; border-bottom: 1px solid #dedcd5; padding: 12px; }
+.cocktail-plate { position: relative; display: flex; aspect-ratio: 4 / 3; width: 100%; flex-direction: column; align-items: center; justify-content: center; background: #fff; border-bottom: 1px solid #dedcd5; padding: 12px; }
 .cocktail-plate .cocktail-line-art { height: 85%; width: 65%; }
-.cocktail-plate .eyebrow { font-size: 7px; margin-top: 3px; }
+.cocktail-plate .cocktail-illustration { position: absolute; top: 8px; left: 12px; height: calc(100% - 32px); width: calc(100% - 24px); min-height: 0; }
+.cocktail-plate .eyebrow { position: absolute; bottom: 8px; font-size: 7px; margin-top: 3px; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
 
 /* The contextual assistant shares the existing paper, ink and border palette. */
@@ -217,3 +218,15 @@ button:not(:disabled), summary { cursor: pointer; }
 .assistant-message.assistant { border-bottom-left-radius:4px; }
 .assistant-message[role=status] { font-size:13px; color:#66645e; }
 .assistant-message[role=status] button { margin-left:12px; text-decoration:underline; font-size:12px; }
+
+/* Streaming assistant keeps the existing shell and renders model formatting safely. */
+.assistant-prose { overflow-wrap:anywhere; white-space:normal; font-size:14px; line-height:1.8; }
+[data-app-shell][data-chat-return="true"] { padding-top:44px; }
+.assistant-return { position:absolute; top:0; left:12px; min-height:44px; padding:0 10px; font-size:13px; color:#333; background:#f6f5f1; border-radius:12px; }
+.assistant-prose p { white-space:normal; margin:0 0 8px; }
+.assistant-prose ul, .assistant-prose ol { padding-left:20px; margin:8px 0; }
+.assistant-prose ul { list-style:disc; }
+.assistant-prose ol { list-style:decimal; }
+.assistant-prose table { display:block; max-width:100%; overflow-x:auto; border-collapse:collapse; font-size:12px; }
+.assistant-prose th, .assistant-prose td { padding:6px; border:1px solid #dedcd5; }
+.assistant-prose pre { white-space:pre-wrap; }

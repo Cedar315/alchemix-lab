@@ -1,10 +1,13 @@
 import { z } from "zod";
+import { IngredientWebLookup } from './IngredientWebLookup';
 import { AssistantSurface } from "./assistant/AssistantProvider";
 import { LAB_DRAFT_KEY, LAB_TRANSFER_KEY, readTransfer } from "../lib/agent/companion-session";
 import React, { useState, useEffect } from "react";
 import { Cocktail, DrinkLog, DrinkLogRecipeSnapshot, SavedCocktail, Ingredient } from "../types";
 import { CONVENIENCE_DRINK_INGREDIENTS, ConvenienceDrinkSeed } from "../lib/data/convenience-drink-ingredients";
 import { JUICE_INGREDIENTS, JuiceIngredientSeed } from "../lib/data/juice-ingredients";
+import { buildReferenceExperiment, type ReferenceIngredient } from "../lib/mixology/reference-experiment";
+import { findReferenceIngredient } from "../lib/mixology/material-identity";
 import { analyzeMixologyRecipe } from "../lib/mixology/engine";
 import { AnalyticsEventInput } from "../lib/analytics";
 import { DrinkLogButton } from "./DrinkLog";
@@ -28,7 +31,7 @@ import {
 } from "lucide-react";
 
 interface LabScreenProps {
-  onSaveCocktail: (cocktail: SavedCocktail) => void;
+  onSaveCocktail: (cocktail: SavedCocktail) => Promise<void>;
   drinkLogs?: DrinkLog[];
   onSaveDrinkLog?: (log: DrinkLog) => void;
   initialIngredients?: { name: string; amount: number; category: string; color: string; isBubbly?: boolean }[];
@@ -91,510 +94,250 @@ const abvRangeLabel: Record<AbvRange, string> = {
 };
 
 function MixingActionAnimation({ method }: { method: "Stir" | "Shake" }) {
-  if (method === "Shake") {
-    return (
-      <div className="mixing-action mixing-action--shake" aria-hidden="true">
-        <div className="load-drops">
-          <span className="drop drop-a"></span>
-          <span className="drop drop-b"></span>
-          <span className="drop drop-c"></span>
-        </div>
-        <div className="shake-lines shake-lines-left">
-          <span></span>
-          <span></span>
-        </div>
-        <div className="shake-lines shake-lines-right">
-          <span></span>
-          <span></span>
-        </div>
-        <div className="cartoon-hand cartoon-hand-left">
-          <span className="thumb"></span>
-          <span className="finger finger-one"></span>
-          <span className="finger finger-two"></span>
-        </div>
-        <div className="cartoon-hand cartoon-hand-right">
-          <span className="thumb"></span>
-          <span className="finger finger-one"></span>
-          <span className="finger finger-two"></span>
-        </div>
-        <div className="shaker">
-          <div className="shaker-cap"></div>
-          <div className="shaker-body">
-            <span className="shaker-shine"></span>
-            <span className="shaker-liquid"></span>
-          </div>
-          <div className="shaker-base"></div>
-        </div>
-        <style jsx>{`
-          .mixing-action {
-            position: relative;
-            width: 118px;
-            height: 136px;
-            transform: scale(0.92);
-          }
-          .shaker {
-            position: absolute;
-            left: 39px;
-            top: 31px;
-            width: 42px;
-            height: 82px;
-            transform-origin: center;
-            animation: shaker-swing 0.7s ease-in-out infinite;
-            z-index: 3;
-          }
-          .shaker-cap {
-            width: 28px;
-            height: 16px;
-            margin: 0 auto -2px;
-            border: 2px solid rgba(38, 38, 38, 0.7);
-            border-bottom: 0;
-            border-radius: 12px 12px 5px 5px;
-            background: linear-gradient(180deg, #faf9f6, #d9f0ff);
-          }
-          .shaker-body {
-            position: relative;
-            width: 42px;
-            height: 58px;
-            border: 2px solid rgba(38, 38, 38, 0.72);
-            border-radius: 14px 14px 18px 18px;
-            overflow: hidden;
-            background: linear-gradient(115deg, #f8fbff 0%, #dff4ff 48%, #faf9f6 100%);
-            box-shadow: inset -8px 0 12px rgba(14, 165, 233, 0.12);
-          }
-          .shaker-liquid {
-            position: absolute;
-            left: 3px;
-            right: 3px;
-            bottom: 4px;
-            height: 23px;
-            border-radius: 10px 10px 15px 15px;
-            background: linear-gradient(90deg, #facc15, #fb7185, #38bdf8);
-            opacity: 0.82;
-            animation: liquid-tilt 0.7s ease-in-out infinite;
-          }
-          .shaker-shine {
-            position: absolute;
-            left: 8px;
-            top: 9px;
-            width: 5px;
-            height: 33px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.72);
-            z-index: 2;
-          }
-          .shaker-base {
-            width: 32px;
-            height: 9px;
-            margin: -1px auto 0;
-            border: 2px solid rgba(38, 38, 38, 0.65);
-            border-top: 0;
-            border-radius: 0 0 14px 14px;
-            background: #e0f2fe;
-          }
-          .cartoon-hand {
-            position: absolute;
-            top: 65px;
-            width: 39px;
-            height: 24px;
-            border: 2px solid rgba(38, 38, 38, 0.7);
-            background: #ffd9bd;
-            box-shadow: inset -4px -3px 0 rgba(251, 146, 60, 0.15);
-            z-index: 4;
-            animation: hand-shake 0.7s ease-in-out infinite;
-          }
-          .cartoon-hand-left {
-            left: 8px;
-            border-radius: 16px 9px 9px 16px;
-          }
-          .cartoon-hand-right {
-            right: 8px;
-            border-radius: 9px 16px 16px 9px;
-            animation-delay: -0.06s;
-          }
-          .thumb,
-          .finger {
-            position: absolute;
-            display: block;
-            background: #ffd9bd;
-            border: 2px solid rgba(38, 38, 38, 0.62);
-          }
-          .cartoon-hand-left .thumb {
-            right: -6px;
-            top: -7px;
-            width: 14px;
-            height: 14px;
-            border-radius: 9px;
-            transform: rotate(35deg);
-          }
-          .cartoon-hand-right .thumb {
-            left: -6px;
-            top: -7px;
-            width: 14px;
-            height: 14px;
-            border-radius: 9px;
-            transform: rotate(-35deg);
-          }
-          .finger {
-            width: 12px;
-            height: 9px;
-            border-radius: 999px;
-            border-top: 0;
-          }
-          .cartoon-hand-left .finger-one {
-            right: -6px;
-            bottom: 3px;
-          }
-          .cartoon-hand-left .finger-two {
-            right: -5px;
-            bottom: 12px;
-          }
-          .cartoon-hand-right .finger-one {
-            left: -6px;
-            bottom: 3px;
-          }
-          .cartoon-hand-right .finger-two {
-            left: -5px;
-            bottom: 12px;
-          }
-          .load-drops span {
-            position: absolute;
-            top: 5px;
-            width: 9px;
-            height: 9px;
-            border-radius: 999px 999px 999px 2px;
-            transform: rotate(-45deg);
-            opacity: 0;
-            z-index: 2;
-            animation: load-drop 1.4s ease-in-out infinite;
-          }
-          .drop-a {
-            left: 44px;
-            background: #facc15;
-          }
-          .drop-b {
-            left: 58px;
-            background: #fb7185;
-            animation-delay: 0.18s !important;
-          }
-          .drop-c {
-            left: 72px;
-            background: #38bdf8;
-            animation-delay: 0.34s !important;
-          }
-          .shake-lines {
-            position: absolute;
-            top: 43px;
-            width: 20px;
-            height: 48px;
-            z-index: 1;
-            opacity: 0.75;
-          }
-          .shake-lines-left {
-            left: 0;
-          }
-          .shake-lines-right {
-            right: 0;
-          }
-          .shake-lines span {
-            display: block;
-            height: 3px;
-            margin: 12px 0;
-            border-radius: 999px;
-            background: rgba(38, 38, 38, 0.45);
-            animation: shake-line 0.7s ease-in-out infinite;
-          }
-          .shake-lines span:nth-child(2) {
-            width: 13px;
-            animation-delay: -0.18s;
-          }
-          @keyframes shaker-swing {
-            0%,
-            100% {
-              transform: translateX(-2px) rotate(-13deg);
-            }
-            50% {
-              transform: translateX(2px) rotate(13deg);
-            }
-          }
-          @keyframes hand-shake {
-            0%,
-            100% {
-              transform: translateX(-2px) translateY(1px);
-            }
-            50% {
-              transform: translateX(2px) translateY(-1px);
-            }
-          }
-          @keyframes liquid-tilt {
-            0%,
-            100% {
-              transform: rotate(8deg) translateY(1px);
-            }
-            50% {
-              transform: rotate(-8deg) translateY(-1px);
-            }
-          }
-          @keyframes load-drop {
-            0% {
-              opacity: 0;
-              transform: translateY(-12px) rotate(-45deg) scale(0.7);
-            }
-            18% {
-              opacity: 1;
-            }
-            42% {
-              opacity: 1;
-              transform: translateY(27px) rotate(-45deg) scale(1);
-            }
-            58%,
-            100% {
-              opacity: 0;
-              transform: translateY(36px) rotate(-45deg) scale(0.75);
-            }
-          }
-          @keyframes shake-line {
-            0%,
-            100% {
-              width: 18px;
-              transform: translateX(0);
-            }
-            50% {
-              width: 10px;
-              transform: translateX(5px);
-            }
-          }
-        `}</style>
-      </div>
-    );
-  }
-
   return (
-    <div className="mixing-action mixing-action--stir" aria-hidden="true">
-      <div className="stir-glow"></div>
-      <div className="stir-tool">
-        <div className="stir-stick"></div>
-        <div className="stir-hand">
-          <span className="sleeve"></span>
-          <span className="palm"></span>
-          <span className="finger finger-one"></span>
-          <span className="finger finger-two"></span>
-          <span className="finger finger-three"></span>
+    <div className={`mixing-action mixing-action--${method.toLowerCase()}`} aria-hidden="true">
+      {method === "Shake" && (
+        <div className="motion-lines">
+          <span></span>
+          <span></span>
         </div>
-      </div>
-      <div className="mini-beaker">
-        <div className="mini-liquid">
-          <span className="swirl swirl-one"></span>
-          <span className="swirl swirl-two"></span>
-          <span className="bubble bubble-one"></span>
-          <span className="bubble bubble-two"></span>
+      )}
+      <div className="vessel-motion">
+        {method === "Stir" && (
+          <div className="stirrer">
+            <span className="stirrer-handle"></span>
+            <span className="stirrer-tip"></span>
+          </div>
+        )}
+        <div className="beaker">
+          <span className="beaker-lip"></span>
+          <span className="measure measure-top"></span>
+          <span className="measure measure-middle"></span>
+          <span className="measure measure-bottom"></span>
+          <div className="liquid">
+            <span className="liquid-line"></span>
+            {method === "Stir" && <span className="swirl"></span>}
+            {method === "Shake" && (
+              <>
+                <span className="air air-one"></span>
+                <span className="air air-two"></span>
+              </>
+            )}
+          </div>
         </div>
       </div>
       <style jsx>{`
         .mixing-action {
           position: relative;
-          width: 118px;
-          height: 136px;
-          transform: scale(0.9);
+          display: grid;
+          place-items: center;
+          width: 124px;
+          height: 132px;
+          overflow: hidden;
+          border: 1px solid #e8e8e8;
+          border-radius: 20px;
+          background: #ffffff;
         }
-        .stir-glow {
-          position: absolute;
-          left: 16px;
-          right: 16px;
-          bottom: 8px;
-          height: 48px;
-          border-radius: 999px;
-          background: radial-gradient(circle, rgba(250, 204, 21, 0.18), transparent 68%);
+        .vessel-motion {
+          position: relative;
+          width: 76px;
+          height: 100px;
+          transform-origin: 50% 66%;
         }
-        .mini-beaker {
+        .mixing-action--shake .vessel-motion {
+          animation: shake-vessel 0.68s ease-in-out infinite;
+        }
+        .beaker {
           position: absolute;
-          left: 30px;
-          bottom: 17px;
-          width: 58px;
-          height: 74px;
-          border: 2px solid rgba(38, 38, 38, 0.65);
+          left: 8px;
+          bottom: 6px;
+          width: 60px;
+          height: 72px;
+          border: 1.5px solid #575751;
           border-top: 0;
-          border-radius: 0 0 22px 22px;
-          background: rgba(255, 255, 255, 0.48);
-          overflow: hidden;
-          z-index: 2;
-          box-shadow: inset 0 -8px 14px rgba(255, 255, 255, 0.45);
+          border-radius: 0 0 18px 18px;
+          background: #ffffff;
         }
-        .mini-beaker:before {
-          content: "";
+        .beaker-lip {
           position: absolute;
-          left: 7px;
+          top: 0;
+          left: -5px;
+          width: 68px;
+          height: 1.5px;
+          border-radius: 2px;
+          background: #575751;
+        }
+        .measure {
+          position: absolute;
           right: 7px;
-          top: -4px;
-          height: 10px;
-          border: 2px solid rgba(38, 38, 38, 0.45);
-          border-radius: 999px;
-          background: white;
+          z-index: 3;
+          width: 7px;
+          height: 1px;
+          background: #c9c7c0;
         }
-        .mini-liquid {
+        .measure-top {
+          top: 21px;
+        }
+        .measure-middle {
+          top: 34px;
+          width: 10px;
+        }
+        .measure-bottom {
+          top: 47px;
+        }
+        .liquid {
           position: absolute;
-          left: 5px;
-          right: 5px;
-          bottom: 5px;
-          height: 43px;
-          border-radius: 10px 10px 18px 18px;
-          background: linear-gradient(135deg, rgba(251, 191, 36, 0.92), rgba(251, 113, 133, 0.82), rgba(56, 189, 248, 0.72));
+          right: 2px;
+          bottom: 2px;
+          left: 2px;
+          height: 39px;
           overflow: hidden;
-          animation: stir-liquid 1.05s ease-in-out infinite;
+          border-radius: 2px 2px 15px 15px;
+          background: #efede6;
+          transform-origin: center;
+        }
+        .mixing-action--shake .liquid {
+          animation: shake-liquid 0.68s ease-in-out infinite;
+        }
+        .liquid-line {
+          position: absolute;
+          top: 0;
+          left: -5px;
+          width: 66px;
+          height: 1px;
+          background: #a5a198;
         }
         .swirl {
           position: absolute;
-          left: 9px;
-          top: 12px;
-          width: 33px;
-          height: 13px;
-          border: 3px solid rgba(255, 255, 255, 0.55);
+          top: 8px;
+          left: 12px;
+          width: 30px;
+          height: 10px;
+          border: 1px solid #b9b5ab;
           border-left-color: transparent;
-          border-right-color: transparent;
           border-radius: 999px;
-          animation: swirl-spin 0.9s linear infinite;
+          animation: stir-swirl 0.95s linear infinite;
         }
-        .swirl-two {
-          left: 16px;
-          top: 22px;
-          width: 20px;
-          height: 8px;
-          opacity: 0.75;
-          animation-direction: reverse;
-        }
-        .bubble {
+        .air {
           position: absolute;
-          border-radius: 999px;
-          background: rgba(255, 255, 255, 0.58);
-          animation: bubble-rise 1.3s ease-in infinite;
-        }
-        .bubble-one {
-          left: 14px;
-          bottom: 4px;
-          width: 6px;
-          height: 6px;
-        }
-        .bubble-two {
-          right: 13px;
-          bottom: 10px;
           width: 4px;
           height: 4px;
-          animation-delay: 0.45s;
+          border: 1px solid #c0bdb5;
+          border-radius: 999px;
         }
-        .stir-tool {
-          position: absolute;
-          left: 43px;
-          top: 19px;
-          width: 48px;
-          height: 88px;
-          z-index: 6;
-          transform-origin: 16px 80px;
-          animation: stir-tool 0.82s ease-in-out infinite;
+        .air-one {
+          top: 12px;
+          left: 15px;
+          animation: air-shift 0.9s ease-in-out infinite;
         }
-        .stir-stick {
+        .air-two {
+          top: 23px;
+          right: 14px;
+          width: 3px;
+          height: 3px;
+          animation: air-shift 0.9s ease-in-out -0.35s infinite;
+        }
+        .stirrer {
           position: absolute;
-          left: 14px;
           top: 0;
-          width: 5px;
+          left: 31px;
+          z-index: 4;
+          width: 16px;
           height: 88px;
-          border-radius: 999px;
-          background: linear-gradient(180deg, #4b5563, #9ca3af);
-          z-index: 5;
-          box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35);
+          transform-origin: 8px 78px;
+          animation: stir-tool 1.05s ease-in-out infinite;
         }
-        .stir-hand {
+        .stirrer-handle {
           position: absolute;
-          left: 3px;
-          top: 6px;
-          width: 44px;
-          height: 34px;
-          z-index: 7;
-        }
-        .sleeve {
-          position: absolute;
-          top: 7px;
-          width: 18px;
-          height: 20px;
+          top: 1px;
+          left: 7px;
+          width: 2px;
+          height: 81px;
           border-radius: 999px;
-          background: #dbeafe;
-          border: 2px solid rgba(38, 38, 38, 0.56);
+          background: #575751;
         }
-        .stir-hand .sleeve {
-          right: -2px;
-        }
-        .palm,
-        .finger {
+        .stirrer-tip {
           position: absolute;
-          display: block;
-          background: #ffd9bd;
-          border: 2px solid rgba(38, 38, 38, 0.62);
-          box-shadow: inset -3px -2px 0 rgba(251, 146, 60, 0.14);
-        }
-        .palm {
-          top: 5px;
-          width: 30px;
-          height: 25px;
-          border-radius: 15px 11px 13px 15px;
-        }
-        .stir-hand .palm {
-          right: 11px;
-          transform: rotate(-11deg);
-        }
-        .finger {
-          width: 18px;
-          height: 8px;
-          border-radius: 999px;
-          z-index: 8;
-        }
-        .stir-hand .finger-one {
+          bottom: 3px;
           left: 4px;
-          top: 8px;
-          transform: rotate(-8deg);
+          width: 8px;
+          height: 8px;
+          border: 1.5px solid #575751;
+          border-radius: 999px;
+          background: #ffffff;
         }
-        .stir-hand .finger-two {
-          left: 3px;
-          top: 17px;
-          transform: rotate(2deg);
+        .motion-lines {
+          position: absolute;
+          inset: 0;
         }
-        .stir-hand .finger-three {
-          left: 6px;
-          top: 25px;
-          width: 15px;
-          transform: rotate(8deg);
+        .motion-lines span {
+          position: absolute;
+          top: 50%;
+          width: 16px;
+          height: 1px;
+          border-radius: 999px;
+          background: #aaa79f;
+          animation: motion-line 0.68s ease-in-out infinite;
+        }
+        .motion-lines span:first-child {
+          left: 9px;
+          transform-origin: right center;
+        }
+        .motion-lines span:last-child {
+          right: 9px;
+          transform-origin: left center;
+          animation-delay: -0.34s;
         }
         @keyframes stir-tool {
           0%,
           100% {
-            transform: rotate(-15deg) translateX(-1px);
+            transform: translateX(-4px) rotate(-5deg);
           }
           50% {
-            transform: rotate(16deg) translateX(1px);
+            transform: translateX(4px) rotate(5deg);
           }
         }
-        @keyframes stir-liquid {
-          0%,
-          100% {
-            transform: skewX(-5deg);
-          }
-          50% {
-            transform: skewX(5deg) translateY(1px);
-          }
-        }
-        @keyframes swirl-spin {
+        @keyframes stir-swirl {
           to {
             transform: rotate(360deg);
           }
         }
-        @keyframes bubble-rise {
-          0% {
-            opacity: 0;
-            transform: translateY(8px) scale(0.7);
-          }
-          25% {
-            opacity: 1;
-          }
+        @keyframes shake-vessel {
+          0%,
           100% {
-            opacity: 0;
-            transform: translateY(-24px) scale(1.1);
+            transform: translateX(-4px) rotate(-5deg);
+          }
+          50% {
+            transform: translateX(4px) rotate(5deg);
+          }
+        }
+        @keyframes shake-liquid {
+          0%,
+          100% {
+            transform: rotate(5deg) translateY(1px);
+          }
+          50% {
+            transform: rotate(-5deg) translateY(-1px);
+          }
+        }
+        @keyframes motion-line {
+          0%,
+          100% {
+            opacity: 0.35;
+            transform: scaleX(0.65);
+          }
+          50% {
+            opacity: 1;
+            transform: scaleX(1);
+          }
+        }
+        @keyframes air-shift {
+          0%,
+          100% {
+            transform: translate(-2px, 2px);
+          }
+          50% {
+            transform: translate(3px, -3px);
           }
         }
       `}</style>
@@ -1358,6 +1101,7 @@ export default function LabScreen({
   const [draftReady, setDraftReady] = useState(false);
   const [pendingMaterials, setPendingMaterials] = useState<{name:string;amount?:number}[]>([]);
   const [pendingName, setPendingName] = useState<string | null>(null);
+  const [referenceNote, setReferenceNote] = useState("");
   const [transferConflict, setTransferConflict] = useState<ReturnType<typeof readTransfer>>(null);
   useEffect(() => {
     try {
@@ -1376,7 +1120,7 @@ export default function LabScreen({
       const transfer=readTransfer();if(!transfer)return;
       sessionStorage.removeItem(LAB_TRANSFER_KEY);
       if((addedIngredients.length||pendingMaterials.length)&&!transfer.replace){setTransferConflict(transfer);return;}
-      setAddedIngredients([]);setPendingMaterials(transfer.materials);setShowResults(false);setLabResult(null);
+      applyTransfer(transfer);
     };
     receive();window.addEventListener('alchemix-lab-transfer',receive);
     return()=>window.removeEventListener('alchemix-lab-transfer',receive);
@@ -1554,7 +1298,7 @@ export default function LabScreen({
         },
       });
     } else {
-      setSearchError("本地数据库暂未确认这个饮料。");
+      setSearchError(`本地材料库尚未收录“${query}”，可以补全后继续使用。`);
       setShowFailGuide(true);
       setPendingUnmatchedQuery(query);
       setManualName(query);
@@ -1800,6 +1544,62 @@ export default function LabScreen({
     }
   };
 
+  const applyTransfer = (transfer: NonNullable<ReturnType<typeof readTransfer>>) => {
+    setReferenceNote("");
+    setShowResults(false);
+    setLabResult(null);
+    if (!transfer.reference) {
+      setAddedIngredients([]);
+      setPendingMaterials(transfer.materials);
+      return;
+    }
+    const resolve = (name: string): ReferenceIngredient | undefined => {
+      // A generic coconut drink is deliberately distinct from coconut water and branded products.
+      if (name === "椰汁" || name === "通用椰汁") return {
+        id: "reference-coconut-drink", name, amount: 90, recommendedAmount: 90,
+        category: "植物乳饮料", color: "rgba(244, 219, 214, 0.85)", abv: 0,
+        sweetness: 3, acidity: 1, viscosity: 3, dairy: 0, fruit: 2,
+        flavorTags: ["椰香", "甜润"],
+      };
+      const item = findReferenceIngredient(name, [...fullIngredientLibrary, ...customIngredients]) as LibraryIngredient | undefined;
+      if (!item) return undefined;
+      const profile = item.flavorProfile;
+      return {
+        id: `reference-${item.id}`, name, amount: item.recommendedAmount || 90,
+        recommendedAmount: item.recommendedAmount, category: item.category, color: item.color || "rgba(148, 163, 184, 0.45)",
+        abv: item.abv, sweetness: item.sweetness ?? profile?.sweetness,
+        acidity: item.acidity ?? profile?.acidity, bitterness: item.bitterness ?? profile?.bitterness,
+        carbonation: item.carbonation ?? profile?.carbonation, isBubbly: item.carbonation >= 3,
+        viscosity: item.viscosity ?? item.body ?? profile?.body, dairy: item.dairyFeeling ?? profile?.dairy,
+        tea: profile?.tea, fruit: profile?.fruit, freshness: profile?.freshness,
+        flavorTags: item.flavorTags, mainComponents: item.mainComponents,
+        goodWith: item.pairingGood, riskyWith: item.pairingRisky,
+      };
+    };
+    const reference = buildReferenceExperiment(transfer.materials, resolve, transfer.reference);
+    setAddedIngredients(reference.ingredients);
+    setPendingMaterials(reference.unresolved);
+    const note = "参考实验：建议用量可调整，风味与酒精度为估算。"
+      + (transfer.materials.some(item => /^(通用)?椰汁$/.test(item.name)) ? "椰汁按通用甜味椰乳饮料估算，实际甜度以包装为准。" : "")
+      + (reference.ingredients.some(item => item.id === "reference-juice-lemon" || item.id === "reference-juice-lime") ? "柠檬汁／青柠汁按纯果汁估算，建议用量不是原茶饮的等量替换；若是加糖果汁饮料，请重新选择实际产品。" : "")
+      + (transfer.reference === "dilute" ? "保留你提供的现有用量，新增量仅供参考；杯型、冰块和泡沫都会影响空间，不保证不会溢出，请分次少量加入。" : "");
+    setReferenceNote(note);
+    if (reference.unresolved.length || reference.ingredients.length < 2) return;
+    const method = buildMixMethodRecommendation(reference.ingredients)?.method ?? "Stir";
+    setMixMethod(method);
+    if (transfer.view === 'materials') return;
+    const analysis = analyzeMixologyRecipe(reference.ingredients, method);
+    setLabResult({
+      id: `lab-${Date.now()}`, chineseName: analysis.chineseName, name: analysis.name,
+      subtitle: analysis.subtitle, spirit: reference.ingredients.filter(i => (i.abv ?? 0) > 0).map(i => i.name).join("+") || "无基酒特调",
+      mixer: reference.ingredients.filter(i => !(i.abv ?? 0)).map(i => i.name).join("+"),
+      size: `${analysis.metrics.totalVolumeMl}ml`, rating: analysis.rating, comments: analysis.comments,
+      adviceSections: analysis.adviceSections, tags: analysis.tags, ingredients: reference.ingredients, mixMethod: method,
+    });
+    setHasSavedResult(false);
+    setShowResults(true);
+  };
+
   // --- REACTION SEQUENCE ---
   const handleInitiateReaction = async () => {
     if (addedIngredients.length < 2 || pendingMaterials.length > 0) return;
@@ -1938,15 +1738,16 @@ export default function LabScreen({
     }
   };
 
-  const handleSaveToNotebook = () => {
+  const handleSaveToNotebook = async () => {
     if (labResult) {
-      onSaveCocktail({
+      try { await onSaveCocktail({
         ...labResult,
         savedAt: new Date().toISOString().split("T")[0],
         ratingValue: 5,
         sourcePage: "lab",
       });
       setHasSavedResult(true);
+      } catch (error) { window.alert(error instanceof Error ? error.message : "收藏失败，请重试"); }
     }
   };
 
@@ -1991,8 +1792,10 @@ export default function LabScreen({
   return (
     <div className="space-y-4 pb-6">
       <AssistantSurface context={{kind:'lab',name:showResults && labResult ? (labResult.chineseName || labResult.name || '酒精实验室') : '酒精实验室',ingredients:addedIngredients.map(i=>({name:i.name,amount:i.amount})),note:pendingMaterials.length?'待确认用量的材料：'+pendingMaterials.map(i=>i.name).join('、'):undefined}} />
-      {transferConflict && <section className="rounded-2xl border border-[#d5d3cd] bg-white p-4 text-sm" role="group" aria-label="确认替换实验室内容"><p>实验室已有编辑，要保留还是替换？</p><div className="mt-3 flex gap-3"><button onClick={()=>setTransferConflict(null)}>保留当前内容</button><button onClick={()=>{setAddedIngredients([]);setPendingMaterials(transferConflict.materials);setShowResults(false);setLabResult(null);setTransferConflict(null);}}>替换内容</button></div></section>}
+      {transferConflict && <section className="rounded-2xl border border-[#d5d3cd] bg-white p-4 text-sm" role="group" aria-label="确认替换实验室内容"><p>实验室已有编辑，要保留还是替换？</p><div className="mt-3 flex gap-3"><button onClick={()=>setTransferConflict(null)}>保留当前内容</button><button onClick={()=>{applyTransfer(transferConflict);setTransferConflict(null);}}>替换内容</button></div></section>}
       {!!pendingMaterials.length && <section className="rounded-2xl border border-[#d5d3cd] bg-white p-4 text-sm" aria-label="待确认的材料"><h3 className="font-medium">材料已带入，请确认用量</h3><p className="mt-2 text-xs text-neutral-500">逐项选择材料并填写用量，再继续实验。</p>{pendingMaterials.map(item=><div className="mt-3 flex items-center justify-between gap-2" key={item.name}><span>{item.name}</span><button className="rounded-xl border px-3 py-2" onClick={()=>{const matches=findLocalIngredientMatches(item.name,[...fullIngredientLibrary,...customIngredients]);setShowAddModal(true);setModalTab('search');setSearchQuery(item.name);setPendingName(item.name);setAutoSaveToLibrary(false);if(matches[0]&&fuzzyIngredientScore(matches[0],item.name)>=108){stageLibraryIngredient(matches[0]);setAmountToInject(item.amount??0);}else{setActiveStagedIngredient(null);setFuzzyMatches(matches.slice(0,8));setSearchError('请选择与这项材料对应的真实商品。');}}}>选择用量</button><button aria-label={'移除待确认材料'+item.name} onClick={()=>setPendingMaterials(items=>items.filter(i=>i.name!==item.name))}>移除</button></div>)}</section>}
+
+      {referenceNote && <section className="rounded-2xl border border-[#d5d3cd] bg-white p-4 text-sm leading-6" aria-label="参考实验说明">{referenceNote}</section>}
 
       {/* Top Header */}
       <div className="flex justify-between items-start">
@@ -2166,7 +1969,17 @@ export default function LabScreen({
                         </div>
 
                         <div className="flex items-center gap-3">
-                          <span className="text-xs font-medium text-neutral-700">{item.amount}ml</span>
+                          <label className="flex items-center gap-1 text-xs text-neutral-700">
+                            <input aria-label={`${item.name}用量（ml）`} type="number" min={1} max={350} step={1} value={item.amount}
+                              className="w-12 rounded border border-neutral-200 bg-white px-1 py-2 text-right"
+                              onChange={event => {
+                                const amount = Number(event.target.value);
+                                if (Number.isFinite(amount) && amount > 0 && amount <= 350) {
+                                  setAddedIngredients(items => items.map(ingredient => ingredient.id === item.id ? { ...ingredient, amount } : ingredient));
+                                  setLabResult(null);
+                                }
+                              }} />ml
+                          </label>
                           <button
                             onClick={() => handleRemoveIngredient(item.id)}
                             className="text-neutral-300 hover:text-red-500 transition-colors"
@@ -3132,15 +2945,11 @@ export default function LabScreen({
                               >
                                 手动输入配料表
                               </button>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  alert("联网补全会在后续接入：只有本地无匹配、你确认不是相似项，并且当天未超调用额度时才会触发。当前 MVP 先使用手动配料表和本地审核。");
-                                }}
-                                className="rounded-xl border border-amber-200 bg-white px-3 py-2 text-[11px] font-medium text-amber-800 active:scale-[0.98]"
-                              >
-                                联网补全资料
-                              </button>
+                              <IngredientWebLookup query={pendingUnmatchedQuery || searchQuery} onComplete={() => {
+                                setManualName(pendingUnmatchedQuery || searchQuery);
+                                setAutoSaveToLibrary(false);
+                                setModalTab('manual');
+                              }} />
                             </div>
                           </div>
                         </div>

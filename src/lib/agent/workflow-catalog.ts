@@ -1,6 +1,8 @@
-import { BEGINNER_CATALOG, CLASSIC_DATABASE, classicExploreCocktails, convenienceExploreCocktails, getConvenienceRecipeGuide, normalizeClassicCocktailId } from '../data/explore-catalog';
+import { BEGINNER_CATALOG, CLASSIC_DATABASE, classicExploreCocktails, convenienceExploreCocktails, canonicalConvenienceId, getConvenienceRecipeGuide, normalizeClassicCocktailId } from '../data/explore-catalog';
 import { emptyAnswers, matchDrinks } from '../recommendations/beginner';
 import type { PageContext, PageAction } from './companion-contract';
+import { requirementFromLine } from './recipe-requirements';
+import { isMaterialName } from '../mixology/material-identity';
 export function ingredientKey(name: string): string {
     const raw = name.trim().toLowerCase().replace(/\s+/g, '');
     if (ingredientAliases[raw]) return ingredientAliases[raw];
@@ -34,11 +36,21 @@ function withinOneEdit(a: string, b: string) {
     return edits + Number(i < a.length || j < b.length) <= 1;
 }
 export function findRecipe(category: 'classic' | 'convenience', id: string) {
-    return (category === 'classic' ? classicExploreCocktails : convenienceExploreCocktails).find(r => r.id === id || (category === 'classic' && normalizeClassicCocktailId(r.id) === normalizeClassicCocktailId(id)));
+    const canonicalId = category === 'convenience' ? canonicalConvenienceId(id) : normalizeClassicCocktailId(id);
+    return (category === 'classic' ? classicExploreCocktails : convenienceExploreCocktails).find(r => r.id === canonicalId || (category === 'classic' && normalizeClassicCocktailId(r.id) === canonicalId));
 }
 export function recipeContext(category: 'classic' | 'convenience', id: string): PageContext {
     const recipe = findRecipe(category, id), classic = category === 'classic' ? CLASSIC_DATABASE[normalizeClassicCocktailId(id)] : null;
-    return { kind: category, recipeId: recipe?.id ?? id, name: classic?.name ?? recipe?.nameZh ?? '当前酒款', ingredients: (classic?.ingredients ?? recipe?.ingredients.map(name => ({ name })) ?? []).map(i => ({ name: i.name, ...('amount' in i && typeof i.amount === 'number' && !/糖块|苦精|蛋白|薄荷/.test(i.name) ? { amount: i.amount } : {}) })), note: classic?.methodNote ? classic.methodNote : category === 'convenience' && recipe ? getConvenienceRecipeGuide(recipe).ingredientLines.join('；') : '原配方要求不代表实际已倒入量；涉及用量需按资料核对。' };
+    if (category === 'convenience' && recipe) {
+        const guide = getConvenienceRecipeGuide(recipe);
+        const requirements = guide.ingredientLines.map(requirementFromLine);
+        return { kind: category, recipeId: recipe.id, name: recipe.nameZh, method:guide.steps.join('；').slice(0,1500), requirements,
+            // The liquid recipe and complete serving requirements are two views of the same guide.
+            // Ice and optional garnish must not become inventory or automatically poured volumes.
+            ingredients: requirements.filter(i => !i.optional && !i.auxiliary).map(({ name, amount }) => ({ name, amount })),
+            note: `${guide.ingredientLines.join('；')}。制作步骤：${guide.steps.join('；')}`.slice(0, 1500) };
+    }
+    return { kind: category, recipeId: recipe?.id ?? id, name: classic?.name ?? recipe?.nameZh ?? '当前酒款', ingredients: (classic?.ingredients ?? recipe?.ingredients.map(name => ({ name })) ?? []).map(i => ({ name: i.name, ...('amount' in i && typeof i.amount === 'number' && !/糖块|苦精|蛋白|薄荷/.test(i.name) ? { amount: i.amount } : {}) })), method:classic?.methodNote||'', note: classic?.methodNote ? classic.methodNote : category === 'convenience' && recipe ? getConvenienceRecipeGuide(recipe).ingredientLines.join('；') : '原配方要求不代表实际已倒入量；涉及用量需按资料核对。' };
 }
 export function namedRecipes(name: string) {
     const key = recipeNameKey(name);
@@ -151,6 +163,7 @@ export function verifiedMaterials(names: string[], input: {
 }): string[] {
     const text = [input.question, ...input.history.filter(h => h.role === 'user').map(h => h.content), ...(input.page.kind === 'lab' ? input.page.ingredients.map(i => i.name) : [])].join(' ').toLowerCase();
     return [...new Set(names)].filter(n => {
+        if (!isMaterialName(n)) return false;
         const key = ingredientKey(n);
         const aliases = [n, ...Object.entries(ingredientAliases).filter(([, canonical]) => canonical === key).map(([alias]) => alias)];
         const quoted = aliases.some(v => text.includes(v.toLowerCase()));

@@ -312,8 +312,8 @@ test('duplicate Highball catalogue alias resolves one canonical recipe without c
 test('precise taste adjustment first gathers actual facts instead of using recipe values', async () => {
     const d = deps({ intent: 'change', question: '杯里现在有多少液体？' });
     const r = await runCompanion(input('太甜了，具体还能加多少苏打水才不溢出来？'), d.d);
-    assert.equal(r.clarification, '这杯实际用了哪些材料？');
-    assert.equal(r.pending?.kind, 'troubleshoot');
+    assert.equal(r.clarification, '杯里现在有多少液体？');
+    assert.equal(r.pending?.kind, 'rescue');
     assert.equal(r.status, 'needs_info');
     assert.equal(d.count().searches, 0);
     assert.equal(r.actions.length, 0);

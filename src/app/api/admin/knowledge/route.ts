@@ -1,3 +1,4 @@
+import { audit } from '@/lib/admin/telemetry';
 import { requireAdmin,authErrorResponse } from '@/lib/auth/current-user';
 import { listCandidates,reviewCandidate,relatedSeedTitles } from '@/lib/knowledge/review/store';
 import { reviewInput } from '@/lib/knowledge/review/contract';
@@ -16,6 +17,7 @@ export async function POST(request:Request) {
     const raw=await request.text();if(raw.length>24000)return Response.json({error:'内容过长'},{status:413});
     let body:unknown;try {body=JSON.parse(raw);}catch{return Response.json({error:'JSON 格式不正确'},{status:400});}
     const parsed=reviewInput.safeParse(body);if(!parsed.success)return Response.json({error:'请检查内容、来源链接和操作参数'},{status:400});
+    await audit(user.id,'attempt_knowledge_'+parsed.data.action,parsed.data.id);
     return Response.json(await reviewCandidate(parsed.data,user.id),{headers:{'Cache-Control':'no-store'}});
   } catch(e) {return failure(e);}
 }

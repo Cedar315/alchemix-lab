@@ -1,10 +1,10 @@
+import { chatConfig } from '../ai/provider-config';
 import { RagError } from '../knowledge/rag/core';
 export async function decide(state: unknown, signal: AbortSignal) {
-  const endpoint = process.env.MINIMAX_API_URL, key = process.env.MINIMAX_API_KEY, model = process.env.MINIMAX_MODEL;
-  if (!endpoint || !key || !model || new URL(endpoint).protocol !== 'https:') throw new RagError('NOT_CONFIGURED', '模型未配置');
+  const {endpoint,key,model,options} = chatConfig();
   const response = await fetch(endpoint, { method: 'POST', redirect: 'error', cache: 'no-store', signal: AbortSignal.any([signal, AbortSignal.timeout(15000)]),
     headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ model, temperature: 0.2, max_tokens: 800, messages: [
+    body: JSON.stringify({ model, ...options, temperature: 0.2, max_tokens: 800, messages: [
       { role: 'system', content: `你是调酒工具调度器。只返回一个 JSON 动作，不输出思维过程。工具协议：
 {"action":"find_recipes","query":"口味","omit":["不再考虑的配方ID"]}
 {"action":"check_recipe","recipeId":"已找到的ID"}
@@ -28,9 +28,8 @@ input.ice 只代表有没有冰，iceEnough 才表示用户按具体配方确认
 }
 
 export async function extractSupplies(input: unknown, signal: AbortSignal) {
-  const endpoint=process.env.MINIMAX_API_URL, key=process.env.MINIMAX_API_KEY, model=process.env.MINIMAX_MODEL;
-  if (!endpoint || !key || !model || new URL(endpoint).protocol !== 'https:') throw new RagError('NOT_CONFIGURED','模型未配置');
-  const response=await fetch(endpoint,{method:'POST',redirect:'error',cache:'no-store',signal:AbortSignal.any([signal,AbortSignal.timeout(15000)]),headers:{Authorization:`Bearer ${key}`,'Content-Type':'application/json'},body:JSON.stringify({model,temperature:0,max_tokens:1600,messages:[
+  const {endpoint,key,model,options} = chatConfig();
+  const response=await fetch(endpoint,{method:'POST',redirect:'error',cache:'no-store',signal:AbortSignal.any([signal,AbortSignal.timeout(15000)]),headers:{Authorization:`Bearer ${key}`,'Content-Type':'application/json'},body:JSON.stringify({model,...options,temperature:0,max_tokens:1600,messages:[
     {role:'system',content:`从调酒对话提取用户明确确认的制作条件，只返回完整 JSON：
 {"inventory":[{"name":"金酒","amount":null,"unit":"ml"}],"excluded":[],"ice":null,"iceEnough":null,"tools":null,"toolAvailability":{"杯子":null,"量杯":null,"搅拌勺":null}}
 以输入现有结构化条件为基础，仅根据当前用户回答更新。历史用来理解简短回答的指代；现有条件未知时可以从历史用户明确陈述补齐，禁止从助手的举例、配方或提问推断用户拥有材料。当前用户陈述优先，否认或用完的材料移除；只有明确说“只有/全部”才替换整个库存，否则合并。材料按名称合并，不重复。

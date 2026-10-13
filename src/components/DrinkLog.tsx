@@ -1,5 +1,8 @@
+import { fetchFavorites,saveFavorite,removeFavorite,snapshotFavorite,FAVORITES_CHANGED } from '../lib/recipes/favorites-client';
+import { canonicalRecipeId as stableRecipeId } from '../lib/recipes/canonical';
 import CocktailLineArt from "./CocktailLineArt";
-import React, { useState } from "react";
+import CocktailIllustration from "./CocktailIllustration";
+import React, { useState, useEffect, useRef } from "react";
 import { DrinkLog, DrinkLogRecipeSnapshot, DrinkLogTasteScores } from "../types";
 
 const defaultTasteScores: DrinkLogTasteScores = {
@@ -39,7 +42,12 @@ export function DrinkLogModal({ recipe, sourcePage, existingLog, onClose, onSave
   const [isFinished, setIsFinished] = useState(existingLog?.isFinished ?? true);
   const [rating, setRating] = useState(existingLog?.rating ?? 0);
   const [tasteScores, setTasteScores] = useState<DrinkLogTasteScores>(existingLog?.tasteScores ?? defaultTasteScores);
-  const [isFavorite, setIsFavorite] = useState(existingLog?.isFavorite ?? false);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [favoriteId,setFavoriteId]=useState<string|null>(null),[favoriteBusy,setFavoriteBusy]=useState(true),[favoriteError,setFavoriteError]=useState('');
+  const favoriteVersion=useRef(0);
+  useEffect(()=>{let active=true;setFavoriteBusy(true);const load=()=>{const version=++favoriteVersion.current;fetchFavorites().then(rows=>{if(!active||version!==favoriteVersion.current)return;const found=rows.find(r=>stableRecipeId(r.recipeId||r.id)===stableRecipeId(recipe.id));setFavoriteId(found?.id||null);setIsFavorite(Boolean(found));}).catch(e=>{if(active&&version===favoriteVersion.current)setFavoriteError(e.message);}).finally(()=>{if(active&&version===favoriteVersion.current)setFavoriteBusy(false);});};load();window.addEventListener(FAVORITES_CHANGED,load);return()=>{active=false;window.removeEventListener(FAVORITES_CHANGED,load);};},[recipe.id]);
+  async function toggleFavorite(){favoriteVersion.current++;setFavoriteBusy(true);setFavoriteError('');try{if(favoriteId){await removeFavorite(favoriteId);setFavoriteId(null);setIsFavorite(false);}else{const saved=await saveFavorite(snapshotFavorite(recipe,sourcePage));setFavoriteId(saved.id);setIsFavorite(true);}}catch(e){setFavoriteError(e instanceof Error?e.message:'收藏失败');}finally{setFavoriteBusy(false);}}
+
   const [isStarred, setIsStarred] = useState(existingLog?.isStarred ?? false);
   const [note, setNote] = useState(existingLog?.note ?? "");
   const [selectedMoodTags, setSelectedMoodTags] = useState<string[]>(existingLog?.moodTags ?? []);
@@ -96,7 +104,9 @@ export function DrinkLogModal({ recipe, sourcePage, existingLog, onClose, onSave
           <section className="rounded-3xl border border-[#E8E8E8] bg-white p-4 shadow-none">
             <div className="flex items-center gap-3">
               <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-[#E8E8E8] bg-[#f6f5f1]">
-                <CocktailLineArt name={recipe.nameZh} className="h-full w-full" />
+                {sourcePage.includes("lab")
+                  ? <CocktailLineArt name={recipe.nameZh} className="h-full w-full" />
+                  : <CocktailIllustration id={recipe.id} name={recipe.nameZh} className="h-full w-full" sizes="56px" />}
               </div>
               <div className="min-w-0">
                 <h4 className="truncate text-base font-medium text-neutral-950">{recipe.nameZh}</h4>
@@ -176,13 +186,15 @@ export function DrinkLogModal({ recipe, sourcePage, existingLog, onClose, onSave
           </section>
 
           <section className="rounded-3xl border border-[#E8E8E8] bg-white p-4">
+            {favoriteError&&<p role="alert" className="mb-2 text-xs text-red-700">{favoriteError}</p>}
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
-                onClick={() => setIsFavorite((value) => !value)}
+                disabled={favoriteBusy}
+                onClick={()=>void toggleFavorite()}
                 className={`h-11 cursor-pointer rounded-2xl border text-sm font-medium active:scale-[0.98] ${isFavorite ? "border-neutral-950 bg-neutral-950 text-white" : "border-[#E8E8E8] bg-white text-neutral-700"}`}
               >
-                {isFavorite ? "已收藏" : "收藏这杯"}
+                {favoriteBusy?"处理中…":isFavorite ? "已收藏" : "收藏这杯"}
               </button>
               <button
                 type="button"

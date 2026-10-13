@@ -1,3 +1,5 @@
+import { recordEvent } from '@/lib/admin/telemetry';
+import { isInternalIdentity } from '@/lib/admin/metrics';
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/db/prisma';
 import { authErrorResponse, requireUser } from '@/lib/auth/current-user';
@@ -45,7 +47,7 @@ function serialize(log: any) {
 export async function POST(request: Request) {
   try {
     const body = drinkLogSchema.parse(await request.json());
-    const { user } = await requireUser();
+    const { user, authUser } = await requireUser();
 
     const log = await prisma.drinkLog.create({
       data: {
@@ -68,6 +70,7 @@ export async function POST(request: Request) {
       },
     });
 
+    await recordEvent({userId:user.id,visitorId:user.id,internal:isInternalIdentity(user.email,authUser.app_metadata),name:'drink_recorded',page:'records'});
     return NextResponse.json({ success: true, drink_log: serialize(log) });
   } catch (error) {
     console.error('POST /api/drink-logs error', error);

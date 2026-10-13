@@ -17,10 +17,11 @@
     "rag:status": "tsx scripts/rag.ts status",
     "rag:ingest": "tsx scripts/rag.ts ingest",
     "test:rag:live": "tsx scripts/rag.ts smoke",
-    "test": "tsx --test src/lib/knowledge/rag/rag.test.ts src/lib/recommendations/beginner.test.ts src/lib/agent/agent.test.ts src/lib/auth/return-path.test.ts src/lib/agent/preparation.test.ts src/lib/agent/companion.test.ts src/lib/knowledge/review/review.test.ts",
-    "test:agent": "tsx --test src/lib/agent/preparation.test.ts src/lib/agent/companion.test.ts",
+    "test": "node --import tsx --test src/lib/admin/evaluate-agent.test.ts src/lib/admin/metrics.test.ts src/lib/agent/agent.test.ts src/lib/agent/companion.test.ts src/lib/agent/conversation-repair.test.ts src/lib/agent/intent-funnel.test.ts src/lib/agent/preparation.test.ts src/lib/agent/task-state.test.ts src/lib/agent-next/response.test.ts src/lib/agent-next/tools.test.ts src/lib/agent-next/ui-stream.test.ts src/lib/ai/provider-config.test.ts src/lib/auth/return-path.test.ts src/lib/ingredients/web-lookup.test.ts src/lib/knowledge/rag/rag.test.ts src/lib/knowledge/review/review.test.ts src/lib/recipes/identity.test.ts src/lib/recommendations/beginner.test.ts",
+    "test:agent": "tsx --test src/lib/agent/preparation.test.ts src/lib/agent/companion.test.ts src/lib/agent/intent-funnel.test.ts src/lib/agent/conversation-repair.test.ts src/lib/agent/task-state.test.ts",
     "eval:rag": "tsx scripts/evaluate.ts rag",
     "eval:agent": "tsx scripts/evaluate-companion.ts",
+    "eval:agent:acceptance": "node --import tsx scripts/evaluate-acceptance.ts",
     "db:status": "tsx scripts/database.ts status",
     "db:deploy": "tsx scripts/database.ts deploy",
     "test:budget:live": "tsx scripts/check-budget.ts",
@@ -29,16 +30,25 @@
     "eval:agent:preparation": "tsx scripts/evaluate-preparation.ts",
     "test:browser:preparation": "node scripts/browser-check.mjs",
     "test:knowledge": "tsx --test src/lib/knowledge/review/review.test.ts",
-    "test:knowledge:live": "tsx scripts/check-knowledge-store.ts"
+    "test:knowledge:live": "tsx scripts/check-knowledge-store.ts",
+    "test:admin": "node --import tsx --test src/lib/admin/metrics.test.ts src/lib/admin/evaluate-agent.test.ts",
+    "test:admin:live": "node --import tsx scripts/check-admin-console.mjs",
+    "test:recipes": "node --import tsx --test src/lib/recipes/identity.test.ts",
+    "test:agent:next": "node --import tsx --test src/lib/agent-next/tools.test.ts src/lib/agent-next/response.test.ts src/lib/agent-next/ui-stream.test.ts",
+    "eval:agent:next": "node --import tsx scripts/evaluate-agent-next.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@ai-sdk/deepseek": "3.0.52",
+    "@ai-sdk/react": "4.0.116",
     "@google/genai": "^2.4.0",
+    "@langchain/core": "^1.2.11",
     "@prisma/client": "^5.10.1",
     "@supabase/ssr": "^0.12.4",
     "@supabase/supabase-js": "^2.112.3",
+    "ai": "7.0.113",
     "dotenv": "^17.2.3",
     "express": "^4.21.2",
     "lucide-react": "^0.546.0",
@@ -46,7 +56,9 @@
     "next": "^16.3.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "zod": "^3.22.2"
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.2",
@@ -60,5 +72,6 @@
     "tailwindcss": "^4.1.14",
     "tsx": "^4.21.0",
     "typescript": "~5.8.2"
-  }
+  },
+  "description": "面向家庭调饮场景的 AI 助手、配方实验室与产品管理后台"
 }

@@ -1,4 +1,5 @@
-// MiniMax is only called from Next.js server code. It never receives direct
+import { chatConfig } from '../provider-config';
+// The configured AI provider is only called from Next.js server code. It never receives direct
 // database credentials and never writes to Supabase by itself.
 
 export async function callAIMock(prompt: string, timeout = 500) {
@@ -6,14 +7,8 @@ export async function callAIMock(prompt: string, timeout = 500) {
   return { ok: true, text: 'MOCK_RESPONSE' };
 }
 
-export async function callMiniMaxJson<T>(messages: Array<{ role: 'system' | 'user'; content: string }>): Promise<T> {
-  const apiKey = process.env.MINIMAX_API_KEY;
-  const endpoint = process.env.MINIMAX_API_URL ?? 'https://api.minimax.chat/v1/text/chatcompletion_v2';
-  const model = process.env.MINIMAX_MODEL ?? 'abab6.5s-chat';
-
-  if (!apiKey) {
-    throw new Error('MINIMAX_API_KEY is not configured');
-  }
+export async function callAIJson<T>(messages: Array<{ role: 'system' | 'user'; content: string }>): Promise<T> {
+  const {key:apiKey,endpoint,model,options} = chatConfig();
 
   const response = await fetch(endpoint, {
     method: 'POST',
@@ -23,6 +18,7 @@ export async function callMiniMaxJson<T>(messages: Array<{ role: 'system' | 'use
     },
     body: JSON.stringify({
       model,
+      ...options,
       messages,
       temperature: 0.3,
       stream: false,
@@ -31,7 +27,7 @@ export async function callMiniMaxJson<T>(messages: Array<{ role: 'system' | 'use
   });
 
   if (!response.ok) {
-    throw new Error(`MiniMax request failed: ${response.status}`);
+    throw new Error(`AI request failed: ${response.status}`);
   }
 
   const payload = await response.json();
@@ -42,10 +38,10 @@ export async function callMiniMaxJson<T>(messages: Array<{ role: 'system' | 'use
     payload?.data?.message;
 
   if (typeof content !== 'string') {
-    throw new Error('MiniMax response did not contain JSON text');
+    throw new Error('AI response did not contain JSON text');
   }
 
   return JSON.parse(content) as T;
 }
 
-export default { callAIMock, callMiniMaxJson };
+export default { callAIMock, callAIJson };

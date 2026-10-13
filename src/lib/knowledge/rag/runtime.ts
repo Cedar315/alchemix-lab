@@ -48,6 +48,6 @@ export async function retrieve(question: string, topK: number, context = "", sig
 }
 export async function ask(question: string, context: string, topK: number, signal?: AbortSignal) {
   const result = await timed('local_retrieval', () => retrieve(question, topK, context, signal));
-  diagnostic('local_hits', { threshold: result.threshold, hits: result.hits.map(h => ({ id: h.document.id, score: h.score, semanticScore: h.semanticScore, keywordScore: h.keywordScore })) });
+  diagnostic('local_hits', { threshold: result.threshold, hits: result.hits.map(h => ({ id: h.document.id, title: h.document.title, excerpt: h.document.answer.slice(0,1200), scope: h.document.scope, datasetVersion, score: h.score, semanticScore: h.semanticScore, keywordScore: h.keywordScore })) });
   return { ...result, answer: await timed('local_answer', () => answerFromHits(question, context, result.hits, (q,c,h) => generate(q,c,h,signal))) };
 }

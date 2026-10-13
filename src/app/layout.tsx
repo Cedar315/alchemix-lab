@@ -1,4 +1,5 @@
 import './globals.css';
+import ProductActivity from '@/components/ProductActivity';
 import React from 'react';
 import AssistantProvider from '@/components/assistant/AssistantProvider';
 
@@ -22,7 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
-        <AssistantProvider><main>{children}</main></AssistantProvider>
+        <AssistantProvider legacy={process.env.ASSISTANT_RUNTIME === 'legacy'}><ProductActivity/><main>{children}</main></AssistantProvider>
       </body>
     </html>
   );
