@@ -11,6 +11,7 @@ import InspirationScreen from "./components/InspirationScreen";
 import MyProfileScreen from "./components/MyProfileScreen";
 import ProfileSettings from "./components/ProfileSettings";
 import { TASTE_KEY, defaultTaste, parseTaste, type TasteSettings } from "./lib/preferences/taste";
+import { useDrinkLogs } from "./lib/drink-logs/use-drink-logs";
 import { trackAnalyticsEvent } from "./lib/analytics";
 
 export default function App() {
@@ -47,7 +48,7 @@ export default function App() {
     if (new URLSearchParams(window.location.search).get("from") === "materials") setActiveTab("MATERIALS");
   }, []);
   const [savedCocktails, setSavedCocktails] = useState<SavedCocktail[]>([]);
-  const [drinkLogs, setDrinkLogs] = useState<DrinkLog[]>([]);
+  const { drinkLogs, refresh: syncAuthenticatedDrinkLogs, save: persistDrinkLog, clear: clearDrinkLogs } = useDrinkLogs();
   const [drinkLogSuccess, setDrinkLogSuccess] = useState<{ recipeName: string; todayCount: number } | null>(null);
 
   // Alchemist rescue tips (persisted in localStorage)
@@ -56,23 +57,6 @@ export default function App() {
   // Lab Preset Ingredients for cross-screen integration
   const [labPresetIngredients, setLabPresetIngredients] = useState<any[]>([]);
   const [labPresetMixMethod, setLabPresetMixMethod] = useState<"Stir" | "Shake">("Stir");
-
-  const syncAuthenticatedDrinkLogs = () => {
-    fetch("/api/drink-logs")
-      .then((response) => response.ok ? response.json() : null)
-      .then((data) => {
-        if (!data?.drink_logs) return;
-        const local = JSON.parse(localStorage.getItem("alchemix_drink_logs") ?? "[]") as DrinkLog[];
-        if (data.drink_logs.length === 0 && local.length > 0) {
-          Promise.all(local.map((log) => fetch("/api/drink-logs", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(log) })))
-            .then(() => syncAuthenticatedDrinkLogs()).catch(() => null);
-          return;
-        }
-        setDrinkLogs(data.drink_logs);
-        localStorage.setItem("alchemix_drink_logs", JSON.stringify(data.drink_logs));
-      })
-      .catch(() => null);
-  };
 
   const favoriteSyncVersion=useRef(0);
   const syncAuthenticatedCocktails = () => {
@@ -87,7 +71,7 @@ export default function App() {
 
   const handleAuthChanged = (signedIn: boolean) => {
     if (signedIn) return syncAuthenticatedData();
-    setDrinkLogs([]);
+    clearDrinkLogs();
     favoriteSyncVersion.current++;
     setSavedCocktails([]);
     localStorage.removeItem("alchemix_drink_logs");
@@ -102,11 +86,6 @@ export default function App() {
       localStorage.removeItem("alchemix_open_tab");
     }
 
-    const localDrinkLogs = localStorage.getItem("alchemix_drink_logs");
-    if (localDrinkLogs) {
-      setDrinkLogs(JSON.parse(localDrinkLogs));
-    }
-    syncAuthenticatedDrinkLogs();
     syncAuthenticatedCocktails();
 
     // Emergency rescue tips
@@ -158,21 +137,9 @@ export default function App() {
     try{await removeFavorite(id);setSavedCocktails(current=>current.filter(c=>c.id!==id));}catch(e){alert(e instanceof Error?e.message:'取消收藏失败');}
   };
 
-  const handleSaveDrinkLog = (log: DrinkLog) => {
-    const updated = [
-      log,
-      ...drinkLogs.filter((item) => item.id !== log.id),
-    ];
-    setDrinkLogs(updated);
-    localStorage.setItem("alchemix_drink_logs", JSON.stringify(updated));
-    fetch(log.id && /^\d+$/.test(String(log.id)) ? `/api/drink-logs/${log.id}` : "/api/drink-logs", {
-      method: log.id && /^\d+$/.test(String(log.id)) ? "PATCH" : "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(log),
-    }).then((response) => response.ok ? response.json() : null).then((data) => {
-      if (!data?.drink_log) return;
-      setDrinkLogs((current) => [data.drink_log, ...current.filter((item) => item.id !== log.id)]);
-    }).catch(() => null);
+  const handleSaveDrinkLog = async (log: DrinkLog) => {
+    const saved = await persistDrinkLog(log);
+    const updated = [saved, ...drinkLogs.filter(item => item.id !== log.id && item.id !== saved.id)];
     const today = new Date().toISOString().split("T")[0];
     const todayCount = updated.filter((item) => item.drinkDate === today).length;
     setDrinkLogSuccess({ recipeName: log.recipeName, todayCount });

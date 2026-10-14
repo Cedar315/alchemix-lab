@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useDrinkLogs } from "@/lib/drink-logs/use-drink-logs";
+import React, { useState } from "react";
 import InspirationScreen from "@/components/InspirationScreen";
 import { DrinkLog, MixTip } from "@/types";
 
@@ -25,24 +26,13 @@ export default function InspirationRouteClient({ initialView = "menu", initialCo
       icon: "icecream",
     },
   ]);
-  const [drinkLogs, setDrinkLogs] = useState<DrinkLog[]>([]);
+  const { drinkLogs, save: persistDrinkLog } = useDrinkLogs();
   const [drinkLogSuccess, setDrinkLogSuccess] = useState<{ recipeName: string; todayCount: number } | null>(null);
   const isExploreHome = initialView === "menu";
 
-  useEffect(() => {
-    const localDrinkLogs = localStorage.getItem("alchemix_drink_logs");
-    if (localDrinkLogs) {
-      setDrinkLogs(JSON.parse(localDrinkLogs));
-    }
-  }, []);
-
-  const handleSaveDrinkLog = (log: DrinkLog) => {
-    const updated = [
-      log,
-      ...drinkLogs.filter((item) => item.id !== log.id),
-    ];
-    setDrinkLogs(updated);
-    localStorage.setItem("alchemix_drink_logs", JSON.stringify(updated));
+  const handleSaveDrinkLog = async (log: DrinkLog) => {
+    const saved = await persistDrinkLog(log);
+    const updated = [saved, ...drinkLogs.filter(item => item.id !== log.id && item.id !== saved.id)];
     const today = new Date().toISOString().split("T")[0];
     const todayCount = updated.filter((item) => item.drinkDate === today).length;
     setDrinkLogSuccess({ recipeName: log.recipeName, todayCount });
@@ -124,8 +114,7 @@ export default function InspirationRouteClient({ initialView = "menu", initialCo
                   type="button"
                   onClick={() => {
                     setDrinkLogSuccess(null);
-                    localStorage.setItem("alchemix_open_tab", "MY");
-                    window.location.href = "/";
+                    window.location.href = "/?tab=MY";
                   }}
                   className="h-11 cursor-pointer rounded-2xl bg-neutral-950 text-sm font-medium text-white active:scale-[0.98]"
                 >

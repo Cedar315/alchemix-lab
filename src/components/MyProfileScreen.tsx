@@ -23,7 +23,7 @@ type AccountProfile = {
 };
 
 type ProfileView = "home" | "drink-list" | "favorite-list";
-type ListCategory = "lab" | "convenience" | "classic";
+type ListCategory = "all" | "lab" | "convenience" | "classic";
 
 export default function MyProfileScreen({
   settings,
@@ -55,7 +55,7 @@ export default function MyProfileScreen({
       setShowAccountSheet(true);
     }
   }, []);
-  const [activeListCategory, setActiveListCategory] = useState<ListCategory>("lab");
+  const [activeListCategory, setActiveListCategory] = useState<ListCategory>("all");
   const [accountError, setAccountError] = useState("");
   const [accountNotice, setAccountNotice] = useState("");
   const [accountPending, setAccountPending] = useState(false);
@@ -256,6 +256,7 @@ export default function MyProfileScreen({
   };
 
   const listCategories: Array<{ id: ListCategory; label: string; icon: string }> = [
+    { id: "all", label: "全部", icon: "view_list" },
     { id: "lab", label: "Lab", icon: "science" },
     { id: "convenience", label: "便利店", icon: "storefront" },
     { id: "classic", label: "经典酒", icon: "local_bar" },
@@ -281,18 +282,20 @@ export default function MyProfileScreen({
   const convenienceDrinkLogs = drinkLogs.filter((log) => getLogSourceType(log) === "convenience");
   const classicDrinkLogs = drinkLogs.filter((log) => getLogSourceType(log) === "classic");
   const drinkLogGroups: Record<ListCategory, DrinkLog[]> = {
+    all: drinkLogs,
     lab: labDrinkLogs,
     convenience: convenienceDrinkLogs,
     classic: classicDrinkLogs,
   };
   const savedCocktailGroups: Record<ListCategory, SavedCocktail[]> = {
+    all: savedCocktails,
     lab: savedCocktails.filter((cocktail) => getSavedSourceType(cocktail) === "lab"),
     convenience: savedCocktails.filter((cocktail) => getSavedSourceType(cocktail) === "convenience"),
     classic: savedCocktails.filter((cocktail) => getSavedSourceType(cocktail) === "classic"),
   };
 
   const renderCategoryTabs = (counts: Record<ListCategory, number>) => (
-    <div className="grid grid-cols-3 gap-2">
+    <div className="grid grid-cols-4 gap-2">
       {listCategories.map((category) => {
         const active = activeListCategory === category.id;
         return (
@@ -427,11 +430,13 @@ export default function MyProfileScreen({
     const activeSavedCocktails = savedCocktailGroups[activeListCategory];
     const counts = isDrinkList
       ? {
+          all: drinkLogs.length,
           lab: drinkLogGroups.lab.length,
           convenience: drinkLogGroups.convenience.length,
           classic: drinkLogGroups.classic.length,
         }
       : {
+          all: savedCocktails.length,
           lab: savedCocktailGroups.lab.length,
           convenience: savedCocktailGroups.convenience.length,
           classic: savedCocktailGroups.classic.length,
@@ -712,7 +717,7 @@ export default function MyProfileScreen({
         <button
           type="button"
           onClick={() => {
-            setActiveListCategory("lab");
+            setActiveListCategory("all");
             setProfileView("favorite-list");
           }}
           className="flex w-full cursor-pointer items-center justify-between gap-3 text-left active:scale-[0.99]"
@@ -739,7 +744,7 @@ export default function MyProfileScreen({
         <button
           type="button"
           onClick={() => {
-            setActiveListCategory("lab");
+            setActiveListCategory("all");
             setProfileView("drink-list");
           }}
           className="flex w-full cursor-pointer items-center justify-between gap-3 text-left active:scale-[0.99]"

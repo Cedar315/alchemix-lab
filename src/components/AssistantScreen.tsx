@@ -12,7 +12,7 @@ interface AssistantScreenProps {
   onBackHome?: () => void;
   onSaveCocktail: (cocktail: SavedCocktail) => Promise<void>;
   drinkLogs: DrinkLog[];
-  onSaveDrinkLog: (log: DrinkLog) => void;
+  onSaveDrinkLog: (log: DrinkLog) => void | Promise<void>;
 }
 
 type RecommendationResult = {
@@ -377,7 +377,7 @@ function RecipeCard({
   compact?: boolean;
   onSave: (recipe: RecipeSeed) => Promise<void>;
   drinkLogs: DrinkLog[];
-  onSaveDrinkLog: (log: DrinkLog) => void;
+  onSaveDrinkLog: (log: DrinkLog) => void | Promise<void>;
   sourcePage: string;
 }) {
   const required = recipe.ingredients.filter((item) => !item.isOptional && Number(item.amount || 0) !== 0);

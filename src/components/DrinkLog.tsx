@@ -35,7 +35,7 @@ interface DrinkLogModalProps {
   sourcePage: string;
   existingLog?: DrinkLog;
   onClose: () => void;
-  onSaved: (log: DrinkLog) => void;
+  onSaved: (log: DrinkLog) => void | Promise<void>;
 }
 
 export function DrinkLogModal({ recipe, sourcePage, existingLog, onClose, onSaved }: DrinkLogModalProps) {
@@ -56,7 +56,14 @@ export function DrinkLogModal({ recipe, sourcePage, existingLog, onClose, onSave
     setSelectedMoodTags((current) => current.includes(tag) ? current.filter((item) => item !== tag) : [...current, tag]);
   };
 
-  const save = () => {
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState('');
+  const savingRef = useRef(false);
+  const save = async () => {
+    if (savingRef.current) return;
+    savingRef.current = true;
+    setSaving(true);
+    setSaveError('');
     const now = new Date().toISOString();
     const log: DrinkLog = {
       id: existingLog?.id ?? `drink-log-${Date.now()}`,
@@ -78,12 +85,14 @@ export function DrinkLogModal({ recipe, sourcePage, existingLog, onClose, onSave
       createdAt: existingLog?.createdAt ?? now,
       updatedAt: now,
     };
-    onSaved(log);
+    try { await onSaved(log); }
+    catch (error) { setSaveError(error instanceof Error ? error.message : '保存失败，请重试'); }
+    finally { savingRef.current = false; setSaving(false); }
   };
 
   return (
     <div className="fixed inset-0 z-[160] flex items-end justify-center px-3">
-      <button type="button" className="absolute inset-0 cursor-pointer bg-black/35 backdrop-blur-[2px]" onClick={onClose} aria-label="取消记录" />
+      <button type="button" className="absolute inset-0 cursor-pointer bg-black/35 backdrop-blur-[2px]" disabled={saving} onClick={onClose} aria-label="取消记录" />
 
       <div className="relative z-10 flex max-h-[88vh] w-full max-w-[430px] flex-col overflow-hidden rounded-t-[28px] border border-[#E8E8E8] bg-white shadow-none animate-in slide-in-from-bottom-8 fade-in duration-300">
         <div className="shrink-0 border-b border-[#EFEFEC] bg-white px-4 pb-3 pt-3">
@@ -94,7 +103,7 @@ export function DrinkLogModal({ recipe, sourcePage, existingLog, onClose, onSave
               <h3 className="mt-1 text-xl font-medium text-neutral-950">记录这杯实验</h3>
               <p className="mt-1 text-sm leading-5 text-neutral-500">喝完之后，给这杯酒留下一点真实反馈。</p>
             </div>
-            <button type="button" onClick={onClose} className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full border border-[#E8E8E8] bg-white text-neutral-500 active:scale-[0.98]">
+            <button type="button" disabled={saving} onClick={onClose} className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full border border-[#E8E8E8] bg-white text-neutral-500 active:scale-[0.98]">
               <span className="material-symbols-outlined text-lg">close</span>
             </button>
           </div>
@@ -241,10 +250,11 @@ export function DrinkLogModal({ recipe, sourcePage, existingLog, onClose, onSave
         </div>
 
         <div className="shrink-0 border-t border-[#EFEFEC] bg-white p-4">
-          <button type="button" onClick={save} className="h-[52px] w-full cursor-pointer rounded-2xl bg-neutral-950 text-sm font-medium text-white shadow-none active:scale-[0.98]">
-            保存到酒记
+          <p role="alert" className="mb-2 text-sm text-red-700 empty:hidden">{saveError}</p>
+          <button type="button" disabled={saving} onClick={save} className="h-[52px] w-full cursor-pointer rounded-2xl bg-neutral-950 text-sm font-medium text-white shadow-none active:scale-[0.98]">
+            {saving ? "保存中…" : "保存到酒记"}
           </button>
-          <button type="button" onClick={onClose} className="mt-2 h-10 w-full cursor-pointer rounded-2xl text-sm font-medium text-neutral-500 active:scale-[0.98]">
+          <button type="button" disabled={saving} onClick={onClose} className="mt-2 h-10 w-full cursor-pointer rounded-2xl text-sm font-medium text-neutral-500 active:scale-[0.98]">
             取消
           </button>
         </div>
@@ -257,7 +267,7 @@ interface DrinkLogButtonProps {
   recipe: DrinkLogRecipeSnapshot;
   sourcePage: string;
   drinkLogs: DrinkLog[];
-  onSaveDrinkLog: (log: DrinkLog) => void;
+  onSaveDrinkLog: (log: DrinkLog) => void | Promise<void>;
   variant?: "text" | "compact" | "icon";
   className?: string;
 }
@@ -266,8 +276,8 @@ export function DrinkLogButton({ recipe, sourcePage, drinkLogs, onSaveDrinkLog, 
   const [isOpen, setIsOpen] = useState(false);
   const [justSaved, setJustSaved] = useState(false);
 
-  const handleSaved = (log: DrinkLog) => {
-    onSaveDrinkLog(log);
+  const handleSaved = async (log: DrinkLog) => {
+    await onSaveDrinkLog(log);
     setJustSaved(true);
     setIsOpen(false);
     window.setTimeout(() => setJustSaved(false), 1800);

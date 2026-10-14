@@ -39,7 +39,7 @@ interface InspirationScreenProps {
   onAddTip: (tip: MixTip) => void;
   onSaveCocktail?: (cocktail: any) => Promise<void>;
   drinkLogs?: DrinkLog[];
-  onSaveDrinkLog?: (log: DrinkLog) => void;
+  onSaveDrinkLog?: (log: DrinkLog) => void | Promise<void>;
   onLoadToLab?: (ingredients: any[], mixMethod: "Stir" | "Shake") => void;
   initialView?: InspirationView;
   initialCocktailId?: string;

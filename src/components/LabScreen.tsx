@@ -33,7 +33,7 @@ import {
 interface LabScreenProps {
   onSaveCocktail: (cocktail: SavedCocktail) => Promise<void>;
   drinkLogs?: DrinkLog[];
-  onSaveDrinkLog?: (log: DrinkLog) => void;
+  onSaveDrinkLog?: (log: DrinkLog) => void | Promise<void>;
   initialIngredients?: { name: string; amount: number; category: string; color: string; isBubbly?: boolean }[];
   initialMixMethod?: "Stir" | "Shake";
   onClearInitial?: () => void;
