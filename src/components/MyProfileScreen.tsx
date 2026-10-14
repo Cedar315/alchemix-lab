@@ -1,3 +1,4 @@
+import { tasteSummary, type TasteSettings } from "../lib/preferences/taste";
 import CocktailLineArt from "./CocktailLineArt";
 import CocktailIllustration from "./CocktailIllustration";
 import { safeReturnPath } from "@/lib/auth/return-path";
@@ -5,6 +6,8 @@ import React, { useEffect, useMemo, useState } from "react";
 import { DrinkLog, SavedCocktail } from "../types";
 
 interface MyProfileScreenProps {
+  settings: TasteSettings;
+  onOpenSettings: () => void;
   savedCocktails: SavedCocktail[];
   drinkLogs: DrinkLog[];
   onRemoveCocktail: (id: string) => void;
@@ -23,6 +26,8 @@ type ProfileView = "home" | "drink-list" | "favorite-list";
 type ListCategory = "lab" | "convenience" | "classic";
 
 export default function MyProfileScreen({
+  settings,
+  onOpenSettings,
   savedCocktails,
   drinkLogs,
   onRemoveCocktail,
@@ -132,15 +137,6 @@ export default function MyProfileScreen({
     }
   };
 
-  const logoutAccount = async () => {
-    await fetch("/api/auth/sign-out", { method: "POST" }).catch(() => null);
-    setAccountProfile(null);
-    setAccountNickname("");
-    setAccountEmail("");
-    setAccountPassword("");
-    onAuthChanged(false);
-  };
-
   const requestPasswordReset = async () => {
     const email = accountEmail.trim();
     if (!email) return setAccountError("请先填写邮箱");
@@ -170,60 +166,6 @@ export default function MyProfileScreen({
   };
 
   const getRatingValue = (log: DrinkLog) => log.rating ?? 0;
-
-  // Compute flavor statistics dynamically from real drink logs first.
-  const calculateStats = () => {
-    if (drinkLogs.length === 0 && savedCocktails.length === 0) {
-      return { sweet: 50, sour: 50, bitter: 30 };
-    }
-
-    if (drinkLogs.length > 0) {
-      const scoredLogs = drinkLogs.filter((log) => getRatingValue(log) > 0);
-      const source = scoredLogs.length > 0 ? scoredLogs : drinkLogs;
-      const totalSweet = source.reduce((sum, log) => sum + (log.tasteScores?.sweetness ?? 0), 0);
-      const totalAcid = source.reduce((sum, log) => sum + (log.tasteScores?.acidity ?? 0), 0);
-      const totalBitter = source.reduce((sum, log) => sum + (log.tasteScores?.bitterness ?? 0), 0);
-      return {
-        sweet: Math.round((totalSweet / (source.length * 5)) * 100),
-        sour: Math.round((totalAcid / (source.length * 5)) * 100),
-        bitter: Math.round((totalBitter / (source.length * 5)) * 100),
-      };
-    }
-
-    let totalSweet = 0;
-    let totalAcid = 0;
-    savedCocktails.forEach((c) => {
-      totalSweet += c.rating?.sweet || 3;
-      totalAcid += c.rating?.acid || 3;
-    });
-
-    const sweetPct = Math.round((totalSweet / (savedCocktails.length * 5)) * 100);
-    const sourPct = Math.round((totalAcid / (savedCocktails.length * 5)) * 100);
-    // Residual bitterness computation
-    const bitterPct = Math.max(15, 100 - sweetPct);
-
-    return { sweet: sweetPct, sour: sourPct, bitter: bitterPct };
-  };
-
-  const { sweet, sour, bitter } = calculateStats();
-
-  const likedDirections = [
-    sour >= 62 ? "明亮酸感" : null,
-    sweet >= 62 ? "甜润入口" : null,
-    bitter <= 35 ? "少苦一点" : null,
-    drinkLogs.some((log) => (log.tasteScores?.freshness ?? 0) >= 4) ? "清爽" : null,
-    drinkLogs.some((log) => (log.tasteScores?.fruitiness ?? 0) >= 4) ? "果香" : null,
-  ].filter(Boolean) as string[];
-  const avoidDirections = [
-    bitter >= 58 ? "高苦草本" : null,
-    sweet >= 78 ? "过甜厚重" : null,
-    drinkLogs.some((log) => (log.tasteScores?.alcohol_intensity ?? 0) <= 2 && getRatingValue(log) >= 4) ? "高酒感" : null,
-  ].filter(Boolean) as string[];
-  const recommendedDirections = [
-    "烧酒 + 乳酸饮料",
-    "金酒 + 气泡水",
-    sour >= sweet ? "啤酒 + 西柚汽水" : "朗姆 + 菠萝汁",
-  ];
 
   const formatDateKey = (date: Date) => {
     const year = date.getFullYear();
@@ -479,46 +421,6 @@ export default function MyProfileScreen({
     </article>
   );
 
-  // Spirit distribution computation
-  const getSpiritPreferences = () => {
-    if (drinkLogs.length === 0 && savedCocktails.length === 0) {
-      return [
-        { name: "还没有足够记录", val: "0%" },
-      ];
-    }
-
-    const counts: { [key: string]: number } = {};
-    if (drinkLogs.length > 0) {
-      drinkLogs.forEach((log) => {
-        const text = [
-          log.recipeName,
-          ...(log.recipeSnapshot.ingredients ?? []).map((item) => item.name),
-          ...(log.recipeSnapshot.tags ?? []),
-        ].join(" ");
-        const match = ["金酒", "伏特加", "威士忌", "朗姆", "龙舌兰", "啤酒", "烧酒", "梅酒", "白兰地"].find((spirit) => text.includes(spirit));
-        if (match) counts[match] = (counts[match] || 0) + 1;
-      });
-    } else {
-      savedCocktails.forEach((c) => {
-        const b = c.spirit.split(" ")[0];
-        counts[b] = (counts[b] || 0) + 1;
-      });
-    }
-
-    const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
-    if (sorted.length === 0) {
-      return [{ name: "还没有明显基酒偏好", val: "0%" }];
-    }
-    const total = sorted.reduce((sum, [, count]) => sum + count, 0) || 1;
-
-    return sorted.map(([name, count]) => ({
-      name: `${name.toUpperCase()} (${Math.round((count / total) * 100)}%)`,
-      val: `${Math.round((count / total) * 100)}%`,
-    }));
-  };
-
-  const prefSpirits = getSpiritPreferences();
-
   if (profileView === "drink-list" || profileView === "favorite-list") {
     const isDrinkList = profileView === "drink-list";
     const activeDrinkLogs = drinkLogGroups[activeListCategory];
@@ -632,10 +534,10 @@ export default function MyProfileScreen({
                 设置档案
               </button>
               <button
-                onClick={logoutAccount}
+                onClick={onOpenSettings}
                 className="h-11 cursor-pointer rounded-2xl bg-neutral-950 text-sm font-medium text-white hover:bg-neutral-800 active:scale-[0.98]"
               >
-                退出登录
+                设置
               </button>
             </>
           ) : (
@@ -656,6 +558,14 @@ export default function MyProfileScreen({
           )}
         </div>
       </section>
+
+      {/* Membership slot reserved; enable only when real benefits and checkout exist. */}
+      <section data-membership-slot hidden aria-hidden="true" />
+      <button onClick={onOpenSettings} className="rounded-3xl border border-[#E8E8E8] bg-white p-5 text-left">
+        <div className="flex items-center justify-between"><h3 className="text-base font-medium">我的口味</h3><span className="text-xs text-neutral-500">编辑 →</span></div>
+        <p className="mt-3 text-sm leading-6 text-neutral-700">{tasteSummary(settings)}</p>
+        <p className="mt-2 text-xs text-neutral-500">历史推荐{settings.useHistory ? '已开启' : '已关闭'} · 仅保存在当前浏览器</p>
+      </button>
 
       {showAccountSheet && (
         <div className="fixed inset-0 z-[150] flex items-end justify-center px-3">
@@ -803,33 +713,6 @@ export default function MyProfileScreen({
           type="button"
           onClick={() => {
             setActiveListCategory("lab");
-            setProfileView("drink-list");
-          }}
-          className="flex w-full cursor-pointer items-center justify-between gap-3 text-left active:scale-[0.99]"
-        >
-          <div className="flex min-w-0 items-center gap-3">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-neutral-950 text-white">
-              <span className="material-symbols-outlined text-[24px]">format_list_bulleted</span>
-            </div>
-            <div className="min-w-0">
-              <h3 className="text-base font-medium text-neutral-950">我喝过的酒单</h3>
-              <p className="mt-1 text-xs leading-5 text-neutral-500">
-                Lab、便利店特调、经典鸡尾酒分开整理
-              </p>
-            </div>
-          </div>
-          <div className="flex shrink-0 items-center gap-2">
-            <span className="rounded-full bg-[#f6f5f1] px-2.5 py-1 text-xs font-medium text-neutral-700">{drinkLogs.length} 杯</span>
-            <span className="material-symbols-outlined text-[22px] text-neutral-400">chevron_right</span>
-          </div>
-        </button>
-      </section>
-
-      <section className="order-2 rounded-3xl border border-[#E8E8E8] bg-white p-4 shadow-none">
-        <button
-          type="button"
-          onClick={() => {
-            setActiveListCategory("lab");
             setProfileView("favorite-list");
           }}
           className="flex w-full cursor-pointer items-center justify-between gap-3 text-left active:scale-[0.99]"
@@ -847,6 +730,33 @@ export default function MyProfileScreen({
           </div>
           <div className="flex shrink-0 items-center gap-2">
             <span className="rounded-full bg-[#f6f5f1] px-2.5 py-1 text-xs font-medium text-neutral-700">{savedCocktails.length} 杯</span>
+            <span className="material-symbols-outlined text-[22px] text-neutral-400">chevron_right</span>
+          </div>
+        </button>
+      </section>
+
+      <section className="order-2 rounded-3xl border border-[#E8E8E8] bg-white p-4 shadow-none">
+        <button
+          type="button"
+          onClick={() => {
+            setActiveListCategory("lab");
+            setProfileView("drink-list");
+          }}
+          className="flex w-full cursor-pointer items-center justify-between gap-3 text-left active:scale-[0.99]"
+        >
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-neutral-950 text-white">
+              <span className="material-symbols-outlined text-[24px]">format_list_bulleted</span>
+            </div>
+            <div className="min-w-0">
+              <h3 className="text-base font-medium text-neutral-950">我喝过的酒单</h3>
+              <p className="mt-1 text-xs leading-5 text-neutral-500">
+                Lab、便利店特调、经典鸡尾酒分开整理
+              </p>
+            </div>
+          </div>
+          <div className="flex shrink-0 items-center gap-2">
+            <span className="rounded-full bg-[#f6f5f1] px-2.5 py-1 text-xs font-medium text-neutral-700">{drinkLogs.length} 杯</span>
             <span className="material-symbols-outlined text-[22px] text-neutral-400">chevron_right</span>
           </div>
         </button>
@@ -934,7 +844,7 @@ export default function MyProfileScreen({
       </section>
 
       {/* Section 2: 调酒日历 (Journal-style calendar) */}
-      <section className="space-y-4 order-1">
+      <section className="space-y-4 order-3">
         <div className="space-y-1 border-b border-outline-variant/20 pb-3">
           <h3 className="text-xl font-medium text-on-surface">调酒日历</h3>
           <p className="text-sm text-on-surface-variant">记录每一杯实验结果。</p>
@@ -1221,106 +1131,7 @@ export default function MyProfileScreen({
         </section>
       )}
 
-      {/* Section 3: 口味画像 (Aggregated preference stats) */}
-      <section className="space-y-4 order-3">
-        <div className="flex items-center justify-between border-b border-outline-variant/20 pb-2">
-          <h3 className="text-base font-serif text-on-surface">口味画像</h3>
-          <span className="text-[10px] font-mono text-outline-variant uppercase">Taste Summary</span>
-        </div>
 
-        <div className="grid gap-3 md:grid-cols-3">
-          {[
-            ["你最近更喜欢", likedDirections.length ? likedDirections.join(" / ") : "还需要更多喝过记录"],
-            ["你可能不太喜欢", avoidDirections.length ? avoidDirections.join(" / ") : "暂时没有明显踩雷方向"],
-            ["下次推荐方向", recommendedDirections.join(" / ")],
-          ].map(([title, body]) => (
-            <div key={title} className="rounded-2xl border border-[#E8E8E8] bg-white p-4 shadow-none">
-              <p className="text-[11px] font-medium text-neutral-400">{title}</p>
-              <p className="mt-2 text-sm font-medium leading-6 text-neutral-900">{body}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Dynamic Progress Bars */}
-          <div className="bg-white p-6 rounded-2xl border border-outline-variant/30 shadow-none md:col-span-2 space-y-6">
-            <p className="text-[10px] font-medium text-on-surface-variant uppercase tracking-[0.2em] mb-4">
-              Recent Taste Index
-            </p>
-            <div className="space-y-5">
-              {/* Sour */}
-              <div>
-                <div className="flex justify-between text-xs font-medium tracking-wider mb-2">
-                  <span className="font-mono text-outline">SOUR 酸味</span>
-                  <span className="text-on-surface">{sour}%</span>
-                </div>
-                <div className="h-1.5 bg-surface-container rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-primary rounded-full transition-all duration-1000 ease-out"
-                    style={{ width: `${sour}%` }}
-                  ></div>
-                </div>
-              </div>
-
-              {/* Sweet */}
-              <div>
-                <div className="flex justify-between text-xs font-medium tracking-wider mb-2">
-                  <span className="font-mono text-outline">SWEET 甜度</span>
-                  <span className="text-on-surface">{sweet}%</span>
-                </div>
-                <div className="h-1.5 bg-surface-container rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-primary rounded-full transition-all duration-1000 ease-out"
-                    style={{ width: `${sweet}%` }}
-                  ></div>
-                </div>
-              </div>
-
-              {/* Bitter */}
-              <div>
-                <div className="flex justify-between text-xs font-medium tracking-wider mb-2">
-                  <span className="font-mono text-outline">BITTER 苦度</span>
-                  <span className="text-on-surface">{bitter}%</span>
-                </div>
-                <div className="h-1.5 bg-surface-container rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-primary rounded-full transition-all duration-1000 ease-out"
-                    style={{ width: `${bitter}%` }}
-                  ></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Auxiliary preferences metrics panels */}
-          <div className="flex flex-col gap-4">
-            {/* Preferred Spirits */}
-            <div className="bg-surface-container-lowest p-5 rounded-2xl border border-outline-variant/30 shadow-none flex-1">
-              <p className="text-[10px] font-medium text-on-surface-variant uppercase tracking-widest mb-3">
-                常用基酒 (FAVORITE)
-              </p>
-              <div className="flex flex-col gap-2.5">
-                {prefSpirits.map((pref, i) => (
-                  <span key={i} className="text-xs font-medium text-on-surface">
-                    {pref.name}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Avoid ingredients panel */}
-            <div className="bg-surface-container-lowest p-5 rounded-2xl border border-outline-variant/30 shadow-none flex-1">
-              <p className="text-[10px] font-medium text-on-surface-variant uppercase tracking-widest mb-3">
-                常踩雷 (AVOID)
-              </p>
-              <div className="flex flex-col gap-2">
-                <span className="text-xs font-medium text-red-600">太甜 SWEET+</span>
-                <span className="text-xs font-medium text-red-600/60">人工香精 Essence</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

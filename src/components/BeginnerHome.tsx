@@ -1,3 +1,5 @@
+import { rankByTaste, type TasteSettings } from "../lib/preferences/taste";
+import type { DrinkLog } from "../types";
 import CocktailLineArt from "./CocktailLineArt";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
@@ -35,7 +37,7 @@ function reconcile(a: Answers, field: Field): Answers {
   return result;
 }
 
-export default function BeginnerHome({ onMaterials }: { onMaterials: () => void; onExplore?: (tab: "classic" | "convenience") => void }) {
+export default function BeginnerHome({ onMaterials, settings, drinkLogs }: { settings: TasteSettings; drinkLogs: DrinkLog[]; onMaterials: () => void; onExplore?: (tab: "classic" | "convenience") => void }) {
   const [assistantRequest,setAssistantRequest] = useState('');
   useEffect(()=>{try{setAssistantRequest(sessionStorage.getItem('alchemix_workflow_request') || '');sessionStorage.removeItem('alchemix_workflow_request');}catch{}},[]);
   const [screen, setScreen] = useState<"home" | "quiz" | "results" | "edit">("home");
@@ -57,7 +59,7 @@ export default function BeginnerHome({ onMaterials }: { onMaterials: () => void;
   useEffect(() => {
     try {
       const value = JSON.parse(sessionStorage.getItem(key) ?? "null");
-      if (value?.version === 2 && value.answers && Array.isArray(value.answers.tastes) && Array.isArray(value.answers.avoid) && Array.isArray(value.slots)) {
+      if (value?.version === 2 && value.preferenceRevision === settings.revision && value.answers && Array.isArray(value.answers.tastes) && Array.isArray(value.answers.avoid) && Array.isArray(value.slots)) {
         value.answers.mixers ??= [];
         const valid = questions.every(q => { const v = value.answers[q.field]; if (q.field === "mixers") return Array.isArray(v) && v.every((x: unknown) => typeof x === "string" && mixerOptions(BEGINNER_CATALOG, value.answers).includes(x)); return Array.isArray(v) ? v.every((x: string) => q.options.some(([id]) => id === x)) : q.options.some(([id]) => id === v); });
         if (valid) {
@@ -78,13 +80,13 @@ export default function BeginnerHome({ onMaterials }: { onMaterials: () => void;
   }, []);
   useEffect(() => {
     if (!ready) return;
-    try { sessionStorage.setItem(key, JSON.stringify({ version: 2, answers, answered, excluded, slots, seen, undo, screen, scroll: scroller()?.scrollTop ?? 0 })); } catch { /* Browsing still works without session storage. */ }
+    try { sessionStorage.setItem(key, JSON.stringify({ version: 2, preferenceRevision: settings.revision, answers, answered, excluded, slots, seen, undo, screen, scroll: scroller()?.scrollTop ?? 0 })); } catch { /* Browsing still works without session storage. */ }
   }, [ready, answers, answered, excluded, slots, seen, undo, screen]);
   const active = screen === "edit" ? draft : answers;
   const drinkOptions = mixerOptions(BEGINNER_CATALOG, active, excluded);
   const steps = questions.filter(q => (q.field !== "tools" || active.kind !== "easy") && (q.field !== "mixers" || drinkOptions.length > 0)).map(q => q.field === "mixers" ? { ...q, options: [...drinkOptions.map(name => [name, name] as [string, string]), ["any", "都可以，帮我选"] as [string, string]] } : q);
   const q = steps[Math.min(step, steps.length - 1)];
-  const pool = matchDrinks(BEGINNER_CATALOG, answers, excluded);
+  const pool = rankByTaste(matchDrinks(BEGINNER_CATALOG, answers, excluded), settings, drinkLogs, answers);
   const top = () => scroller()?.scrollTo({ top: 0 });
   function choose(field: Field, id: string, multi?: boolean) {
     const before = active[field];
@@ -106,7 +108,7 @@ export default function BeginnerHome({ onMaterials }: { onMaterials: () => void;
     return matchDrinks(BEGINNER_CATALOG, prefix).length > 0;
   }
   function results(a: Answers) {
-    const ids = matchDrinks(BEGINNER_CATALOG, a, excluded).slice(0, 3).map(d => d.href);
+    const ids = rankByTaste(matchDrinks(BEGINNER_CATALOG, a, excluded), settings, drinkLogs, a).slice(0, 3).map(d => d.href);
     setAnswers(a); setSlots(ids); setSeen(ids); setUndo({}); setNotice(""); setScreen("results"); top();
   }
   function change(index: number) {
@@ -116,7 +118,7 @@ export default function BeginnerHome({ onMaterials }: { onMaterials: () => void;
     setSlots(slots.map((id, i) => i === index ? next : id)); setSeen([...seen, next]); setNotice("");
   }
   function updateExcluded(nextExcluded: string[]) {
-    const nextPool = matchDrinks(BEGINNER_CATALOG, answers, nextExcluded);
+    const nextPool = rankByTaste(matchDrinks(BEGINNER_CATALOG, answers, nextExcluded), settings, drinkLogs, answers);
     const nextSlots = repairSlots(nextPool, slots, seen);
     const nextUndo: Record<number, string> = {};
     nextSlots.forEach((id, index) => {
@@ -129,7 +131,7 @@ export default function BeginnerHome({ onMaterials }: { onMaterials: () => void;
     setNotice(nextSlots.length < 3 ? "符合全部条件的酒不足三杯。可以取消材料排除，或修改偏好。" : "");
   }
   function detail(href: string) {
-    try { sessionStorage.setItem(key, JSON.stringify({ version: 2, answers, answered, excluded, slots, seen, undo, screen: "results", scroll: scroller()?.scrollTop ?? 0 })); sessionStorage.setItem("alchemix_beginner_detail", "1"); } catch { }
+    try { sessionStorage.setItem(key, JSON.stringify({ version: 2, preferenceRevision: settings.revision, answers, answered, excluded, slots, seen, undo, screen: "results", scroll: scroller()?.scrollTop ?? 0 })); sessionStorage.setItem("alchemix_beginner_detail", "1"); } catch { }
     window.location.href = href;
   }
   const options = (question: Question) => <div className="mt-4 space-y-2">{question.options.map(([id, label]) => {
@@ -169,6 +171,7 @@ export default function BeginnerHome({ onMaterials }: { onMaterials: () => void;
       <p className="mt-2 text-[11px] text-neutral-500">买不到哪样？点一下酒卡里的材料。</p>
       {excluded.length > 0 && <div className="mt-2 flex flex-wrap items-center gap-2"><span className="text-[11px] text-neutral-500">本次不使用</span>{excluded.map(name => <button key={name} aria-label={`取消排除${name}`} onClick={() => updateExcluded(excluded.filter(n => n !== name))} className="rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-xs">{name} ×</button>)}</div>}
       {pendingIngredient && <div role="region" aria-label="确认排除材料" className="mt-3 rounded-2xl border border-neutral-300 bg-white p-4"><p className="text-sm font-medium">这次买不到{pendingIngredient}？</p><p className="mt-2 text-xs leading-5 text-neutral-500">只更换需要它的酒，保留你的口味偏好。之后换酒也会排除它。</p><div className="mt-3 flex gap-2"><button onClick={() => updateExcluded([...new Set([...excluded, pendingIngredient])])} className="min-h-10 flex-1 rounded-full border border-neutral-300 bg-white px-3 text-xs">排除并换酒</button><button onClick={() => setPendingIngredient(null)} className="min-h-10 rounded-full border border-neutral-200 px-4 text-xs">取消</button></div></div>}
+      <p className="mt-3 text-xs leading-5 text-neutral-500">优先满足本次选择，再参考「我的口味」排序。{settings.useHistory ? '已开启近期高评分酒记参考。' : '历史推荐已关闭。'}</p>
       {slots.length < 3 && <p className="mt-4 rounded-xl bg-neutral-100 p-3 text-xs leading-6">目前只有这些配方符合全部条件，不会加入不匹配的酒。你可以修改偏好。</p>}
       <div className="mt-4 space-y-3">{slots.map((id, index) => {
         const drink = BEGINNER_CATALOG.find(d => d.href === id); if (!drink) return null;

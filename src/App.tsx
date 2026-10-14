@@ -9,11 +9,29 @@ import AssistantScreen from "./components/AssistantScreen";
 import BeginnerHome from "./components/BeginnerHome";
 import InspirationScreen from "./components/InspirationScreen";
 import MyProfileScreen from "./components/MyProfileScreen";
+import ProfileSettings from "./components/ProfileSettings";
+import { TASTE_KEY, defaultTaste, parseTaste, type TasteSettings } from "./lib/preferences/taste";
 import { trackAnalyticsEvent } from "./lib/analytics";
 
 export default function App() {
   const searchParams = useSearchParams();
   useEffect(() => { const tab=searchParams.get("tab"); if(tab && ["ASSISTANT","LAB","INSPIRATION","MY"].includes(tab))setActiveTab(tab); }, [searchParams]);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [tasteSettings, setTasteSettings] = useState<TasteSettings>(defaultTaste);
+  const [tasteReady, setTasteReady] = useState(false);
+  useEffect(() => {
+    const read = () => { try { setTasteSettings(parseTaste(JSON.parse(localStorage.getItem(TASTE_KEY) || 'null'))); } catch { setTasteSettings(defaultTaste); } };
+    read(); setTasteReady(true);
+    const sync = (event: StorageEvent) => { if (event.key === TASTE_KEY || event.key === null) read(); };
+    window.addEventListener('storage', sync);
+    return () => window.removeEventListener('storage', sync);
+  }, []);
+  const saveTasteSettings = (value: TasteSettings) => {
+    const next = { ...value, revision: Math.max(Date.now(), tasteSettings.revision + 1) };
+    try { localStorage.setItem(TASTE_KEY, JSON.stringify(next)); } catch { return false; }
+    setTasteSettings(next);
+    return true;
+  };
   // Navigation State: "ASSISTANT" | "LAB" | "INSPIRATION" | "MY"
   const [homeVisit, setHomeVisit] = useState(0);
   const [guideTab, setGuideTab] = useState<"classic" | "convenience" | undefined>();
@@ -183,7 +201,7 @@ export default function App() {
   const renderScreen = () => {
     switch (activeTab) {
       case "ASSISTANT":
-        return <BeginnerHome key={homeVisit} onMaterials={() => setActiveTab("MATERIALS")} onExplore={(tab) => { sessionStorage.removeItem("alchemix_guide_return"); setGuideTab(tab); setActiveTab("INSPIRATION"); }} />;
+        return tasteReady ? <BeginnerHome settings={tasteSettings} drinkLogs={drinkLogs} key={`${homeVisit}-${tasteSettings.revision}`} onMaterials={() => setActiveTab("MATERIALS")} onExplore={(tab) => { sessionStorage.removeItem("alchemix_guide_return"); setGuideTab(tab); setActiveTab("INSPIRATION"); }} /> : null;
       case "MATERIALS":
         return (
           <AssistantScreen
@@ -229,8 +247,15 @@ export default function App() {
           />
         );
       case "MY":
+        if (settingsOpen) return <ProfileSettings settings={tasteSettings} onSave={saveTasteSettings} onBack={() => setSettingsOpen(false)} onLogout={async () => {
+          const response = await fetch('/api/auth/sign-out', { method: 'POST' });
+          if (!response.ok) throw new Error('退出失败');
+          handleAuthChanged(false);
+        }} />;
         return (
           <MyProfileScreen
+            settings={tasteSettings}
+            onOpenSettings={() => setSettingsOpen(true)}
             savedCocktails={savedCocktails}
             drinkLogs={drinkLogs}
             onRemoveCocktail={handleRemoveCocktail}
@@ -254,29 +279,14 @@ export default function App() {
         </div>
         
         {/* Dynamic Context Header action buttons */}
-        {activeTab === "LAB" && (
-          <button 
-            onClick={() => {
-              alert("🧪 [化学滴定实验日志] 正在汇总您所有的混合化学键能变化。您可以点击底部 'MY' 档案中心，深度查阅您已保存的高分化学特调结果。");
-            }}
-            className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container transition-colors active:scale-95 duration-150 text-on-surface-variant"
-            title="历史混合分析"
-          >
-            <span className="material-symbols-outlined">history</span>
-          </button>
-        )}
-        
         {activeTab === "MY" && (
           <button 
             onClick={() => {
-              const confirmReset = window.confirm("🔄 确定要重置当前实验室的所有特调日志和本地档案吗？这将会清空您的本地缓存记录。");
-              if (confirmReset) {
-                localStorage.clear();
-                window.location.reload();
-              }
+              setSettingsOpen(true);
             }}
             className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container transition-colors active:scale-95 duration-150 text-on-surface-variant"
-            title="重置实验室档案"
+            title="设置"
+            aria-label="设置"
           >
             <span className="material-symbols-outlined">settings</span>
           </button>
